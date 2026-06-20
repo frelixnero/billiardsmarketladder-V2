@@ -2499,7 +2499,11 @@ buildPnl();
 buildOwnerPrizes();
 buildBracket();
 buildPredGrid();
-applyRole(currentRole());
+applyRole("public"); // Always start as public — require explicit login each visit
+sessionStorage.removeItem("al_user_email");
+// Silently clear any stale Supabase session so INITIAL_SESSION never auto-restores login
+if (_sb) { _sb.auth.signOut().catch(() => {}); }
+
 
 // ── Share Certificate functions ──────────────────────────────
 function closeCert() {
@@ -2665,12 +2669,15 @@ async function shareCert() {
 
 if (_sb) {
   _sb.auth.onAuthStateChange((event, session) => {
-    if (session?.user) {
+    // Only respond to explicit user actions — ignore INITIAL_SESSION
+    // so the page always opens as PUBLIC even if a Supabase session exists
+    if (event === 'SIGNED_IN' && session?.user) {
       resolveAndSetUserRole(session.user);
-    } else {
+    } else if (event === 'SIGNED_OUT') {
       sessionStorage.removeItem("al_user_email");
       setRole("public");
     }
+    // TOKEN_REFRESHED, INITIAL_SESSION etc. are intentionally ignored
   });
 }
 </script>
