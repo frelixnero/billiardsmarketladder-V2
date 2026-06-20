@@ -1008,7 +1008,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 </div>
 
 <!-- ════════ LOGIN OVERLAY ════════ -->
-<div class="overlay" id="loginOverlay" onclick="if(event.target.id==='loginOverlay')this.classList.remove('open')">
+<div id="loginOverlay" onclick="if(event.target.id==='loginOverlay')this.classList.remove('open')">
   <div class="auth-wrapper">
     <button class="auth-close-btn" onclick="$('loginOverlay').classList.remove('open')">✕</button>
     
