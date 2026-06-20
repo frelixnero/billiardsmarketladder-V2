@@ -553,6 +553,7 @@ body.role-helper .ownerOnly { display:none !important; }
       <canvas id="op-chart"></canvas>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <script>
     (function(){
@@ -833,13 +834,34 @@ body.role-helper .ownerOnly { display:none !important; }
 <div class="overlay" id="loginOverlay" onclick="if(event.target.id==='loginOverlay')this.classList.remove('open')">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">Staff Login</div>
-    <div class="modal-sub">Owner gets full control. Helpers get a limited, read-only view. The public never sees this.</div>
-    <div class="form-field"><label>Role</label>
-      <select id="loginRole"><option value="owner">Owner (Elliot)</option><option value="helper">Helper</option></select></div>
-    <div class="form-field"><label>Password</label><input id="loginPw" type="password" placeholder="password" /></div>
-    <button class="al-btn" style="width:100%;padding:14px" onclick="doLogin()">Sign in</button>
-    <div id="loginNotice"></div>
+    <div class="modal-title" id="loginModalTitle">Staff Login</div>
+    <div class="modal-sub" id="loginModalSub">Owner gets full control. Helpers get a limited, read-only view. The public never sees this.</div>
+    
+    <div class="form-field">
+      <label>Email address</label>
+      <input id="loginEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)" />
+    </div>
+    
+    <div class="form-field">
+      <label>Password</label>
+      <input id="loginPw" type="password" placeholder="password" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)" />
+    </div>
+
+    <div id="signUpRoleGroup" style="display:none" class="form-field">
+      <label>Requested Role</label>
+      <select id="loginRole" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)">
+        <option value="helper">Helper</option>
+        <option value="owner">Owner (Elliot)</option>
+      </select>
+    </div>
+
+    <button class="al-btn" id="loginSubmitBtn" style="width:100%;padding:14px" onclick="doLogin()">Sign in</button>
+    
+    <div id="authToggleContainer" style="text-align:center;margin-top:16px">
+      <a href="#" id="authToggleLink" onclick="toggleAuthMode();return false" style="font-size:12px;color:var(--al-green);text-decoration:none">Don't have an account? Sign up</a>
+    </div>
+
+    <div id="loginNotice" style="margin-top:12px"></div>
   </div>
 </div>
 
@@ -880,6 +902,11 @@ body.role-helper .ownerOnly { display:none !important; }
      SCRIPT — Edit CONFIG section before going live
      ════════════════════════════════════════════════════════ -->
 <script>
+// Supabase Client Initialization
+const SUPABASE_URL = "https://vhsxjfzhwrxujpsvrutx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3hqZnpod3J4dWpwc3ZydXR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NjQzOTEsImV4cCI6MjA5NzE0MDM5MX0.uTSkYFb_IkVIPO4uIZniOph5uEwqcizHfe4mvBbIXWw";
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 // ╔═══════════════════════════════════════════════════════╗
 // ║  OPERATOR CONFIG — EDIT BEFORE GOING LIVE            ║
 // ╚═══════════════════════════════════════════════════════╝
@@ -907,13 +934,13 @@ const CONFIG = {
   // The serverless function bills these price IDs. Top 2 changed to $150,
   // so create a NEW $150 price in Stripe and paste its id below.
   priceIds: {
-    share25:      "price_1TggihA99FsxroMnBPTlNsqG", // $25  Unranked
-    share35:      "price_1TggiiA99FsxroMnpYAcLcrf", // $35  Top 5-8
-    share75:      "price_1TggijA99FsxroMnIaLhtpjs", // $75  Top 3-4
-    share150:     "price_REPLACE_WITH_150_SHARE",   // $150 Top 2  (create in Stripe)
-    registration: "price_1TgnwEA99FsxroMnnSLWi5w5", // $150 Season registration
-    weeklyDues:   "price_1TgnwKA99FsxroMnsezXA5nW", // $25  Weekly dues
-    teamReg:      "price_REPLACE_WITH_225_TEAM_REG", // $225 Team registration / person (create in Stripe)
+    share25:      "price_1TkOfEAoSKKzN4A3ksE3fpdD", // $25  Unranked
+    share35:      "price_1TkOfSAoSKKzN4A3jJw6IjHo", // $35  Top 5-8
+    share75:      "price_1TkOfsAoSKKzN4A3E57CdQ9W", // $75  Top 3-4
+    share150:     "price_1TkOhHAoSKKzN4A3HFKV358Y", // $150 Top 2
+    registration: "price_1TkOhoAoSKKzN4A3zdmQlYWE", // $150 Season registration
+    weeklyDues:   "price_1TkOi7AoSKKzN4A3z8hWbyja", // $25  Weekly dues
+    teamReg:      "price_1TkOiYAoSKKzN4A34AEcEldN", // $225 Team registration / person
   },
 
   // ── BUY-IN CAP ────────────────────────────────────────
@@ -941,6 +968,7 @@ const CONFIG = {
     ownerPassword:  "owner2026",   // full control — change before going live
     helperPassword: "helper2026",  // paid partners, limited control
     partners:       4,             // owner + 3 helpers → 4-way profit split
+    operators:      ["osiraogene@gmail.com"], // Supabase operator emails
   },
 
   // ── BRANDING ──────────────────────────────────────────
@@ -1571,6 +1599,21 @@ function showTab(t) {
 // ╔═══════════════════════════════════════════════════════╗
 // ║  ACCESS ROLES  (public / helper / owner)             ║
 // ╚═══════════════════════════════════════════════════════╝
+// Toggle between Sign In and Create Account modes in the overlay
+let authMode = "signin";
+function toggleAuthMode() {
+  const isSignIn = authMode === "signin";
+  authMode = isSignIn ? "signup" : "signin";
+  $("loginModalTitle").textContent = isSignIn ? "Create Staff Account" : "Staff Login";
+  $("loginModalSub").textContent = isSignIn 
+    ? "Request operator (owner) or helper access to manage settings." 
+    : "Owner gets full control. Helpers get a limited, read-only view. The public never sees this.";
+  $("signUpRoleGroup").style.display = isSignIn ? "block" : "none";
+  $("loginSubmitBtn").textContent = isSignIn ? "Create account" : "Sign in";
+  $("authToggleLink").textContent = isSignIn ? "Already have an account? Sign in" : "Don't have an account? Sign up";
+  $("loginNotice").innerHTML = "";
+}
+
 function currentRole() { return sessionStorage.getItem("al_role") || "public"; }
 function setRole(role) { sessionStorage.setItem("al_role", role); applyRole(role); }
 function applyRole(role) {
@@ -1581,17 +1624,131 @@ function applyRole(role) {
   $("logoutBtn").style.display = role === "public" ? "none" : "";
   const ro = role === "helper";
   document.querySelectorAll("#settingsGrid input").forEach(i => i.disabled = ro);
+  
+  // Update active user display text
+  const email = sessionStorage.getItem("al_user_email") || "";
+  const userDisplay = email ? ` (${email})` : "";
   $("ownerWho").textContent = role === "owner"
-    ? `Full control · signed in as ${CONFIG.roles.ownerName}`
-    : "Limited helper access · settings are read-only";
+    ? `Full control · signed in as ${CONFIG.roles.ownerName}${userDisplay}`
+    : `Limited helper access · settings are read-only${userDisplay}`;
+    
   if (role === "public" && $("view-owner").classList.contains("active")) showTab("market");
 }
-function openLogin() { $("loginNotice").innerHTML = ""; $("loginPw").value = ""; $("loginOverlay").classList.add("open"); }
-function doLogin() {
-  const role = $("loginRole").value, pw = $("loginPw").value;
-  const ok = role === "owner" ? pw === CONFIG.roles.ownerPassword : pw === CONFIG.roles.helperPassword;
-  if (ok) { setRole(role); $("loginOverlay").classList.remove("open"); showTab("owner"); }
-  else $("loginNotice").innerHTML = '<div class="notice err">Wrong password.</div>';
+
+function openLogin() {
+  authMode = "signup"; // Toggle sets it back to signin
+  toggleAuthMode();
+  $("loginEmail").value = "";
+  $("loginPw").value = "";
+  $("loginNotice").innerHTML = "";
+  $("loginOverlay").classList.add("open");
+}
+
+async function doLogin() {
+  const email = $("loginEmail").value.trim().toLowerCase();
+  const password = $("loginPw").value;
+  if (!email || !password) {
+    $("loginNotice").innerHTML = '<div class="notice err">Email and password are required.</div>';
+    return;
+  }
+  
+  $("loginNotice").innerHTML = '<div class="notice info">Authenticating...</div>';
+  
+  // Fallback to local passwords if Supabase library isn't loaded
+  if (!supabase) {
+    handleLocalAuthFallback(email, password);
+    return;
+  }
+  
+  try {
+    if (authMode === "signup") {
+      const selectedRole = $("loginRole").value;
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            role: selectedRole,
+            requested_role: selectedRole
+          }
+        }
+      });
+      if (error) throw error;
+      
+      if (data?.user) {
+        resolveAndSetUserRole(data.user);
+        $("loginOverlay").classList.remove("open");
+      } else {
+        $("loginNotice").innerHTML = '<div class="notice ok">Account created! Check your email to confirm registration.</div>';
+      }
+    } else {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data?.user) {
+        resolveAndSetUserRole(data.user);
+        $("loginOverlay").classList.remove("open");
+        showTab("owner");
+      }
+    }
+  } catch (err) {
+    $("loginNotice").innerHTML = `<div class="notice err">${err.message || "Authentication failed."}</div>`;
+  }
+}
+
+// Fallback logic when Supabase is not loaded/configured
+function handleLocalAuthFallback(email, password) {
+  const isElliot = email === "elliot" || CONFIG.roles.operators.includes(email);
+  const isHelper = email === "helper";
+  
+  let ok = false;
+  let role = "public";
+  
+  if (isElliot && password === CONFIG.roles.ownerPassword) {
+    ok = true;
+    role = "owner";
+  } else if (isHelper && password === CONFIG.roles.helperPassword) {
+    ok = true;
+    role = "helper";
+  } else if (password === CONFIG.roles.ownerPassword) {
+    ok = true;
+    role = "owner";
+  } else if (password === CONFIG.roles.helperPassword) {
+    ok = true;
+    role = "helper";
+  }
+  
+  if (ok) {
+    sessionStorage.setItem("al_user_email", email);
+    setRole(role);
+    $("loginOverlay").classList.remove("open");
+    showTab("owner");
+  } else {
+    $("loginNotice").innerHTML = '<div class="notice err">Wrong email or password.</div>';
+  }
+}
+
+function resolveAndSetUserRole(user) {
+  if (!user) return;
+  const email = user.email.toLowerCase();
+  
+  const isOperator = CONFIG.roles.operators.map(x => x.toLowerCase()).includes(email);
+  const metadataRole = user.user_metadata?.role || user.app_metadata?.role;
+  
+  let role = "helper";
+  if (isOperator || metadataRole === "owner") {
+    role = "owner";
+  }
+  
+  sessionStorage.setItem("al_user_email", user.email);
+  setRole(role);
+}
+
+async function doLogout() {
+  if (supabase) {
+    try { await supabase.auth.signOut(); } catch(e) {}
+  }
+  sessionStorage.removeItem("al_user_email");
+  setRole("public");
 }
 
 // ╔═══════════════════════════════════════════════════════╗
@@ -1859,6 +2016,18 @@ buildOwnerPrizes();
 buildBracket();
 buildPredGrid();
 applyRole(currentRole());
+
+// Listen to Supabase auth events to auto-sync logged-in status
+if (supabase) {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+      resolveAndSetUserRole(session.user);
+    } else {
+      sessionStorage.removeItem("al_user_email");
+      setRole("public");
+    }
+  });
+}
 </script>
 </body>
 </html>
