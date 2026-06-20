@@ -12,7 +12,7 @@
     :root {
       --bg: #09090f;
       --card: #12121f;
-      --gold: #ffd700;
+      --gold: #39ff14;
       --green: #39ff14;
       --red: #ff4444;
       --purple: #c470f5;
@@ -35,7 +35,7 @@
     .topbar {
       width: 100%;
       background: linear-gradient(135deg, #0d0d20, #12121f);
-      border-bottom: 1px solid rgba(255,215,0,0.15);
+      border-bottom: 1px solid rgba(57,255,20,0.15);
       padding: 14px 20px;
       display: flex;
       align-items: center;
@@ -62,8 +62,8 @@
       text-transform: uppercase;
     }
     .back-btn {
-      background: rgba(255,215,0,0.08);
-      border: 1px solid rgba(255,215,0,0.2);
+      background: rgba(57,255,20,0.08);
+      border: 1px solid rgba(57,255,20,0.2);
       color: var(--gold);
       padding: 8px 16px;
       border-radius: 20px;
@@ -72,7 +72,7 @@
       text-decoration: none;
       transition: all 0.15s;
     }
-    .back-btn:hover { background: rgba(255,215,0,0.15); }
+    .back-btn:hover { background: rgba(57,255,20,0.15); }
 
     /* ── Main container ── */
     .container {
@@ -84,15 +84,15 @@
     /* ── Hero card ── */
     .hero-card {
       background: linear-gradient(160deg, #10102a, #1a1a3a, #0d1a0d);
-      border: 1px solid rgba(255,215,0,0.25);
+      border: 1px solid rgba(57,255,20,0.25);
       border-radius: 20px;
       overflow: hidden;
       margin-bottom: 16px;
-      box-shadow: 0 0 40px rgba(255,215,0,0.08), 0 16px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 0 40px rgba(57,255,20,0.08), 0 16px 40px rgba(0,0,0,0.5);
     }
     .hero-bg {
-      background: linear-gradient(135deg, #1a1400, #2a2000, #1a1400);
-      border-bottom: 1px solid rgba(255,215,0,0.2);
+      background: linear-gradient(135deg, #071400, #0a1f00, #071400);
+      border-bottom: 1px solid rgba(57,255,20,0.2);
       padding: 32px 24px 24px;
       text-align: center;
       position: relative;
@@ -102,20 +102,20 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,215,0,0.03) 8px,rgba(255,215,0,0.03) 9px);
+      background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(57,255,20,0.03) 8px,rgba(57,255,20,0.03) 9px);
     }
     .player-avatar {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2a2000, #3a3000);
-      border: 3px solid rgba(255,215,0,0.4);
+      background: linear-gradient(135deg, #0a1f00, #0f2a00);
+      border: 3px solid rgba(57,255,20,0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 36px;
       margin: 0 auto 14px;
-      box-shadow: 0 0 20px rgba(255,215,0,0.2);
+      box-shadow: 0 0 20px rgba(57,255,20,0.2);
     }
     .player-name {
       font-size: 28px;
@@ -133,7 +133,7 @@
       font-weight: 700;
       margin-bottom: 10px;
     }
-    .tier-badge.gold   { background: rgba(255,215,0,0.15);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }
+    .tier-badge.gold   { background: rgba(57,255,20,0.15);   color: var(--gold);   border: 1px solid rgba(57,255,20,0.3); }
     .tier-badge.purple { background: rgba(196,112,245,0.15); color: var(--purple); border: 1px solid rgba(196,112,245,0.3); }
     .tier-badge.blue   { background: rgba(68,136,255,0.15);  color: var(--blue);   border: 1px solid rgba(68,136,255,0.3); }
     .tier-badge.gray   { background: rgba(100,100,130,0.15); color: #aaa;          border: 1px solid rgba(100,100,130,0.3); }
@@ -206,8 +206,8 @@
 
     /* ── Your investment card (if they own shares) ── */
     .invest-card {
-      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.04));
-      border: 1px solid rgba(255,215,0,0.25);
+      background: linear-gradient(135deg, rgba(57,255,20,0.08), rgba(57,255,20,0.04));
+      border: 1px solid rgba(57,255,20,0.25);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 16px;
@@ -216,7 +216,7 @@
       font-size: 11px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255,215,0,0.6);
+      color: rgba(57,255,20,0.6);
       margin-bottom: 14px;
     }
     .invest-row {
@@ -264,14 +264,14 @@
     }
     .cta-btn {
       display: inline-block;
-      background: linear-gradient(135deg, #cfa800, #ffd700);
+      background: linear-gradient(135deg, #1a9900, #39ff14);
       color: #0a0a14;
       font-weight: 800;
       font-size: 15px;
       padding: 15px 36px;
       border-radius: 14px;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(255,215,0,0.25);
+      box-shadow: 0 4px 20px rgba(57,255,20,0.25);
       transition: all 0.15s;
     }
     .cta-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
@@ -279,7 +279,7 @@
     /* ── Fee confirmation view ── */
     .fee-card {
       background: linear-gradient(160deg, #10102a, #1a1a3a);
-      border: 1px solid rgba(255,215,0,0.25);
+      border: 1px solid rgba(57,255,20,0.25);
       border-radius: 20px;
       overflow: hidden;
       margin-bottom: 16px;

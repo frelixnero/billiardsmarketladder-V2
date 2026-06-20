@@ -10,7 +10,7 @@
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 :root {
   --bg:#060610; --card:#0e0e1e; --card2:#12122a; --border:#1a1a35;
-  --green:#00e5a0; --red:#ff3b5c; --gold:#ffd700; --blue:#4488ff;
+  --green:#00e5a0; --red:#ff3b5c; --gold:#39ff14; --blue:#4488ff;
   --purple:#c470f5; --orange:#ff9500; --white:#f0f0ff; --gray:#6060a0; --dim:#282848;
   --al-green:#19ff75; --al-black:#050805;
 }
@@ -64,7 +64,7 @@ body { background:var(--bg); color:var(--white); font-family:-apple-system,Blink
 .p-badges { display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
 .badge { font-size:9px; font-weight:800; letter-spacing:.5px; padding:3px 7px; border-radius:100px; }
 .b-hot  { background:rgba(255,149,0,.18); color:var(--orange); border:1px solid rgba(255,149,0,.3); }
-.b-lock { background:rgba(255,215,0,.1);  color:var(--gold);   border:1px solid rgba(255,215,0,.2); }
+.b-lock { background:rgba(57,255,20,.1);  color:var(--gold);   border:1px solid rgba(57,255,20,.2); }
 .b-deal { background:rgba(0,229,160,.12); color:var(--green);  border:1px solid rgba(0,229,160,.25); }
 
 .p-name { font-size:23px; font-weight:900; letter-spacing:-.5px; }
@@ -121,7 +121,7 @@ body { background:var(--bg); color:var(--white); font-family:-apple-system,Blink
 .split-amt { font-size:12px; color:var(--gray); min-width:48px; text-align:right; }
 .split-note { font-size:11px; color:var(--gray); margin:-10px 0 14px 0; padding-left:4px; }
 
-.partner-box { background:rgba(255,215,0,.06); border:1px solid rgba(255,215,0,.2); border-radius:12px; padding:14px 16px; font-size:13px; color:var(--gray); line-height:1.7; margin-top:10px; }
+.partner-box { background:rgba(57,255,20,.06); border:1px solid rgba(57,255,20,.2); border-radius:12px; padding:14px 16px; font-size:13px; color:var(--gray); line-height:1.7; margin-top:10px; }
 .partner-box strong { color:var(--gold); }
 
 .roi-tbl { width:100%; border-collapse:collapse; }
@@ -196,7 +196,7 @@ footer .name { font-weight:800; color:var(--white); margin-bottom:4px; font-size
 .mode-switch { display:flex; gap:6px; justify-content:center; padding:14px 16px 0; max-width:920px; margin:0 auto; }
 .mode-btn { flex:0 0 auto; background:var(--card); border:1.5px solid var(--border); color:var(--gray); font-size:14px; font-weight:800; padding:10px 22px; border-radius:100px; cursor:pointer; transition:all .15s; letter-spacing:.3px; }
 .mode-btn:hover { border-color:var(--dim); color:var(--white); }
-.mode-btn.active { background:rgba(255,215,0,.1); border-color:rgba(255,215,0,.35); color:var(--gold); }
+.mode-btn.active { background:rgba(57,255,20,.1); border-color:rgba(57,255,20,.35); color:var(--gold); }
 
 /* ─── TEAM STANDINGS TABLE ───────────────────────────────── */
 .stand-tbl { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
@@ -210,7 +210,7 @@ footer .name { font-weight:800; color:var(--white); margin-bottom:4px; font-size
 .stand-cap { font-size:11px; color:var(--gray); font-weight:600; margin-top:2px; }
 .stand-pts { font-weight:900; color:var(--gold); }
 .stand-price { font-weight:800; }
-.medal-1 td { background:rgba(255,215,0,.05); }
+.medal-1 td { background:rgba(57,255,20,.05); }
 .medal-2 td { background:rgba(192,192,200,.04); }
 .medal-3 td { background:rgba(205,127,50,.05); }
 
@@ -368,9 +368,9 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 }
 .auth-button-role.active {
   background: #ffb95f;
-  border-color: #ffd700;
+  border-color: #39ff14;
   color: #0c0800;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(57, 255, 20, 0.25);
 }
 .auth-button-role:hover:not(.active) {
   border-color: #958ea0;
@@ -412,8 +412,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   box-shadow: 0 4px 16px rgba(255, 185, 95, 0.2);
 }
 .auth-submit-btn:hover {
-  background: #ffd700;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
+  background: #39ff14;
+  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.35);
 }
 .auth-submit-btn:active {
   transform: translateY(1px);
@@ -470,12 +470,12 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 .cert-card {
   position: relative;
   background: linear-gradient(160deg, #10102a 0%, #1a1a3a 60%, #0d1a0d 100%);
-  border: 1px solid rgba(255,215,0,0.3);
+  border: 1px solid rgba(57,255,20,0.3);
   border-radius: 20px;
   max-width: 420px;
   width: 100%;
   overflow: hidden;
-  box-shadow: 0 0 60px rgba(255,215,0,0.15), 0 24px 64px rgba(0,0,0,0.6);
+  box-shadow: 0 0 60px rgba(57,255,20,0.15), 0 24px 64px rgba(0,0,0,0.6);
   animation: certSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
 @keyframes certSlideIn {
@@ -492,24 +492,24 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 }
 .cert-close:hover { color: #fff; border-color: #555; }
 .cert-header {
-  background: linear-gradient(135deg, #1a1400, #2a2000, #1a1400);
-  border-bottom: 1px solid rgba(255,215,0,0.25);
+  background: linear-gradient(135deg, #071400, #0a1f00, #071400);
+  border-bottom: 1px solid rgba(57,255,20,0.25);
   padding: 28px 24px 20px; text-align: center; position: relative; overflow: hidden;
 }
 .cert-header::before {
   content:''; position:absolute; inset:0;
-  background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,215,0,0.03) 8px,rgba(255,215,0,0.03) 9px);
+  background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(57,255,20,0.03) 8px,rgba(57,255,20,0.03) 9px);
 }
-.cert-logo { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); }
-.cert-brand { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,215,0,0.6); margin-bottom: 6px; }
-.cert-title { font-size: 18px; font-weight: 800; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); letter-spacing: 1px; }
+.cert-logo { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(57,255,20,0.6)); }
+.cert-brand { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(57,255,20,0.6); margin-bottom: 6px; }
+.cert-title { font-size: 18px; font-weight: 800; color: #39ff14; text-shadow: 0 0 20px rgba(57,255,20,0.5); letter-spacing: 1px; }
 .cert-body { padding: 20px 24px 8px; }
 .cert-player-name { font-size: 26px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 4px; }
 .cert-tier-badge {
   display: block; width: fit-content; margin: 4px auto 16px;
   padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-align: center;
 }
-.cert-tier-badge.gold   { background:rgba(255,215,0,0.15);   color:#ffd700; border:1px solid rgba(255,215,0,0.3); }
+.cert-tier-badge.gold   { background:rgba(57,255,20,0.15);   color:#39ff14; border:1px solid rgba(57,255,20,0.3); }
 .cert-tier-badge.purple { background:rgba(196,112,245,0.15); color:#c470f5; border:1px solid rgba(196,112,245,0.3); }
 .cert-tier-badge.blue   { background:rgba(68,136,255,0.15);  color:#4488ff; border:1px solid rgba(68,136,255,0.3); }
 .cert-tier-badge.gray   { background:rgba(100,100,130,0.15); color:#aaa;    border:1px solid rgba(100,100,130,0.3); }
@@ -520,13 +520,13 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 .cert-streak .w { color:var(--al-green); }
 .cert-streak .l { color:var(--red); }
 .cert-hot { display:inline-block; background:rgba(255,100,0,0.15); color:#ff6400; border:1px solid rgba(255,100,0,0.3); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; }
-.cert-qr-wrap { display:flex; flex-direction:column; align-items:center; padding:16px 24px; background:rgba(255,215,0,0.04); border-top:1px solid rgba(255,215,0,0.1); border-bottom:1px solid rgba(255,215,0,0.1); gap:8px; }
-#certQRBox { border-radius:10px; border:3px solid rgba(255,215,0,0.3); padding:6px; background:#fff; overflow:hidden; line-height:0; }
+.cert-qr-wrap { display:flex; flex-direction:column; align-items:center; padding:16px 24px; background:rgba(57,255,20,0.04); border-top:1px solid rgba(57,255,20,0.1); border-bottom:1px solid rgba(57,255,20,0.1); gap:8px; }
+#certQRBox { border-radius:10px; border:3px solid rgba(57,255,20,0.3); padding:6px; background:#fff; overflow:hidden; line-height:0; }
 #certQRBox canvas, #certQRBox img { display:block; border-radius:6px; }
-.cert-qr-label { font-size:11px; color:rgba(255,215,0,0.5); letter-spacing:1px; text-transform:uppercase; }
+.cert-qr-label { font-size:11px; color:rgba(57,255,20,0.5); letter-spacing:1px; text-transform:uppercase; }
 .cert-actions { display:flex; gap:10px; padding:16px 24px 12px; }
 .cert-btn { flex:1; padding:11px 0; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; border:none; }
-.cert-btn.primary { background:linear-gradient(135deg,#cfa800,#ffd700); color:#0a0a14; }
+.cert-btn.primary { background:linear-gradient(135deg,#1a9900,#39ff14); color:#0a0a14; }
 .cert-btn.primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
 .cert-btn.ghost { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
 .cert-btn.ghost:hover { color:#fff; border-color:#555; }
@@ -682,7 +682,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 </div>
 
 <div class="wrap public-cta-section">
-  <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(255, 215, 0, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+  <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(57, 255, 20, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
     <div style="font-size: 40px; margin-bottom: 16px;">🎱</div>
     <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Own the Action?</h2>
     <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
@@ -696,7 +696,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <div class="divider ownerOnly"></div>
 <div class="ownerOnly" style="max-width:920px;margin:0 auto;padding:32px 16px 0">
   <button id="opToggle" onclick="toggleOp()"
-    style="display:flex;align-items:center;gap:8px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);color:var(--gold);font-size:13px;font-weight:800;padding:10px 18px;border-radius:100px;cursor:pointer;letter-spacing:.5px;margin-bottom:20px;">
+    style="display:flex;align-items:center;gap:8px;background:rgba(57,255,20,.08);border:1px solid rgba(57,255,20,.25);color:var(--gold);font-size:13px;font-weight:800;padding:10px 18px;border-radius:100px;cursor:pointer;letter-spacing:.5px;margin-bottom:20px;">
     🔐 OPERATOR P&amp;L MODEL <span id="opArrow">▼</span>
   </button>
   <div id="opPanel" style="display:none">
@@ -712,7 +712,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       .op-prow:last-child{border-bottom:none}
       .op-plabel{color:var(--gray)}
       .op-pval{font-weight:700}
-      .op-partner-box{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+      .op-partner-box{background:rgba(57,255,20,.07);border:1px solid rgba(57,255,20,.2);border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
       .op-partner-num{font-size:42px;font-weight:900;line-height:1;color:var(--gold)}
       .op-slider-block{margin-bottom:1rem}
       .op-slider-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -970,7 +970,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   </div>
 
   <div class="wrap public-cta-section">
-    <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(255, 215, 0, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+    <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(57, 255, 20, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
       <div style="font-size: 40px; margin-bottom: 16px;">🏆</div>
       <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Back a Team?</h2>
       <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
@@ -1394,7 +1394,7 @@ const CONFIG = {
   // Teams — name, color, 2–3 players, captain, and season record.
   // legs = total individual legs won (the standings tiebreak).
   teams: [
-    { name:"Cue Kings",        color:"#ffd700", captain:"Marcus P.", players:["Marcus P.","Mike H."],  w:6, l:1, t:0, legs:14 },
+    { name:"Cue Kings",        color:"#39ff14", captain:"Marcus P.", players:["Marcus P.","Mike H."],  w:6, l:1, t:0, legs:14 },
     { name:"Rail Riders",      color:"#4488ff", captain:"Jake T.",   players:["Jake T.","Sam K."],     w:5, l:2, t:0, legs:12 },
     { name:"Bank Shot Bandits",color:"#00e5a0", captain:"Darius M.", players:["Darius M.","Leo G."],   w:5, l:2, t:0, legs:11 },
     { name:"Felt Felons",      color:"#c470f5", captain:"Caleb R.",  players:["Caleb R.","Nate F."],   w:4, l:3, t:0, legs:10 },
@@ -1438,7 +1438,7 @@ function rankLabel(rank) {
 }
 
 function accentColor(rank) {
-  if (rank <= 2) return "#ffd700";
+  if (rank <= 2) return "#39ff14";
   if (rank <= 4) return "#c470f5";
   if (rank <= 8) return "#4488ff";
   return "#2a2a4a";
@@ -2033,7 +2033,7 @@ function onPasswordInput() {
   let txt = "Too short";
   
   if (password.length >= 8) {
-    color = "#ffd700"; // gold
+    color = "#39ff14"; // gold
     pct = "66%";
     txt = "Fair";
   }
