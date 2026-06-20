@@ -448,6 +448,88 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   border-color: var(--dim);
   transform: scale(1.05);
 }
+/* ═══════════════════════════════════════════════
+   SHARE CERTIFICATE MODAL
+   ═══════════════════════════════════════════════ */
+#certOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 20px;
+  overflow-y: auto;
+}
+#certOverlay.open { opacity: 1; pointer-events: all; }
+.cert-card {
+  position: relative;
+  background: linear-gradient(160deg, #10102a 0%, #1a1a3a 60%, #0d1a0d 100%);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 20px;
+  max-width: 420px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(255,215,0,0.15), 0 24px 64px rgba(0,0,0,0.6);
+  animation: certSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes certSlideIn {
+  from { transform: scale(0.8) translateY(40px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+.cert-close {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%; width: 30px; height: 30px;
+  color: #aaa; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2; transition: all 0.15s;
+}
+.cert-close:hover { color: #fff; border-color: #555; }
+.cert-header {
+  background: linear-gradient(135deg, #1a1400, #2a2000, #1a1400);
+  border-bottom: 1px solid rgba(255,215,0,0.25);
+  padding: 28px 24px 20px; text-align: center; position: relative; overflow: hidden;
+}
+.cert-header::before {
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,215,0,0.03) 8px,rgba(255,215,0,0.03) 9px);
+}
+.cert-logo { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); }
+.cert-brand { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,215,0,0.6); margin-bottom: 6px; }
+.cert-title { font-size: 18px; font-weight: 800; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); letter-spacing: 1px; }
+.cert-body { padding: 20px 24px 8px; }
+.cert-player-name { font-size: 26px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 4px; }
+.cert-tier-badge {
+  display: block; width: fit-content; margin: 4px auto 16px;
+  padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-align: center;
+}
+.cert-tier-badge.gold   { background:rgba(255,215,0,0.15);   color:#ffd700; border:1px solid rgba(255,215,0,0.3); }
+.cert-tier-badge.purple { background:rgba(196,112,245,0.15); color:#c470f5; border:1px solid rgba(196,112,245,0.3); }
+.cert-tier-badge.blue   { background:rgba(68,136,255,0.15);  color:#4488ff; border:1px solid rgba(68,136,255,0.3); }
+.cert-tier-badge.gray   { background:rgba(100,100,130,0.15); color:#aaa;    border:1px solid rgba(100,100,130,0.3); }
+.cert-rows { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.cert-row { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:10px 12px; }
+.cert-row-label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:#666; margin-bottom:4px; }
+.cert-row-value { font-size:16px; font-weight:700; color:#fff; }
+.cert-streak .w { color:var(--al-green); }
+.cert-streak .l { color:var(--red); }
+.cert-hot { display:inline-block; background:rgba(255,100,0,0.15); color:#ff6400; border:1px solid rgba(255,100,0,0.3); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; }
+.cert-qr-wrap { display:flex; flex-direction:column; align-items:center; padding:16px 24px; background:rgba(255,215,0,0.04); border-top:1px solid rgba(255,215,0,0.1); border-bottom:1px solid rgba(255,215,0,0.1); gap:8px; }
+#certQR { border-radius:10px; border:3px solid rgba(255,215,0,0.3); padding:6px; background:#fff; }
+.cert-qr-label { font-size:11px; color:rgba(255,215,0,0.5); letter-spacing:1px; text-transform:uppercase; }
+.cert-actions { display:flex; gap:10px; padding:16px 24px 12px; }
+.cert-btn { flex:1; padding:11px 0; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; border:none; }
+.cert-btn.primary { background:linear-gradient(135deg,#cfa800,#ffd700); color:#0a0a14; }
+.cert-btn.primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.cert-btn.ghost { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
+.cert-btn.ghost:hover { color:#fff; border-color:#555; }
+.cert-footer { font-size:10px; color:#444; text-align:center; padding:0 24px 16px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -721,6 +803,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
     (function(){
       const OP_FEE=0.17, BAR_SHARE=0.015, BAR_BASE=0.03;
@@ -1072,6 +1155,42 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       <button id="loginSubmitBtn" class="auth-submit-btn" onclick="doLogin()">Log in</button>
       
       <div id="loginNotice" style="margin-top:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SHARE CERTIFICATE MODAL ════════ -->
+<div id="certOverlay" onclick="if(event.target.id==='certOverlay')closeCert()">
+  <div class="cert-card" id="certCard">
+    <button class="cert-close" onclick="closeCert()">✕</button>
+
+    <!-- Gold foil header -->
+    <div class="cert-header">
+      <div class="cert-logo">🎱</div>
+      <div class="cert-brand">Billiards Market Ladder</div>
+      <div class="cert-title">Official Share Certificate</div>
+    </div>
+
+    <!-- Player / fee info -->
+    <div class="cert-body" id="certBody">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- QR code -->
+    <div class="cert-qr-wrap">
+      <canvas id="certQR"></canvas>
+      <div class="cert-qr-label">Scan to view player profile</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="cert-actions">
+      <button class="cert-btn primary" onclick="downloadCert()">⬇ Download Certificate</button>
+      <button class="cert-btn ghost" onclick="shareCert()">↗ Share</button>
+    </div>
+
+    <div class="cert-footer">
+      This certificate is proof of your share purchase.<br>
+      Keep your Stripe receipt as the official payment record.
     </div>
   </div>
 </div>
@@ -1612,7 +1731,21 @@ async function goCheckout() {
             metadata: { player: name, mode, unitPrice: String(price) } }),
         });
         const data = await r.json();
-        if (r.ok && data.url) { window.location.href = data.url; return; }
+        if (r.ok && data.url) {
+          // Save share info for the post-payment certificate
+          sessionStorage.setItem('pendingShare', JSON.stringify({
+            type: 'share',
+            name: name,
+            rank: CONFIG.players.find(p => p.name === name)?.rank || 0,
+            price: price,
+            qty: qty,
+            mode: mode,
+            streak: CONFIG.players.find(p => p.name === name)?.streak || '',
+            hot: CONFIG.players.find(p => p.name === name)?.hot || false,
+            purchasedAt: new Date().toISOString()
+          }));
+          window.location.href = data.url; return;
+        }
         alert(data.error || "Checkout failed"); return;
       } catch (e) { alert("Checkout error: " + e.message); return; }
     }
@@ -1795,7 +1928,16 @@ async function payFee(kind) {
         body: JSON.stringify({ priceId: map.priceId, quantity: 1, productKey: kind, metadata: { fee: map.label } }),
       });
       const data = await r.json();
-      if (r.ok && data.url) { window.location.href = data.url; return; }
+      if (r.ok && data.url) {
+        sessionStorage.setItem('pendingShare', JSON.stringify({
+          type: 'fee',
+          label: map.label,
+          price: kind === 'registration' ? CONFIG.fees.registration : kind === 'weeklyDues' ? CONFIG.fees.weeklyDues : CONFIG.fees.teamPerPerson,
+          qty: 1,
+          purchasedAt: new Date().toISOString()
+        }));
+        window.location.href = data.url; return;
+      }
       alert(data.error || "Checkout failed"); return;
     } catch (e) { alert("Checkout error: " + e.message); return; }
   }
@@ -2357,13 +2499,129 @@ buildBracket();
 buildPredGrid();
 applyRole(currentRole());
 
+// ── Share Certificate functions ──────────────────────────────
+function closeCert() {
+  $('certOverlay').classList.remove('open');
+}
+
+function showCertificate(share) {
+  const baseUrl = window.location.origin;
+  const tierLabel = share.type === 'share'
+    ? (share.rank <= 2 ? '🥇 Top 2 — Gold Tier' : share.rank <= 4 ? '🥈 Top 3–4 — Purple Tier' : share.rank <= 8 ? '🥉 Top 5–8 — Blue Tier' : `#${share.rank} — Standard`)
+    : share.label;
+  const tierClass = share.type === 'share'
+    ? (share.rank <= 2 ? 'gold' : share.rank <= 4 ? 'purple' : share.rank <= 8 ? 'blue' : 'gray')
+    : 'gold';
+  const date = new Date(share.purchasedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+
+  // Build certificate body HTML
+  if (share.type === 'share') {
+    const streakHtml = (share.streak || '').split(' ').map(r =>
+      `<span class="${r === 'W' ? 'w' : 'l'}">${r}</span>`
+    ).join(' ');
+    $('certBody').innerHTML = `
+      <div class="cert-player-name">${share.name}${share.hot ? ' <span class="cert-hot">🔥 HOT</span>' : ''}</div>
+      <div class="cert-tier-badge ${tierClass}">${tierLabel}</div>
+      <div class="cert-rows">
+        <div class="cert-row"><div class="cert-row-label">Shares Owned</div><div class="cert-row-value">${share.qty}</div></div>
+        <div class="cert-row"><div class="cert-row-label">Price / Share</div><div class="cert-row-value">$${share.price}</div></div>
+        <div class="cert-row"><div class="cert-row-label">Total Invested</div><div class="cert-row-value">$${share.price * share.qty}</div></div>
+        <div class="cert-row"><div class="cert-row-label">Rank</div><div class="cert-row-value">#${share.rank}</div></div>
+      </div>
+      <div class="cert-row" style="margin-bottom:12px">
+        <div class="cert-row-label">Last 5 Results</div>
+        <div class="cert-row-value cert-streak">${streakHtml || '—'}</div>
+      </div>
+      <div class="cert-row" style="margin-bottom:0"><div class="cert-row-label">Purchased</div><div class="cert-row-value">${date}</div></div>
+    `;
+  } else {
+    $('certBody').innerHTML = `
+      <div class="cert-player-name">${share.label}</div>
+      <div class="cert-tier-badge gold">League Fee Payment</div>
+      <div class="cert-rows">
+        <div class="cert-row"><div class="cert-row-label">Amount Paid</div><div class="cert-row-value">$${share.price}</div></div>
+        <div class="cert-row"><div class="cert-row-label">Date</div><div class="cert-row-value">${date}</div></div>
+      </div>
+    `;
+  }
+
+  // Build QR code URL
+  const playerParam = share.type === 'share'
+    ? `?name=${encodeURIComponent(share.name)}&rank=${share.rank}&price=${share.price}&tier=${tierClass}&purchasedAt=${encodeURIComponent(share.purchasedAt)}`
+    : `?fee=${encodeURIComponent(share.label)}&price=${share.price}&purchasedAt=${encodeURIComponent(share.purchasedAt)}`;
+  const profileUrl = `${baseUrl}/player.html${playerParam}`;
+
+  // Update QR label
+  $('certQR').getContext && $('certQR').getContext('2d').clearRect(0, 0, 200, 200);
+  if (share.type === 'share') {
+    $('certOverlay').querySelector('.cert-qr-label').textContent = 'Scan to view player profile';
+  } else {
+    $('certOverlay').querySelector('.cert-qr-label').textContent = 'Scan to view payment details';
+  }
+
+  // Generate QR code
+  if (window.QRCode) {
+    QRCode.toCanvas($('certQR'), profileUrl, {
+      width: 160,
+      margin: 1,
+      color: { dark: '#0a0a14', light: '#ffffff' }
+    }, function(err) {
+      if (err) console.warn('QR error:', err);
+    });
+  }
+
+  // Store URL for sharing
+  $('certOverlay').dataset.shareUrl = profileUrl;
+  $('certOverlay').dataset.shareName = share.name || share.label;
+
+  // Show overlay
+  $('certOverlay').classList.add('open');
+}
+
+function downloadCert() {
+  // Use html2canvas if available, else fall back to QR canvas only
+  const card = $('certCard');
+  if (window.html2canvas) {
+    html2canvas(card, { backgroundColor: null, scale: 2 }).then(canvas => {
+      const a = document.createElement('a');
+      a.download = `BML-Certificate-${Date.now()}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    });
+  } else {
+    // Fallback: download just the QR code
+    const qr = $('certQR');
+    const a = document.createElement('a');
+    a.download = `BML-QR-${Date.now()}.png`;
+    a.href = qr.toDataURL('image/png');
+    a.click();
+  }
+}
+
+async function shareCert() {
+  const url = $('certOverlay').dataset.shareUrl || window.location.href;
+  const name = $('certOverlay').dataset.shareName || 'player';
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Billiards Market Ladder — Share Certificate',
+        text: `I just bought shares in ${name} on the Billiards Market Ladder! 🎱`,
+        url
+      });
+    } catch(e) { /* user cancelled */ }
+  } else {
+    await navigator.clipboard.writeText(url).catch(() => {});
+    alert('Profile link copied to clipboard!');
+  }
+}
+
 // ── Post-payment redirect handler ────────────────────────
 (function() {
   const params = new URLSearchParams(window.location.search);
   const checkout = params.get('checkout');
   if (checkout === 'success') {
+    // Show green toast
     const t = document.createElement('div');
-    t.id = 'checkoutToast';
     t.innerHTML = '✅ Payment successful! Welcome aboard.';
     Object.assign(t.style, {
       position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
@@ -2371,15 +2629,24 @@ applyRole(currentRole());
       color:'#6dff7a', border:'1px solid #6dff7a44',
       padding:'14px 28px', borderRadius:'12px', fontWeight:'700',
       fontSize:'15px', zIndex:'9999', boxShadow:'0 4px 24px #0008',
-      opacity:'1', transition:'opacity 1s'
+      opacity:'1', transition:'opacity 1s', whiteSpace:'nowrap'
     });
     document.body.appendChild(t);
     setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),1000); }, 4000);
-    // Clean the URL
     history.replaceState({}, '', window.location.pathname);
+
+    // Show share certificate if we have purchase info
+    const raw = sessionStorage.getItem('pendingShare');
+    if (raw) {
+      try {
+        const share = JSON.parse(raw);
+        sessionStorage.removeItem('pendingShare');
+        // Small delay so QR library is ready
+        setTimeout(() => showCertificate(share), 600);
+      } catch(e) {}
+    }
   } else if (checkout === 'cancelled') {
     const t = document.createElement('div');
-    t.id = 'checkoutToast';
     t.innerHTML = '↩ Payment cancelled — no charge was made.';
     Object.assign(t.style, {
       position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
@@ -2387,13 +2654,16 @@ applyRole(currentRole());
       color:'#ff8a8a', border:'1px solid #ff6b6b44',
       padding:'14px 28px', borderRadius:'12px', fontWeight:'700',
       fontSize:'15px', zIndex:'9999', boxShadow:'0 4px 24px #0008',
-      opacity:'1', transition:'opacity 1s'
+      opacity:'1', transition:'opacity 1s', whiteSpace:'nowrap'
     });
     document.body.appendChild(t);
     setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),1000); }, 4000);
     history.replaceState({}, '', window.location.pathname);
+    sessionStorage.removeItem('pendingShare');
   }
 })();
+
+
 
 
 if (_sb) {

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Profile · Billiards Market Ladder</title>
+  <meta name="description" content="View your player's live stats, rank, share price and win record on the Billiards Market Ladder.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #09090f;
+      --card: #12121f;
+      --gold: #ffd700;
+      --green: #39ff14;
+      --red: #ff4444;
+      --purple: #c470f5;
+      --blue: #4488ff;
+      --gray: #666;
+      --white: #f0f0f8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header bar ── */
+    .topbar {
+      width: 100%;
+      background: linear-gradient(135deg, #0d0d20, #12121f);
+      border-bottom: 1px solid rgba(255,215,0,0.15);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .topbar-logo { font-size: 22px; }
+    .topbar-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+    .topbar-sub {
+      font-size: 10px;
+      color: var(--gray);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .back-btn {
+      background: rgba(255,215,0,0.08);
+      border: 1px solid rgba(255,215,0,0.2);
+      color: var(--gold);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .back-btn:hover { background: rgba(255,215,0,0.15); }
+
+    /* ── Main container ── */
+    .container {
+      max-width: 480px;
+      width: 100%;
+      padding: 30px 16px 0;
+    }
+
+    /* ── Hero card ── */
+    .hero-card {
+      background: linear-gradient(160deg, #10102a, #1a1a3a, #0d1a0d);
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 0 40px rgba(255,215,0,0.08), 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .hero-bg {
+      background: linear-gradient(135deg, #1a1400, #2a2000, #1a1400);
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+      padding: 32px 24px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,215,0,0.03) 8px,rgba(255,215,0,0.03) 9px);
+    }
+    .player-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a2000, #3a3000);
+      border: 3px solid rgba(255,215,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 20px rgba(255,215,0,0.2);
+    }
+    .player-name {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .tier-badge.gold   { background: rgba(255,215,0,0.15);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }
+    .tier-badge.purple { background: rgba(196,112,245,0.15); color: var(--purple); border: 1px solid rgba(196,112,245,0.3); }
+    .tier-badge.blue   { background: rgba(68,136,255,0.15);  color: var(--blue);   border: 1px solid rgba(68,136,255,0.3); }
+    .tier-badge.gray   { background: rgba(100,100,130,0.15); color: #aaa;          border: 1px solid rgba(100,100,130,0.3); }
+    .hot-badge {
+      display: inline-block;
+      background: rgba(255,100,0,0.15);
+      color: #ff6400;
+      border: 1px solid rgba(255,100,0,0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* ── Stats grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 20px;
+    }
+    .stat-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+    }
+    .stat-value.gold { color: var(--gold); }
+
+    /* ── Streak bar ── */
+    .streak-section {
+      padding: 0 20px 20px;
+    }
+    .streak-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+    .streak-pills {
+      display: flex;
+      gap: 8px;
+    }
+    .streak-pill {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .streak-pill.w { background: rgba(57,255,20,0.15); color: var(--green); border: 1px solid rgba(57,255,20,0.3); }
+    .streak-pill.l { background: rgba(255,68,68,0.1);  color: var(--red);   border: 1px solid rgba(255,68,68,0.2); }
+
+    /* ── Your investment card (if they own shares) ── */
+    .invest-card {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.04));
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .invest-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,215,0,0.6);
+      margin-bottom: 14px;
+    }
+    .invest-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .invest-row:last-child { border-bottom: none; }
+    .invest-row-label { font-size: 13px; color: var(--gray); }
+    .invest-row-value { font-size: 14px; font-weight: 700; color: var(--white); }
+    .invest-row-value.gold { color: var(--gold); }
+
+    /* ── Playoff payouts table ── */
+    .payouts-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .payouts-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .payout-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+    .payout-row:last-child { border-bottom: none; }
+    .payout-place { color: var(--gray); }
+    .payout-amount { font-weight: 700; color: var(--green); }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #cfa800, #ffd700);
+      color: #0a0a14;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 15px 36px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.25);
+      transition: all 0.15s;
+    }
+    .cta-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+    /* ── Fee confirmation view ── */
+    .fee-card {
+      background: linear-gradient(160deg, #10102a, #1a1a3a);
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .fee-icon { font-size: 48px; margin-bottom: 16px; }
+    .fee-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .fee-sub { font-size: 14px; color: var(--gray); margin-bottom: 24px; }
+    .fee-amount {
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .fee-date { font-size: 12px; color: var(--gray); }
+
+    /* ── Error state ── */
+    .error-state {
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .error-icon { font-size: 48px; margin-bottom: 16px; }
+    .error-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .error-sub { font-size: 14px; color: var(--gray); }
+
+    /* ── Footer ── */
+    .page-footer {
+      font-size: 11px;
+      color: #333;
+      text-align: center;
+      margin-top: 30px;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a href="/" class="topbar-brand">
+    <div class="topbar-logo">🎱</div>
+    <div>
+      <div class="topbar-name">Billiards Market Ladder</div>
+      <div class="topbar-sub">Player Profile</div>
+    </div>
+  </a>
+  <a href="/" class="back-btn">← Back to Market</a>
+</div>
+
+<div class="container" id="app">
+  <!-- Filled by JS -->
+  <div class="error-state">
+    <div class="error-icon">⏳</div>
+    <div class="error-title">Loading profile…</div>
+  </div>
+</div>
+
+<div class="page-footer">
+  Billiards Market Ladder · Secure payments by Stripe<br>
+  Share prices reflect current standings and are updated each week.
+</div>
+
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const app = document.getElementById('app');
+
+  // ── Fee confirmation view ──
+  const fee = params.get('fee');
+  if (fee) {
+    const price = params.get('price') || '?';
+    const purchasedAt = params.get('purchasedAt');
+    const date = purchasedAt
+      ? new Date(purchasedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+      : 'Today';
+    document.title = `${fee} Receipt · Billiards Market Ladder`;
+    app.innerHTML = `
+      <div class="fee-card">
+        <div class="fee-icon">🧾</div>
+        <div class="fee-title">${escHtml(fee)}</div>
+        <div class="fee-sub">Payment confirmed via Stripe</div>
+        <div class="fee-amount">$${escHtml(price)}</div>
+        <div class="fee-date">Paid on ${date}</div>
+      </div>
+      <div class="cta-section">
+        <a href="/" class="cta-btn">← Back to the Market</a>
+      </div>
+    `;
+    return;
+  }
+
+  // ── Player profile view ──
+  const name = params.get('name');
+  if (!name) {
+    app.innerHTML = `
+      <div class="error-state">
+        <div class="error-icon">🔍</div>
+        <div class="error-title">Player not found</div>
+        <div class="error-sub">This link may be incomplete. Try scanning the QR code again.</div>
+      </div>
+    `;
+    return;
+  }
+
+  const rank     = parseInt(params.get('rank')) || 0;
+  const price    = parseInt(params.get('price')) || 0;
+  const tier     = params.get('tier') || 'gray';
+  const purchasedAt = params.get('purchasedAt');
+  const date     = purchasedAt
+    ? new Date(purchasedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+    : 'Unknown';
+
+  // Tier label
+  const tierLabel = rank <= 2 ? '🥇 Top 2 — Gold Tier'
+    : rank <= 4 ? '🥈 Top 3–4 — Purple Tier'
+    : rank <= 8 ? '🥉 Top 5–8 — Blue Tier'
+    : `#${rank} — Standard`;
+
+  // Payout per share by tier
+  const payouts = {
+    champ:    rank <= 2 ? 150 : rank <= 4 ? 80 : rank <= 8 ? 40 : 15,
+    finalist: rank <= 2 ? 80  : rank <= 4 ? 40 : rank <= 8 ? 15 : 5,
+    semi:     rank <= 2 ? 40  : rank <= 4 ? 15 : rank <= 8 ? 5  : 0,
+  };
+
+  document.title = `${name} · Billiards Market Ladder`;
+
+  // Initials avatar
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+
+  app.innerHTML = `
+    <!-- Hero card -->
+    <div class="hero-card">
+      <div class="hero-bg">
+        <div class="player-avatar">${initials}</div>
+        <div class="player-name">${escHtml(name)}</div>
+        <div class="tier-badge ${tier}">${tierLabel}</div>
+        <div style="font-size:13px;color:#888;margin-top:4px">Rank #${rank} · Season 1</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-cell">
+          <div class="stat-label">Share Price</div>
+          <div class="stat-value gold">$${price}</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Current Rank</div>
+          <div class="stat-value">#${rank}</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Championship Payout</div>
+          <div class="stat-value">$${payouts.champ}<span style="font-size:12px;color:#666">/share</span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Your Purchase Date</div>
+          <div class="stat-value" style="font-size:14px">${date}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investment summary -->
+    <div class="invest-card">
+      <div class="invest-title">📊 Playoff Payout Potential (per share)</div>
+      <div class="invest-row">
+        <div class="invest-row-label">🏆 Championship win</div>
+        <div class="invest-row-value gold">$${payouts.champ}</div>
+      </div>
+      <div class="invest-row">
+        <div class="invest-row-label">🥈 Runner-up finish</div>
+        <div class="invest-row-value">$${payouts.finalist}</div>
+      </div>
+      <div class="invest-row">
+        <div class="invest-row-label">🥉 Semi-final exit</div>
+        <div class="invest-row-value">$${payouts.semi}</div>
+      </div>
+      <div class="invest-row">
+        <div class="invest-row-label">💰 Price paid per share</div>
+        <div class="invest-row-value">$${price}</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <a href="/?player=${encodeURIComponent(name)}" class="cta-btn">🎱 View Live Market →</a>
+    </div>
+
+    <div class="page-footer" style="margin-top:8px;font-size:10px;color:#2a2a3a">
+      This page reflects the ranking at time of purchase.<br>
+      Visit the market for live standings and current share prices.
+    </div>
+  `;
+
+  function escHtml(s) {
+    return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+})();
+
+function escHtml(s) {
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>
