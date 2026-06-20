@@ -1129,7 +1129,7 @@ const CONFIG = {
   //         function at /api/create-checkout using the priceIds map.
   //         Flip this to true once your secret key + price IDs are in
   //         Netlify env vars and you've created the $150 share price.
-  useServerless: false,
+  useServerless: true,
 
   // ── STRIPE PAYMENT LINKS (static fallback) ────────────
   // SHARES — one link per tier (investment in a player's playoff performance).
@@ -2357,7 +2357,45 @@ buildBracket();
 buildPredGrid();
 applyRole(currentRole());
 
-// Listen to Supabase auth events to auto-sync logged-in status
+// ── Post-payment redirect handler ────────────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const checkout = params.get('checkout');
+  if (checkout === 'success') {
+    const t = document.createElement('div');
+    t.id = 'checkoutToast';
+    t.innerHTML = '✅ Payment successful! Welcome aboard.';
+    Object.assign(t.style, {
+      position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
+      background:'linear-gradient(135deg,#1a2f1a,#224422)',
+      color:'#6dff7a', border:'1px solid #6dff7a44',
+      padding:'14px 28px', borderRadius:'12px', fontWeight:'700',
+      fontSize:'15px', zIndex:'9999', boxShadow:'0 4px 24px #0008',
+      opacity:'1', transition:'opacity 1s'
+    });
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),1000); }, 4000);
+    // Clean the URL
+    history.replaceState({}, '', window.location.pathname);
+  } else if (checkout === 'cancelled') {
+    const t = document.createElement('div');
+    t.id = 'checkoutToast';
+    t.innerHTML = '↩ Payment cancelled — no charge was made.';
+    Object.assign(t.style, {
+      position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
+      background:'linear-gradient(135deg,#2a1a1a,#441a1a)',
+      color:'#ff8a8a', border:'1px solid #ff6b6b44',
+      padding:'14px 28px', borderRadius:'12px', fontWeight:'700',
+      fontSize:'15px', zIndex:'9999', boxShadow:'0 4px 24px #0008',
+      opacity:'1', transition:'opacity 1s'
+    });
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),1000); }, 4000);
+    history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
+
 if (_sb) {
   _sb.auth.onAuthStateChange((event, session) => {
     if (session?.user) {
