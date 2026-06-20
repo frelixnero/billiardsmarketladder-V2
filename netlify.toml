@@ -1,0 +1,9 @@
+# ActionLadder Pool Market Ladder — Netlify config
+# Static single-file site (index.html) + serverless functions in netlify/functions.
+
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
