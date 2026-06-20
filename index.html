@@ -51,6 +51,13 @@ body { background:var(--bg); color:var(--white); font-family:-apple-system,Blink
 .sec-sub { font-size:13px; color:var(--gray); margin-top:4px; }
 .divider { height:1px; background:var(--border); margin:0 16px; }
 
+/* ─── BAR TABS ───────────────────────────────────────────── */
+.bar-tabs { display:flex; gap:8px; overflow-x:auto; padding:0 4px 16px; margin-bottom:16px; scrollbar-width:none; }
+.bar-tabs::-webkit-scrollbar { display:none; }
+.bar-tab { background:var(--card); border:1.5px solid var(--border); color:var(--gray); padding:8px 18px; border-radius:100px; font-size:13px; font-weight:800; cursor:pointer; transition:all .15s; letter-spacing:.3px; white-space:nowrap; }
+.bar-tab:hover { border-color:var(--dim); color:var(--white); }
+.bar-tab.active { background:rgba(57,255,20,.1); border-color:rgba(57,255,20,.35); color:var(--gold); }
+
 /* ─── PLAYER GRID ────────────────────────────────────────── */
 .player-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 .p-card { background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:20px; position:relative; overflow:hidden; transition:transform .18s,border-color .18s; }
@@ -350,8 +357,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 .auth-input:focus {
-  border-color: #ffb95f;
-  box-shadow: 0 0 0 2px rgba(255, 185, 95, 0.15);
+  border-color: #39ff14;
+  box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.15);
 }
 .auth-button-role {
   background: #131b2e;
@@ -367,10 +374,10 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   transition: all 0.2s;
 }
 .auth-button-role.active {
-  background: #ffb95f;
+  background: #39ff14;
   border-color: #39ff14;
-  color: #0c0800;
-  box-shadow: 0 4px 12px rgba(57, 255, 20, 0.25);
+  color: #071400;
+  box-shadow: 0 4px 12px rgba(57, 255, 20, 0.35);
 }
 .auth-button-role:hover:not(.active) {
   border-color: #958ea0;
@@ -400,8 +407,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   border: none;
   border-radius: 8px;
   padding: 14px;
-  background: #ffb95f;
-  color: #301b00;
+  background: linear-gradient(135deg, #1a9900, #39ff14);
+  color: #071400;
   font-weight: 800;
   cursor: pointer;
   font-family: inherit;
@@ -409,7 +416,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(255, 185, 95, 0.2);
+  box-shadow: 0 4px 16px rgba(57, 255, 20, 0.25);
 }
 .auth-submit-btn:hover {
   background: #39ff14;
@@ -541,12 +548,12 @@ body:not(.role-public) .public-cta-section { display:none !important; }
     <div class="al-mark">▲</div>
     <div>
       <div class="al-name">Action<span>Ladder</span></div>
-      <div class="al-tag">Savage green &amp; black · Billiards Market Ladder</div>
+      <div class="al-tag">Billiards Market Ladder</div>
     </div>
   </div>
   <div class="al-access">
     <span class="al-role-pill" id="rolePill">PUBLIC</span>
-    <button class="al-btn ghost" id="loginBtn" onclick="openLogin()">Staff Login</button>
+    <button class="al-btn ghost" id="loginBtn" onclick="openLogin()">Login</button>
     <button class="al-btn" id="logoutBtn" onclick="doLogout()" style="display:none">Exit to Public</button>
   </div>
 </div>
@@ -625,6 +632,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
     <div class="sec-title">📊 Live Share Prices</div>
     <div class="sec-sub">Price locks in at purchase · Rises with standings · Every investor gets paid at playoffs</div>
   </div>
+  <div class="bar-tabs" id="barTabs"></div>
   <div class="player-grid" id="playerGrid"></div>
 </div>
 
@@ -987,21 +995,23 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <!-- ════════ MATCHUPS VIEW ════════ -->
 <div class="view" id="view-matchups">
   <div class="hero" style="padding:40px 20px 28px">
-    <div class="hero-eyebrow"><div class="live-dot"></div>AUTO-SEEDED BRACKET</div>
-    <h1 style="font-size:clamp(30px,7vw,56px)">THE<br><em>BRACKET.</em></h1>
-    <p class="hero-sub">Matchups auto-pair off the live standings. Win and stay in — your next possible opponents light up the moment your match is set.</p>
+    <div class="hero-eyebrow"><div class="live-dot"></div>SEASON SCHEDULE</div>
+    <h1 style="font-size:clamp(30px,7vw,56px)">THE<br><em>SCHEDULE.</em></h1>
+    <p class="hero-sub">Regular season round robins, Season 3 bracket, and the final Bar vs Bar showdown.</p>
   </div>
   <div class="divider"></div>
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-title">🗓️ This Round &amp; What's Next</div>
-      <div class="sec-sub">Top seed plays the bottom seed · Winners advance right · Hover a match to trace its path</div></div>
-    <div class="bracket" id="bracket"></div>
+  
+  <div class="mode-switch" style="margin:24px auto 12px; max-width:920px;">
+    <button class="mode-btn active" id="matchupTabS1" onclick="setMatchupSeason(1)">Season 1 (Round Robin)</button>
+    <button class="mode-btn" id="matchupTabS2" onclick="setMatchupSeason(2)">Season 2 (Round Robin)</button>
+    <button class="mode-btn" id="matchupTabS3" onclick="setMatchupSeason(3)">Season 3 (Bracket)</button>
+    <button class="mode-btn" id="matchupTabTourney" onclick="setMatchupSeason('tourney')">Bar vs Bar</button>
   </div>
+  
   <div class="divider"></div>
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-title">🔮 If You Win, You Could Next Face…</div>
-      <div class="sec-sub">Live look-ahead for every player still in it</div></div>
-    <div id="nextMatches"></div>
+  
+  <div class="wrap" id="matchupsContent">
+    <!-- Populated by JS -->
   </div>
 </div>
 
@@ -1201,7 +1211,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <footer>
   <div class="logo">🎱</div>
   <div class="name" style="color:var(--al-green)">ActionLadder · Billiards Market Ladder</div>
-  <div>Savage green &amp; black competitive ecosystem · Secure payments by Stripe</div>
+  <div>Competitive pool ecosystem · Secure payments by Stripe</div>
   <div style="margin-top:8px;font-size:11px">No 6-ball runout · Shares tracked on device · Keep your Stripe receipt as proof of purchase</div>
 </footer>
 
@@ -1306,7 +1316,7 @@ const CONFIG = {
   // ── BRANDING ──────────────────────────────────────────
   brand: {
     name:    "ActionLadder",
-    tagline: "Savage green & black competitive pool ecosystem",
+    tagline: "Competitive pool ecosystem",
   },
 
   // ── PLAYOFF PAYOUTS (per share, regardless of purchase price) ──
@@ -1378,6 +1388,10 @@ const CONFIG = {
     s2: {
       individual: { first: 2000, second: 900, third: 450 },
       team:       { first: 2500, second: 1000, third: 650 },
+    },
+    s3: {
+      individual: { first: 2500, second: 1200, third: 600 },
+      team:       { first: 3000, second: 1500, third: 800 },
     },
   },
   firstServe: true, // Season-1 players/supporters get priority for Season 2
@@ -1528,13 +1542,46 @@ function setHeroStats() {
 }
 
 
+let selectedBar = "All";
+
+function renderBarTabs() {
+  const container = $("barTabs");
+  if (!container) return;
+  if (container.children.length > 0) {
+    // Just update active class
+    Array.from(container.children).forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-bar") === selectedBar);
+    });
+    return;
+  }
+  
+  // Dynamically extract bars
+  const bars = ["All", ...new Set(CONFIG.players.map(p => p.bar).filter(Boolean))];
+  
+  container.innerHTML = bars.map(bar => {
+    return `<button class="bar-tab ${bar === selectedBar ? 'active' : ''}" data-bar="${bar}" onclick="selectBar('${bar}')">${bar}</button>`;
+  }).join("");
+}
+
+function selectBar(bar) {
+  selectedBar = bar;
+  buildGrid();
+}
+
 // ╔═══════════════════════════════════════════════════════╗
 // ║  INDIVIDUAL — PLAYER GRID                             ║
 // ╚═══════════════════════════════════════════════════════╝
 function buildGrid() {
   const grid = $("playerGrid"); if (!grid) return;
   const po = CONFIG.payouts;
-  grid.innerHTML = CONFIG.players.slice().sort((a, b) => a.rank - b.rank).map(p => {
+  
+  renderBarTabs();
+  
+  const filtered = selectedBar === "All"
+    ? CONFIG.players
+    : CONFIG.players.filter(p => p.bar === selectedBar);
+    
+  grid.innerHTML = filtered.slice().sort((a, b) => a.rank - b.rank).map(p => {
     const price = sharePrice(p.rank);
     const lock  = isLocked(p);
     const last  = (p.streak || "").trim().split(/\s+/).pop();
@@ -2120,10 +2167,12 @@ async function doLogin() {
   }
   
   try {
+    sessionStorage.setItem("logging_in", "true");
     if (authMode === "signup") {
       if (signUpRole === "owner") {
         const operatorKey = $("operatorKey").value.trim();
         if (!operatorKey) {
+          sessionStorage.removeItem("logging_in");
           $("loginNotice").innerHTML = '<div class="notice err">Operator Secret Key is required.</div>';
           return;
         }
@@ -2162,6 +2211,7 @@ async function doLogin() {
           $("loginOverlay").classList.remove("open");
           showTab("owner");
         } else {
+          sessionStorage.removeItem("logging_in");
           $("loginNotice").innerHTML = '<div class="notice ok">Account created! Check your email to confirm registration.</div>';
         }
       }
@@ -2175,6 +2225,7 @@ async function doLogin() {
       }
     }
   } catch (err) {
+    sessionStorage.removeItem("logging_in");
     $("loginNotice").innerHTML = `<div class="notice err">${err.message || "Authentication failed."}</div>`;
   }
 }
@@ -2340,6 +2391,169 @@ function buildOwnerPrizes() {
 // ╔═══════════════════════════════════════════════════════╗
 // ║  MATCHUPS — AUTO BRACKET + NEXT POSSIBLE MATCHES      ║
 // ╚═══════════════════════════════════════════════════════╝
+// ╔═══════════════════════════════════════════════════════╗
+// ║  MATCHUPS — AUTO BRACKET + NEXT POSSIBLE MATCHES      ║
+// ╚═══════════════════════════════════════════════════════╝
+let currentMatchupSeason = 1;
+let currentRRRound = 1;
+
+function generateRoundRobin(players) {
+  const list = [...players];
+  if (list.length % 2 !== 0) list.push({ name: "BYE", isBye: true });
+  const n = list.length;
+  const rounds = [];
+  for (let r = 0; r < n - 1; r++) {
+    const matches = [];
+    for (let i = 0; i < n / 2; i++) {
+      const a = list[i];
+      const b = list[n - 1 - i];
+      if (a && b && !a.isBye && !b.isBye) {
+        matches.push({ a, b });
+      }
+    }
+    rounds.push(matches);
+    // Rotate list (keep first element fixed)
+    list.splice(1, 0, list.pop());
+  }
+  return rounds;
+}
+
+function setMatchupSeason(s) {
+  currentMatchupSeason = s;
+  const tabS1 = $("matchupTabS1");
+  const tabS2 = $("matchupTabS2");
+  const tabS3 = $("matchupTabS3");
+  const tabTourney = $("matchupTabTourney");
+  if (tabS1) tabS1.classList.toggle("active", s === 1);
+  if (tabS2) tabS2.classList.toggle("active", s === 2);
+  if (tabS3) tabS3.classList.toggle("active", s === 3);
+  if (tabTourney) tabTourney.classList.toggle("active", s === 'tourney');
+  renderMatchups();
+}
+
+function setRRRound(val) {
+  currentRRRound = parseInt(val) || 1;
+  renderMatchups();
+}
+
+function renderMatchups() {
+  const container = $("matchupsContent");
+  if (!container) return;
+  
+  if (currentMatchupSeason === 1 || currentMatchupSeason === 2) {
+    const players = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
+    const rounds = generateRoundRobin(players);
+    
+    let options = "";
+    for (let i = 0; i < rounds.length; i++) {
+      options += `<option value="${i + 1}" ${currentRRRound === i + 1 ? 'selected' : ''}>Round ${i + 1}</option>`;
+    }
+    
+    const matches = rounds[currentRRRound - 1] || [];
+    
+    container.innerHTML = `
+      <div class="sec-head">
+        <div class="sec-title">🗓️ Season ${currentMatchupSeason} Matchups (Round Robin)</div>
+        <div class="sec-sub">16 players · Everybody plays each other once · 15 total rounds</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+        <span style="font-weight:700; color:var(--gray); font-size:14px;">Choose Round:</span>
+        <select id="rrRoundSelect" onchange="setRRRound(this.value)" style="background:var(--card); border:1px solid var(--border); color:var(--white); padding:8px 16px; border-radius:8px; font-weight:700; outline:none; cursor:pointer;">
+          ${options}
+        </select>
+      </div>
+      <div class="player-grid">
+        ${matches.map((m, mi) => `
+          <div class="p-card" style="padding:16px; border-color:var(--border); display:flex; flex-direction:column; justify-content:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700;">
+              <div style="flex:1; text-align:left;">
+                <div style="font-size:16px; color:var(--white);">${m.a.name}</div>
+                <div style="font-size:11px; color:var(--gray); margin-top:2px;">Rank #${m.a.rank} · ${m.a.bar}</div>
+              </div>
+              <div style="color:var(--gold); font-size:12px; padding:0 12px; font-weight:800;">VS</div>
+              <div style="flex:1; text-align:right;">
+                <div style="font-size:16px; color:var(--white);">${m.b.name}</div>
+                <div style="font-size:11px; color:var(--gray); margin-top:2px;">Rank #${m.b.rank} · ${m.b.bar}</div>
+              </div>
+            </div>
+            <div style="text-align:center; font-size:10px; color:var(--gray); margin-top:12px; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px;">
+              Match ${mi + 1}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  } else if (currentMatchupSeason === 3) {
+    container.innerHTML = `
+      <div class="sec-head">
+        <div class="sec-title">🗓️ Season 3 Bracket (Single Elimination)</div>
+        <div class="sec-sub">Top seed plays the bottom seed · Winners advance right · Hover a match to trace its path</div>
+      </div>
+      <div class="bracket" id="bracket" style="margin-top:20px;"></div>
+      <div class="divider" style="margin:44px 0;"></div>
+      <div class="sec-head">
+        <div class="sec-title">🔮 If You Win, You Could Next Face…</div>
+        <div class="sec-sub">Live look-ahead for every player still in it</div>
+      </div>
+      <div id="nextMatches"></div>
+    `;
+    buildBracket();
+  } else if (currentMatchupSeason === 'tourney') {
+    container.innerHTML = `
+      <div class="p-card" style="background:linear-gradient(135deg, rgba(57,255,20,0.08), rgba(0,0,0,0.4)); border-color:rgba(57,255,20,0.3); padding:32px; border-radius:24px; text-align:center; margin-bottom:24px; position:relative; overflow:hidden;">
+        <div style="font-size:48px; margin-bottom:16px;">🏆</div>
+        <h2 style="font-size:28px; font-weight:900; margin-bottom:8px; color:var(--gold);">Bar vs Bar Championship</h2>
+        <p style="color:var(--gray); font-size:15px; max-width:600px; margin:0 auto 24px; line-height:1.6;">
+          The ultimate one-day tournament at the end of Season 3 where the bars face off head-to-head for the grand title!
+        </p>
+        <div style="display:flex; justify-content:center; gap:32px; flex-wrap:wrap; margin-bottom:16px;">
+          <div style="text-align:center;">
+            <div style="font-size:12px; color:var(--gray); font-weight:700; letter-spacing:1px; text-transform:uppercase;">Added Prize</div>
+            <div style="font-size:32px; font-weight:900; color:var(--green); margin-top:4px;">$500 Added</div>
+          </div>
+          <div style="width:1px; background:var(--border);"></div>
+          <div style="text-align:center;">
+            <div style="font-size:12px; color:var(--gray); font-weight:700; letter-spacing:1px; text-transform:uppercase;">Entry Fee</div>
+            <div style="font-size:32px; font-weight:900; color:var(--white); margin-top:4px;">$25 Entry</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sec-head" style="margin-top:40px;">
+        <div class="sec-title">🗓️ Bar vs Bar Showdown Bracket</div>
+        <div class="sec-sub">One-day tournament schedule after Season 3 finishes</div>
+      </div>
+      
+      <div class="bracket" style="margin-top:20px; display:flex; justify-content:center; gap:40px;">
+        <div class="round">
+          <div class="round-title">Semifinals</div>
+          <div class="match-card live" style="min-width:200px;">
+            <div class="match-side"><span><span class="seed">#1</span> Bar One</span></div>
+            <div class="match-vs">vs</div>
+            <div class="match-side"><span><span class="seed">#4</span> Bar Four</span></div>
+            <div class="match-vs" style="margin-top:4px;color:var(--al-green)">Match 1</div>
+          </div>
+          <div class="match-card live" style="margin-top:20px; min-width:200px;">
+            <div class="match-side"><span><span class="seed">#2</span> Bar Two</span></div>
+            <div class="match-vs">vs</div>
+            <div class="match-side"><span><span class="seed">#3</span> Bar Three</span></div>
+            <div class="match-vs" style="margin-top:4px;color:var(--al-green)">Match 2</div>
+          </div>
+        </div>
+        
+        <div class="round" style="display:flex; flex-direction:column; justify-content:center;">
+          <div class="round-title">Finals</div>
+          <div class="match-card" style="min-width:200px;">
+            <div class="match-side"><span style="color:var(--gray)">Winner Match 1</span></div>
+            <div class="match-vs">vs</div>
+            <div class="match-side"><span style="color:var(--gray)">Winner Match 2</span></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
 function seedOrder(n) {
   let r = [1, 2];
   while (r.length < n) { const m = r.length * 2 + 1, out = []; r.forEach(s => { out.push(s); out.push(m - s); }); r = out; }
@@ -2363,22 +2577,22 @@ function buildBracket() {
   const html = rounds.map((rd, ri) => {
     if (ri === 0) {
       return `<div class="round"><div class="round-title">${roundName(rd.length)}</div>` +
-        rd.map((m, mi) => `<div class="match-card live">
+        rd.map((m, mi) => `<div class="match-card live" style="min-width:200px;">
           <div class="match-side"><span><span class="seed">#${m.sa}</span>${m.a.name}</span></div>
           <div class="match-vs">vs</div>
           <div class="match-side"><span><span class="seed">#${m.sb}</span>${m.b.name}</span></div>
           <div class="match-vs" style="margin-top:4px;color:var(--al-green)">Match ${mi + 1}</div>
         </div>`).join("") + `</div>`;
     }
-    const prevCount = rounds[ri - 1].length;
     return `<div class="round"><div class="round-title">${roundName(rd.length)}</div>` +
-      rd.map((_, mi) => `<div class="match-card">
+      rd.map((_, mi) => `<div class="match-card" style="min-width:200px;">
         <div class="match-side"><span style="color:var(--gray)">Winner M${mi * 2 + 1}</span></div>
         <div class="match-vs">vs</div>
         <div class="match-side"><span style="color:var(--gray)">Winner M${mi * 2 + 2}</span></div>
       </div>`).join("") + `</div>`;
   }).join("");
-  $("bracket").innerHTML = html;
+  const bracketEl = $("bracket");
+  if (bracketEl) bracketEl.innerHTML = html;
 
   // Next possible matches — for each round-1 match, the winner next faces the
   // winner of the sibling match.
@@ -2393,7 +2607,8 @@ function buildBracket() {
       </div>
     </div>`;
   }).join("");
-  $("nextMatches").innerHTML = `<div class="port-grid">${nm}</div>`;
+  const nextMatchesEl = $("nextMatches");
+  if (nextMatchesEl) nextMatchesEl.innerHTML = `<div class="port-grid">${nm}</div>`;
 }
 
 // ╔═══════════════════════════════════════════════════════╗
@@ -2497,7 +2712,7 @@ renderPortfolio("teams");
 buildSettings();
 buildPnl();
 buildOwnerPrizes();
-buildBracket();
+setMatchupSeason(1);
 buildPredGrid();
 applyRole("public"); // Always start as public — require explicit login each visit
 sessionStorage.removeItem("al_user_email");
@@ -2669,15 +2884,22 @@ async function shareCert() {
 
 if (_sb) {
   _sb.auth.onAuthStateChange((event, session) => {
-    // Only respond to explicit user actions — ignore INITIAL_SESSION
-    // so the page always opens as PUBLIC even if a Supabase session exists
     if (event === 'SIGNED_IN' && session?.user) {
-      resolveAndSetUserRole(session.user);
+      const isLoggingIn = sessionStorage.getItem("logging_in") === "true";
+      const hasSessionRole = sessionStorage.getItem("al_role") && sessionStorage.getItem("al_role") !== "public";
+      
+      if (isLoggingIn || hasSessionRole) {
+        sessionStorage.removeItem("logging_in");
+        resolveAndSetUserRole(session.user);
+      } else {
+        // Ignore auto-login from restored localStorage session in new tabs/visits
+        _sb.auth.signOut().catch(() => {});
+      }
     } else if (event === 'SIGNED_OUT') {
       sessionStorage.removeItem("al_user_email");
+      sessionStorage.removeItem("logging_in");
       setRole("public");
     }
-    // TOKEN_REFRESHED, INITIAL_SESSION etc. are intentionally ignored
   });
 }
 </script>
