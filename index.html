@@ -521,7 +521,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 .cert-streak .l { color:var(--red); }
 .cert-hot { display:inline-block; background:rgba(255,100,0,0.15); color:#ff6400; border:1px solid rgba(255,100,0,0.3); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; }
 .cert-qr-wrap { display:flex; flex-direction:column; align-items:center; padding:16px 24px; background:rgba(255,215,0,0.04); border-top:1px solid rgba(255,215,0,0.1); border-bottom:1px solid rgba(255,215,0,0.1); gap:8px; }
-#certQR { border-radius:10px; border:3px solid rgba(255,215,0,0.3); padding:6px; background:#fff; }
+#certQRBox { border-radius:10px; border:3px solid rgba(255,215,0,0.3); padding:6px; background:#fff; overflow:hidden; line-height:0; }
+#certQRBox canvas, #certQRBox img { display:block; border-radius:6px; }
 .cert-qr-label { font-size:11px; color:rgba(255,215,0,0.5); letter-spacing:1px; text-transform:uppercase; }
 .cert-actions { display:flex; gap:10px; padding:16px 24px 12px; }
 .cert-btn { flex:1; padding:11px 0; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; border:none; }
@@ -803,7 +804,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
     (function(){
       const OP_FEE=0.17, BAR_SHARE=0.015, BAR_BASE=0.03;
@@ -1178,7 +1179,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 
     <!-- QR code -->
     <div class="cert-qr-wrap">
-      <canvas id="certQR"></canvas>
+      <canvas id="certQR" style="display:none"></canvas>
+      <div id="certQRBox"></div>
       <div class="cert-qr-label">Scan to view player profile</div>
     </div>
 
@@ -2551,22 +2553,24 @@ function showCertificate(share) {
     : `?fee=${encodeURIComponent(share.label)}&price=${share.price}&purchasedAt=${encodeURIComponent(share.purchasedAt)}`;
   const profileUrl = `${baseUrl}/player.html${playerParam}`;
 
-  // Update QR label
-  $('certQR').getContext && $('certQR').getContext('2d').clearRect(0, 0, 200, 200);
+  // Clear old QR and generate new one
+  const qrBox = $('certQRBox');
+  qrBox.innerHTML = '';
   if (share.type === 'share') {
     $('certOverlay').querySelector('.cert-qr-label').textContent = 'Scan to view player profile';
   } else {
     $('certOverlay').querySelector('.cert-qr-label').textContent = 'Scan to view payment details';
   }
 
-  // Generate QR code
+  // Generate QR code using qrcodejs
   if (window.QRCode) {
-    QRCode.toCanvas($('certQR'), profileUrl, {
-      width: 160,
-      margin: 1,
-      color: { dark: '#0a0a14', light: '#ffffff' }
-    }, function(err) {
-      if (err) console.warn('QR error:', err);
+    new QRCode(qrBox, {
+      text: profileUrl,
+      width: 148,
+      height: 148,
+      colorDark: '#0a0a14',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
     });
   }
 
@@ -2579,22 +2583,15 @@ function showCertificate(share) {
 }
 
 function downloadCert() {
-  // Use html2canvas if available, else fall back to QR canvas only
-  const card = $('certCard');
-  if (window.html2canvas) {
-    html2canvas(card, { backgroundColor: null, scale: 2 }).then(canvas => {
-      const a = document.createElement('a');
-      a.download = `BML-Certificate-${Date.now()}.png`;
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-    });
-  } else {
-    // Fallback: download just the QR code
-    const qr = $('certQR');
+  // qrcodejs creates a canvas inside #certQRBox
+  const qrCanvas = $('certQRBox').querySelector('canvas');
+  if (qrCanvas) {
     const a = document.createElement('a');
     a.download = `BML-QR-${Date.now()}.png`;
-    a.href = qr.toDataURL('image/png');
+    a.href = qrCanvas.toDataURL('image/png');
     a.click();
+  } else {
+    alert('QR code not ready yet — please try again.');
   }
 }
 
