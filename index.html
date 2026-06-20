@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ActionLadder · Pool Market Ladder · Own the Action</title>
+<title>ActionLadder · Billiards Market Ladder · Own the Action</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎱</text></svg>">
 <style>
 /* ─── RESET ─────────────────────────────────────────────── */
@@ -293,6 +293,161 @@ body.role-helper .ownerOnly { display:none !important; }
 .notice { font-size:13px; padding:12px 14px; border-radius:10px; margin-top:10px; }
 .notice.ok  { background:rgba(25,255,117,.1); color:var(--al-green); border:1px solid rgba(25,255,117,.25); }
 .notice.err { background:rgba(255,59,92,.1); color:var(--red); border:1px solid rgba(255,59,92,.25); }
+
+/* ─── ROLE GATING PORTFOLIO ──────────────────────────────── */
+body.role-public .portfolio-section { display:none !important; }
+body:not(.role-public) .public-cta-section { display:none !important; }
+
+/* ─── FULLSCREEN AUTH OVERLAY ───────────────────────────── */
+#loginOverlay {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(10,10,24,0.72) 0%, rgba(10,10,24,0.85) 100%), url('/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  overflow-y: auto;
+  padding: 20px;
+}
+#loginOverlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+#loginOverlay .auth-wrapper {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+  position: relative;
+}
+#loginOverlay .auth-card {
+  background: rgba(22, 22, 42, 0.85);
+  border: 1px solid rgba(42, 42, 69, 0.9);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  padding: 28px;
+}
+.auth-input {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f0f0ff;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.auth-input:focus {
+  border-color: #ffb95f;
+  box-shadow: 0 0 0 2px rgba(255, 185, 95, 0.15);
+}
+.auth-button-role {
+  background: #131b2e;
+  border: 1px solid #2d3449;
+  color: #cbc3d7;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s;
+}
+.auth-button-role.active {
+  background: #ffb95f;
+  border-color: #ffd700;
+  color: #0c0800;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
+}
+.auth-button-role:hover:not(.active) {
+  border-color: #958ea0;
+  color: #dae2fd;
+}
+.auth-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #cbc3d7;
+  padding: 10px 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.25s;
+  text-align: center;
+}
+.auth-tab-btn.active {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #dae2fd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.auth-submit-btn {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  background: #ffb95f;
+  color: #301b00;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255, 185, 95, 0.2);
+}
+.auth-submit-btn:hover {
+  background: #ffd700;
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35);
+}
+.auth-submit-btn:active {
+  transform: translateY(1px);
+}
+.auth-submit-btn:disabled {
+  background: #2d3449;
+  color: #cbc3d7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.auth-close-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(22, 22, 42, 0.9);
+  border: 1px solid rgba(42, 42, 69, 0.9);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  color: var(--gray);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 510;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: all 0.15s;
+}
+.auth-close-btn:hover {
+  color: var(--white);
+  border-color: var(--dim);
+  transform: scale(1.05);
+}
 </style>
 </head>
 <body>
@@ -303,7 +458,7 @@ body.role-helper .ownerOnly { display:none !important; }
     <div class="al-mark">▲</div>
     <div>
       <div class="al-name">Action<span>Ladder</span></div>
-      <div class="al-tag">Savage green &amp; black · Pool Market Ladder</div>
+      <div class="al-tag">Savage green &amp; black · Billiards Market Ladder</div>
     </div>
   </div>
   <div class="al-access">
@@ -432,7 +587,7 @@ body.role-helper .ownerOnly { display:none !important; }
 <div class="divider"></div>
 
 <!-- ════════ PORTFOLIO ════════ -->
-<div class="wrap">
+<div class="wrap portfolio-section">
   <div class="sec-head" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
     <div>
       <div class="sec-title">🎯 My Portfolio</div>
@@ -441,6 +596,17 @@ body.role-helper .ownerOnly { display:none !important; }
     <button class="clear-btn" onclick="clearPortfolio()">Clear All</button>
   </div>
   <div id="portfolio"></div>
+</div>
+
+<div class="wrap public-cta-section">
+  <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(255, 215, 0, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+    <div style="font-size: 40px; margin-bottom: 16px;">🎱</div>
+    <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Own the Action?</h2>
+    <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+      Create an account or log in to track your supporter shares, pay weekly dues, register for the season, or back a team.
+    </p>
+    <button class="btn-buy" style="max-width: 260px; margin: 0 auto; display: block;" onclick="openLogin()">Get Started</button>
+  </div>
 </div>
 
 <!-- ════════ OPERATOR MODEL ════════ -->
@@ -708,7 +874,7 @@ body.role-helper .ownerOnly { display:none !important; }
   <div class="divider"></div>
 
   <!-- Team portfolio -->
-  <div class="wrap">
+  <div class="wrap portfolio-section">
     <div class="sec-head" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
       <div>
         <div class="sec-title">🎯 My Team Portfolio</div>
@@ -717,6 +883,17 @@ body.role-helper .ownerOnly { display:none !important; }
       <button class="clear-btn" onclick="clearPortfolio('teams')">Clear All</button>
     </div>
     <div id="teamPortfolio"></div>
+  </div>
+
+  <div class="wrap public-cta-section">
+    <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(255, 215, 0, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+      <div style="font-size: 40px; margin-bottom: 16px;">🏆</div>
+      <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Back a Team?</h2>
+      <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+        Create an account or log in to track your team portfolio, enter a team, or see live team matchups.
+      </p>
+      <button class="btn-buy" style="max-width: 260px; margin: 0 auto; display: block;" onclick="openLogin()">Get Started</button>
+    </div>
   </div>
 
 </div><!-- /teamMode -->
@@ -832,43 +1009,77 @@ body.role-helper .ownerOnly { display:none !important; }
 
 <!-- ════════ LOGIN OVERLAY ════════ -->
 <div class="overlay" id="loginOverlay" onclick="if(event.target.id==='loginOverlay')this.classList.remove('open')">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="loginModalTitle">Staff Login</div>
-    <div class="modal-sub" id="loginModalSub">Owner gets full control. Helpers get a limited, read-only view. The public never sees this.</div>
+  <div class="auth-wrapper">
+    <button class="auth-close-btn" onclick="$('loginOverlay').classList.remove('open')">✕</button>
     
-    <div class="form-field">
-      <label>Email address</label>
-      <input id="loginEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)" />
-    </div>
-    
-    <div class="form-field">
-      <label>Password</label>
-      <input id="loginPw" type="password" placeholder="password" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)" />
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); font-size: 32px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3)">🎱</div>
+      <div style="font-size:24px; font-weight:900; letter-spacing:0.06em; text-transform: uppercase; color: var(--gold); text-shadow: 0 2px 10px rgba(0,0,0,0.5)">BilliardsMarketLadder</div>
+      <div style="font-size:12px; color:var(--gray); margin-top:6px; font-weight: 500; letter-spacing: 0.02em">League &amp; Supporter Share Platform</div>
     </div>
 
-    <div id="signUpRoleGroup" style="display:none" class="form-field">
-      <label>Requested Role</label>
-      <select id="loginRole" style="width:100%;padding:10px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--white)">
-        <option value="helper">Helper</option>
-        <option value="owner">Owner (Elliot)</option>
-      </select>
-    </div>
+    <div class="auth-card">
+      <div style="display:flex; background:rgba(0,0,0,0.25); padding: 6px; border-radius: 8px; margin-bottom: 24px;">
+        <button id="authTabLogin" type="button" onclick="setAuthMode('signin')" class="auth-tab-btn active">Log in</button>
+        <button id="authTabSignup" type="button" onclick="setAuthMode('signup')" class="auth-tab-btn">Create account</button>
+      </div>
 
-    <button class="al-btn" id="loginSubmitBtn" style="width:100%;padding:14px" onclick="doLogin()">Sign in</button>
-    
-    <div id="authToggleContainer" style="text-align:center;margin-top:16px">
-      <a href="#" id="authToggleLink" onclick="toggleAuthMode();return false" style="font-size:12px;color:var(--al-green);text-decoration:none">Don't have an account? Sign up</a>
-    </div>
+      <div style="margin-bottom:18px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Email address</label>
+        <input id="loginEmail" type="email" autocomplete="email" class="auth-input" placeholder="you@example.com" required />
+      </div>
 
-    <div id="loginNotice" style="margin-top:12px"></div>
+      <!-- Signup Role Selection -->
+      <div id="signUpRoleGroup" style="display:none; margin-bottom:18px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Dashboard role</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <button id="roleBtnHelper" type="button" onclick="setSignUpRole('helper')" class="auth-button-role active">Player</button>
+          <button id="roleBtnOwner" type="button" onclick="setSignUpRole('owner')" class="auth-button-role">Operator</button>
+        </div>
+      </div>
+
+      <!-- Operator Key field -->
+      <div id="operatorKeyGroup" style="display:none; margin-bottom:18px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Operator Secret Key</label>
+        <input id="operatorKey" type="text" maxlength="10" class="auth-input" placeholder="10-character secret key" />
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Password</label>
+        <div style="position:relative;">
+          <input id="loginPw" type="password" class="auth-input" placeholder="Your password" style="padding-right: 40px;" oninput="onPasswordInput()" required />
+          <button type="button" onclick="togglePasswordVisibility(event)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--gray); cursor:pointer; font-size:16px; padding:0;">👁</button>
+        </div>
+        
+        <!-- Password strength indicator (signup only) -->
+        <div id="pwStrengthContainer" style="display:none; margin-top:8px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="flex:1; height:3px; background:rgba(255, 255, 255, 0.08); border-radius:2px; overflow:hidden;">
+              <div id="pwStrengthBar" style="height:100%; width:0%; transition:width .3s, background .3s;"></div>
+            </div>
+            <span id="pwStrengthLabel" style="font-size:10px; font-weight:700; text-transform: uppercase; letter-spacing: 0.05em;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm Password (signup only) -->
+      <div id="confirmPasswordGroup" style="display:none; margin-bottom:24px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Confirm password</label>
+        <input id="confirmPw" type="password" class="auth-input" placeholder="Repeat password" oninput="onConfirmPasswordInput()" />
+        <div id="confirmPwError" style="font-size:11px; color:var(--red); margin-top:6px; display:none;">Passwords do not match</div>
+      </div>
+
+      <button id="loginSubmitBtn" class="auth-submit-btn" onclick="doLogin()">Log in</button>
+      
+      <div id="loginNotice" style="margin-top:18px;"></div>
+    </div>
   </div>
 </div>
 
 <!-- ════════ FOOTER ════════ -->
 <footer>
   <div class="logo">🎱</div>
-  <div class="name" style="color:var(--al-green)">ActionLadder · Pool Market Ladder</div>
+  <div class="name" style="color:var(--al-green)">ActionLadder · Billiards Market Ladder</div>
   <div>Savage green &amp; black competitive ecosystem · Secure payments by Stripe</div>
   <div style="margin-top:8px;font-size:11px">No 6-ball runout · Shares tracked on device · Keep your Stripe receipt as proof of purchase</div>
 </footer>
@@ -1339,6 +1550,10 @@ function teamStripeUrl(price, qty) {
 }
 
 function openBuy(mode, name, price, rank, sub) {
+  if (currentRole() === "public") {
+    openLogin();
+    return;
+  }
   buyState = { mode, name, price, qty: 1 };
   $("mTitle").textContent = name;
   $("mSub").textContent   = sub || "";
@@ -1562,6 +1777,10 @@ function setMode(mode) {
 
 // League fee checkout (registration / weekly dues / team entry).
 async function payFee(kind) {
+  if (currentRole() === "public") {
+    openLogin();
+    return;
+  }
   const F = CONFIG.fees, P = CONFIG.priceIds;
   const map = {
     registration: { priceId: P.registration, link: F.registrationLink, label: "Season Registration" },
@@ -1601,17 +1820,102 @@ function showTab(t) {
 // ╚═══════════════════════════════════════════════════════╝
 // Toggle between Sign In and Create Account modes in the overlay
 let authMode = "signin";
-function toggleAuthMode() {
+let signUpRole = "helper"; // Default role
+
+function setAuthMode(mode) {
+  authMode = mode;
   const isSignIn = authMode === "signin";
-  authMode = isSignIn ? "signup" : "signin";
-  $("loginModalTitle").textContent = isSignIn ? "Create Staff Account" : "Staff Login";
-  $("loginModalSub").textContent = isSignIn 
-    ? "Request operator (owner) or helper access to manage settings." 
-    : "Owner gets full control. Helpers get a limited, read-only view. The public never sees this.";
-  $("signUpRoleGroup").style.display = isSignIn ? "block" : "none";
-  $("loginSubmitBtn").textContent = isSignIn ? "Create account" : "Sign in";
-  $("authToggleLink").textContent = isSignIn ? "Already have an account? Sign in" : "Don't have an account? Sign up";
+  
+  // Style tabs
+  $("authTabLogin").classList.toggle("active", isSignIn);
+  $("authTabSignup").classList.toggle("active", !isSignIn);
+  
+  // Toggle groups
+  $("signUpRoleGroup").style.display = isSignIn ? "none" : "block";
+  $("confirmPasswordGroup").style.display = isSignIn ? "none" : "block";
+  $("pwStrengthContainer").style.display = isSignIn ? "none" : "block";
+  
+  // Toggle Operator Key group based on role
+  const isOperator = signUpRole === "owner";
+  $("operatorKeyGroup").style.display = (!isSignIn && isOperator) ? "block" : "none";
+  
+  // Update submit button
+  $("loginSubmitBtn").textContent = isSignIn ? "Log in" : "Create account";
   $("loginNotice").innerHTML = "";
+  
+  // Reset password validation UI
+  $("confirmPwError").style.display = "none";
+  $("confirmPw").value = "";
+  $("loginPw").value = "";
+}
+
+function setSignUpRole(role) {
+  signUpRole = role;
+  const isOperator = role === "owner";
+  
+  // Style buttons
+  $("roleBtnHelper").classList.toggle("active", !isOperator);
+  $("roleBtnOwner").classList.toggle("active", isOperator);
+  
+  // Toggle operator key input
+  $("operatorKeyGroup").style.display = isOperator ? "block" : "none";
+}
+
+let showPassword = false;
+function togglePasswordVisibility(ev) {
+  ev.preventDefault();
+  showPassword = !showPassword;
+  const pwInput = $("loginPw");
+  const confInput = $("confirmPw");
+  pwInput.type = showPassword ? "text" : "password";
+  confInput.type = showPassword ? "text" : "password";
+  ev.target.textContent = showPassword ? "🙈" : "👁";
+}
+
+function onPasswordInput() {
+  if (authMode !== "signup") return;
+  const password = $("loginPw").value;
+  const bar = $("pwStrengthBar");
+  const label = $("pwStrengthLabel");
+  
+  if (!password.length) {
+    bar.style.width = "0%";
+    label.textContent = "";
+    return;
+  }
+  
+  let color = "#ff3b5c"; // red
+  let pct = "33%";
+  let txt = "Too short";
+  
+  if (password.length >= 8) {
+    color = "#ffd700"; // gold
+    pct = "66%";
+    txt = "Fair";
+  }
+  if (password.length >= 12) {
+    color = "#00e5a0"; // green
+    pct = "100%";
+    txt = "Strong";
+  }
+  
+  bar.style.width = pct;
+  bar.style.backgroundColor = color;
+  label.textContent = txt;
+  label.style.color = color;
+}
+
+function onConfirmPasswordInput() {
+  const password = $("loginPw").value;
+  const confirm = $("confirmPw").value;
+  const errDiv = $("confirmPwError");
+  if (confirm && password !== confirm) {
+    errDiv.style.display = "block";
+    $("confirmPw").style.borderColor = "var(--red)";
+  } else {
+    errDiv.style.display = "none";
+    $("confirmPw").style.borderColor = "";
+  }
 }
 
 function currentRole() { return sessionStorage.getItem("al_role") || "public"; }
@@ -1636,10 +1940,11 @@ function applyRole(role) {
 }
 
 function openLogin() {
-  authMode = "signup"; // Toggle sets it back to signin
-  toggleAuthMode();
+  setAuthMode("signin");
   $("loginEmail").value = "";
   $("loginPw").value = "";
+  $("confirmPw").value = "";
+  $("operatorKey").value = "";
   $("loginNotice").innerHTML = "";
   $("loginOverlay").classList.add("open");
 }
@@ -1649,6 +1954,16 @@ async function doLogin() {
   const password = $("loginPw").value;
   if (!email || !password) {
     $("loginNotice").innerHTML = '<div class="notice err">Email and password are required.</div>';
+    return;
+  }
+  
+  if (authMode === "signup" && password.length < 8) {
+    $("loginNotice").innerHTML = '<div class="notice err">Password must be at least 8 characters.</div>';
+    return;
+  }
+  
+  if (authMode === "signup" && password !== $("confirmPw").value) {
+    $("loginNotice").innerHTML = '<div class="notice err">Passwords do not match.</div>';
     return;
   }
   
@@ -1662,24 +1977,49 @@ async function doLogin() {
   
   try {
     if (authMode === "signup") {
-      const selectedRole = $("loginRole").value;
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            role: selectedRole,
-            requested_role: selectedRole
-          }
+      if (signUpRole === "owner") {
+        const operatorKey = $("operatorKey").value.trim();
+        if (!operatorKey) {
+          $("loginNotice").innerHTML = '<div class="notice err">Operator Secret Key is required.</div>';
+          return;
         }
-      });
-      if (error) throw error;
-      
-      if (data?.user) {
-        resolveAndSetUserRole(data.user);
-        $("loginOverlay").classList.remove("open");
+        
+        const r = await fetch("/api/signup-operator", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, operatorKey })
+        });
+        const res = await r.json();
+        if (!r.ok) throw new Error(res.error || "Failed to sign up operator.");
+        
+        // Auto-login operator
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+        if (signInData?.user) {
+          resolveAndSetUserRole(signInData.user);
+          $("loginOverlay").classList.remove("open");
+          showTab("owner");
+        }
       } else {
-        $("loginNotice").innerHTML = '<div class="notice ok">Account created! Check your email to confirm registration.</div>';
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              role: "helper",
+              requested_role: "helper"
+            }
+          }
+        });
+        if (error) throw error;
+        
+        if (data?.user) {
+          resolveAndSetUserRole(data.user);
+          $("loginOverlay").classList.remove("open");
+          showTab("owner");
+        } else {
+          $("loginNotice").innerHTML = '<div class="notice ok">Account created! Check your email to confirm registration.</div>';
+        }
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
