@@ -1116,7 +1116,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 // Supabase Client Initialization
 const SUPABASE_URL = "https://vhsxjfzhwrxujpsvrutx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoc3hqZnpod3J4dWpwc3ZydXR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NjQzOTEsImV4cCI6MjA5NzE0MDM5MX0.uTSkYFb_IkVIPO4uIZniOph5uEwqcizHfe4mvBbIXWw";
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const _sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // ╔═══════════════════════════════════════════════════════╗
 // ║  OPERATOR CONFIG — EDIT BEFORE GOING LIVE            ║
@@ -1970,7 +1970,7 @@ async function doLogin() {
   $("loginNotice").innerHTML = '<div class="notice info">Authenticating...</div>';
   
   // Fallback to local passwords if Supabase library isn't loaded
-  if (!supabase) {
+  if (!_sb) {
     handleLocalAuthFallback(email, password);
     return;
   }
@@ -1993,7 +1993,7 @@ async function doLogin() {
         if (!r.ok) throw new Error(res.error || "Failed to sign up operator.");
         
         // Auto-login operator
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data: signInData, error: signInError } = await _sb.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
         if (signInData?.user) {
           resolveAndSetUserRole(signInData.user);
@@ -2001,7 +2001,7 @@ async function doLogin() {
           showTab("owner");
         }
       } else {
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await _sb.auth.signUp({
           email,
           password,
           options: {
@@ -2022,7 +2022,7 @@ async function doLogin() {
         }
       }
     } else {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await _sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
       if (data?.user) {
         resolveAndSetUserRole(data.user);
@@ -2084,8 +2084,8 @@ function resolveAndSetUserRole(user) {
 }
 
 async function doLogout() {
-  if (supabase) {
-    try { await supabase.auth.signOut(); } catch(e) {}
+  if (_sb) {
+    try { await _sb.auth.signOut(); } catch(e) {}
   }
   sessionStorage.removeItem("al_user_email");
   setRole("public");
@@ -2358,8 +2358,8 @@ buildPredGrid();
 applyRole(currentRole());
 
 // Listen to Supabase auth events to auto-sync logged-in status
-if (supabase) {
-  supabase.auth.onAuthStateChange((event, session) => {
+if (_sb) {
+  _sb.auth.onAuthStateChange((event, session) => {
     if (session?.user) {
       resolveAndSetUserRole(session.user);
     } else {
