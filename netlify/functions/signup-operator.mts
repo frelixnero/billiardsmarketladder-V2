@@ -15,7 +15,7 @@ export default async (req: Request) => {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { email, password, operatorKey } = payload || {};
+  const { email, password, operatorKey, displayName } = payload || {};
   if (!email || !password || !operatorKey) {
     return Response.json({ error: "Email, password, and secret key are required." }, { status: 400 });
   }
@@ -28,7 +28,7 @@ export default async (req: Request) => {
     );
   }
 
-  if (operatorKey !== expectedKey) {
+  if (operatorKey.trim() !== expectedKey?.trim()) {
     return Response.json({ error: "Invalid operator secret key." }, { status: 400 });
   }
 
@@ -52,7 +52,8 @@ export default async (req: Request) => {
       email_confirm: true, // Confirm email automatically
       user_metadata: {
         role: "owner",
-        requested_role: "owner"
+        requested_role: "owner",
+        display_name: (displayName || "").trim() || email.split("@")[0]
       }
     });
 

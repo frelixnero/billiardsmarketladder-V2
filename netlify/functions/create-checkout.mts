@@ -24,11 +24,26 @@ export default async (req: Request, context: Context) => {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { priceId, quantity, productKey, metadata } = payload || {};
-  if (!priceId || typeof priceId !== "string" || priceId.includes("REPLACE")) {
-    return Response.json({ error: "Missing or placeholder priceId" }, { status: 400 });
-  }
+  const { priceId, quantity, productKey, productName, amount, metadata } = payload || {};
   const qty = Math.max(1, Math.min(99, Number(quantity) || 1));
+
+  let lineItem: any;
+  if (amount && typeof amount === "number") {
+    lineItem = {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: productName || "Billiards Market Ladder Product",
+        },
+        unit_amount: Math.round(amount * 100),
+      },
+      quantity: qty,
+    };
+  } else if (priceId && typeof priceId === "string" && !priceId.includes("REPLACE")) {
+    lineItem = { price: priceId, quantity: qty };
+  } else {
+    return Response.json({ error: "Missing priceId or amount parameter" }, { status: 400 });
+  }
 
   const stripe = new Stripe(secret);
   const origin = req.headers.get("origin") || new URL(req.url).origin;
@@ -36,7 +51,7 @@ export default async (req: Request, context: Context) => {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [{ price: priceId, quantity: qty }],
+      line_items: [lineItem],
       metadata: {
         app: "ActionLadder Pool Market Ladder",
         productKey: String(productKey || ""),

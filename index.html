@@ -538,6 +538,41 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 .cert-btn.ghost { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
 .cert-btn.ghost:hover { color:#fff; border-color:#555; }
 .cert-footer { font-size:10px; color:#444; text-align:center; padding:0 24px 16px; line-height:1.6; }
+
+/* ─── SKELETON SHIMMER ───────────────────────────────────── */
+@keyframes sk-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.sk {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.11) 40%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 600px 100%;
+  animation: sk-shimmer 1.6s ease-in-out infinite;
+  border-radius: 6px;
+  display: block;
+}
+/* Skeleton card wrapper — mimics .p-card */
+.sk-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  overflow: hidden;
+}
+/* Skeleton metric tile — mimics .dash-card */
+.sk-metric {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  overflow: hidden;
+}
+
 </style>
 </head>
 <body>
@@ -605,22 +640,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
     <div class="sec-title">🎟️ Join the League</div>
     <div class="sec-sub">Player fees &amp; team entry · paid securely through Stripe</div>
   </div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-label">SEASON REGISTRATION</div>
-      <div class="dash-val tier-gold">$<span>150</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('registration')">Register · $150</button>
-    </div>
-    <div class="dash-card">
-      <div class="dash-label">WEEKLY DUES</div>
-      <div class="dash-val">$<span>25</span><span style="font-size:13px;color:var(--gray)">/wk</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('weeklyDues')">Pay Dues · $25</button>
-    </div>
-    <div class="dash-card">
-      <div class="dash-label">TEAM ENTRY</div>
-      <div class="dash-val tier-purple">$<span>225</span><span style="font-size:13px;color:var(--gray)">/person</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('teamReg')">Enter a Team · $225</button>
-    </div>
+  <div class="dash-grid" id="feeCards">
+    <!-- dynamically populated by buildFeeCards() -->
   </div>
 </div>
 
@@ -1093,6 +1114,40 @@ body:not(.role-public) .public-cta-section { display:none !important; }
         <button class="al-btn ghost" style="margin-top:16px" onclick="resetSettings()">Reset to defaults</button></div>
     </div>
 
+    <!-- Bars & Locations Management — owner edits, helpers read-only -->
+    <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:14px">
+      <div class="m-head" style="margin-bottom:14px">BARS &amp; LOCATIONS MANAGEMENT <span class="ownerOnly" style="color:var(--al-green);font-size:11px">· editable</span></div>
+      
+      <!-- Bars list -->
+      <div id="barsManagementList" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+      
+      <!-- Add new bar input and button (Owner only) -->
+      <div class="ownerOnly" style="display:flex; gap:8px; max-width:400px; margin-top:8px;">
+        <input type="text" id="newBarNameInput" class="auth-input" style="margin:0; height:38px; font-size:13px;" placeholder="Add New Bar Name..." />
+        <button class="al-btn" style="width:auto; padding:0 16px; height:38px; margin:0;" onclick="addNewBar()">Add Bar</button>
+      </div>
+    </div>
+
+    <!-- Dues & Payments Manager — owner only -->
+    <div class="card ownerOnly" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:14px">
+      <div class="m-head" style="margin-bottom:14px">DUES &amp; PAYMENTS MANAGER</div>
+      <div style="overflow-x:auto;">
+        <table class="stand-tbl" style="width:100%;">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="num">Registration</th>
+              <th class="num">Weekly Dues Paid</th>
+              <th class="num">Manual Lock</th>
+            </tr>
+          </thead>
+          <tbody id="duesManagerTable">
+            <!-- populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Prize structure (read-only display of locked numbers) -->
     <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:14px">
       <div class="m-head" style="margin-bottom:14px">SEASON PRIZE STRUCTURE</div>
@@ -1121,6 +1176,13 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       <div style="margin-bottom:18px;">
         <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Email address</label>
         <input id="loginEmail" type="email" autocomplete="email" class="auth-input" placeholder="you@example.com" required />
+      </div>
+
+      <!-- Display Name / Nickname (signup only) -->
+      <div id="displayNameGroup" style="display:none; margin-bottom:18px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Display name / nickname</label>
+        <input id="displayName" type="text" autocomplete="nickname" class="auth-input" placeholder="e.g. Marcus P. or Big Mike" maxlength="40" />
+        <div style="font-size:10px; color:rgba(255,255,255,0.3); margin-top:5px;">This is how your name appears in the league — not your email.</div>
       </div>
 
       <!-- Signup Role Selection -->
@@ -1338,6 +1400,7 @@ const CONFIG = {
   // duesPaid:  true = dues current | false = dues owed
   // duesDue:   "YYYY-MM-DD" date dues were expected (set when they play unpaid)
   //            After 2 days past this date with duesPaid:false → auto-locks
+  bars: ["Bar One", "Bar Two", "Bar Three", "Bar Four"],
   players: [
     { name:"Marcus P.",  rank:1,  bar:"Bar One",   locked:false, hot:true,  streak:"W W W W W", duesPaid:true,  duesDue:null },
     { name:"Jake T.",    rank:2,  bar:"Bar Two",   locked:false, hot:true,  streak:"W W W L W", duesPaid:true,  duesDue:null },
@@ -1544,19 +1607,21 @@ function setHeroStats() {
 
 let selectedBar = "All";
 
-function renderBarTabs() {
+function renderBarTabs(forceRebuild = false) {
   const container = $("barTabs");
   if (!container) return;
-  if (container.children.length > 0) {
+
+  const bars = ["All", ...new Set([...(CONFIG.bars || []), ...CONFIG.players.map(p => p.bar).filter(Boolean)])];
+
+  // Only skip rebuild if we have the correct number of tabs already rendered
+  const hasRealTabs = container.querySelectorAll('.bar-tab');
+  if (hasRealTabs.length === bars.length && !forceRebuild) {
     // Just update active class
-    Array.from(container.children).forEach(btn => {
+    Array.from(hasRealTabs).forEach(btn => {
       btn.classList.toggle("active", btn.getAttribute("data-bar") === selectedBar);
     });
     return;
   }
-  
-  // Dynamically extract bars
-  const bars = ["All", ...new Set(CONFIG.players.map(p => p.bar).filter(Boolean))];
   
   container.innerHTML = bars.map(bar => {
     return `<button class="bar-tab ${bar === selectedBar ? 'active' : ''}" data-bar="${bar}" onclick="selectBar('${bar}')">${bar}</button>`;
@@ -1771,33 +1836,48 @@ async function goCheckout() {
   const { mode, name, price, qty } = buyState;
   recordPurchase(mode, name, price, qty);
   if (CONFIG.useServerless) {
-    const priceId = sharePriceIdFor(price);
-    if (priceId && !priceId.includes("REPLACE")) {
-      try {
-        const r = await fetch("/api/create-checkout", {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ priceId, quantity: qty, productKey: `${mode}-share`,
-            metadata: { player: name, mode, unitPrice: String(price) } }),
-        });
-        const data = await r.json();
-        if (r.ok && data.url) {
-          // Save share info for the post-payment certificate
-          sessionStorage.setItem('pendingShare', JSON.stringify({
-            type: 'share',
-            name: name,
-            rank: CONFIG.players.find(p => p.name === name)?.rank || 0,
-            price: price,
-            qty: qty,
-            mode: mode,
-            streak: CONFIG.players.find(p => p.name === name)?.streak || '',
-            hot: CONFIG.players.find(p => p.name === name)?.hot || false,
-            purchasedAt: new Date().toISOString()
-          }));
-          window.location.href = data.url; return;
-        }
-        alert(data.error || "Checkout failed"); return;
-      } catch (e) { alert("Checkout error: " + e.message); return; }
-    }
+    try {
+      const playerObj = CONFIG.players.find(p => p.name === name) || {};
+      const playerId = playerObj.id || "";
+      const buyerEmail = sessionStorage.getItem("al_user_email") || "";
+      
+      const r = await fetch("/api/create-checkout", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: price,
+          productName: `${mode === 'teams' ? 'Team ' : ''}Share - ${name}`,
+          quantity: qty,
+          productKey: `${mode}-share`,
+          metadata: {
+            type: "share",
+            playerId: playerId,
+            playerName: name,
+            shareTier: `$${price}`,
+            buyerEmail: buyerEmail,
+            buyerName: buyerEmail || "Supporter",
+            playerRank: String(playerObj.rank || 0),
+            season: String(CONFIG.currentSeason || 1)
+          }
+        }),
+      });
+      const data = await r.json();
+      if (r.ok && data.url) {
+        // Save share info for the post-payment certificate
+        sessionStorage.setItem('pendingShare', JSON.stringify({
+          type: 'share',
+          name: name,
+          rank: playerObj.rank || 0,
+          price: price,
+          qty: qty,
+          mode: mode,
+          streak: playerObj.streak || '',
+          hot: playerObj.hot || false,
+          purchasedAt: new Date().toISOString()
+        }));
+        window.location.href = data.url; return;
+      }
+      alert(data.error || "Checkout failed"); return;
+    } catch (e) { alert("Checkout error: " + e.message); return; }
   }
   const link = mode === "teams" ? teamStripeUrl(price, qty) : stripeUrl(price, qty);
   if (link) window.open(link, "_blank", "noopener");
@@ -1963,25 +2043,39 @@ async function payFee(kind) {
     openLogin();
     return;
   }
-  const F = CONFIG.fees, P = CONFIG.priceIds;
+  const F = CONFIG.fees;
   const map = {
-    registration: { priceId: P.registration, link: F.registrationLink, label: "Season Registration" },
-    weeklyDues:   { priceId: P.weeklyDues,   link: F.weeklyDuesLink,   label: "Weekly Dues" },
-    teamReg:      { priceId: P.teamReg,       link: F.teamRegLink,      label: "Team Entry" },
+    registration: { amount: CONFIG.fees.registration, label: "Season Registration", type: "registration" },
+    weeklyDues:   { amount: CONFIG.fees.weeklyDues,   label: "Weekly Dues",         type: "weekly_dues" },
+    teamReg:      { amount: CONFIG.fees.teamPerPerson, label: "Team Entry",         type: "teamReg" },
   }[kind];
   if (!map) return;
-  if (CONFIG.useServerless && map.priceId && !map.priceId.includes("REPLACE")) {
+  if (CONFIG.useServerless) {
     try {
+      const playerId = sessionStorage.getItem("al_user_id") || "";
+      const buyerEmail = sessionStorage.getItem("al_user_email") || "";
       const r = await fetch("/api/create-checkout", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId: map.priceId, quantity: 1, productKey: kind, metadata: { fee: map.label } }),
+        body: JSON.stringify({
+          amount: map.amount,
+          productName: map.label,
+          quantity: 1,
+          productKey: kind,
+          metadata: {
+            type: map.type,
+            playerId: playerId,
+            playerName: sessionStorage.getItem("al_user_email") || "Player",
+            buyerEmail: buyerEmail,
+            season: String(CONFIG.currentSeason || 1)
+          }
+        }),
       });
       const data = await r.json();
       if (r.ok && data.url) {
         sessionStorage.setItem('pendingShare', JSON.stringify({
           type: 'fee',
           label: map.label,
-          price: kind === 'registration' ? CONFIG.fees.registration : kind === 'weeklyDues' ? CONFIG.fees.weeklyDues : CONFIG.fees.teamPerPerson,
+          price: map.amount,
           qty: 1,
           purchasedAt: new Date().toISOString()
         }));
@@ -1990,7 +2084,9 @@ async function payFee(kind) {
       alert(data.error || "Checkout failed"); return;
     } catch (e) { alert("Checkout error: " + e.message); return; }
   }
-  if (map.link && !map.link.includes("REPLACE")) window.open(map.link, "_blank", "noopener");
+  // Fallback to static URLs (only if configured)
+  const link = kind === 'registration' ? F.registrationLink : kind === 'weeklyDues' ? F.weeklyDuesLink : F.teamRegLink;
+  if (link && !link.includes("REPLACE")) window.open(link, "_blank", "noopener");
   else alert(`No Stripe link set for ${map.label} yet. Add it in CONFIG or flip useServerless on.`);
 }
 
@@ -2021,7 +2117,8 @@ function setAuthMode(mode) {
   $("authTabLogin").classList.toggle("active", isSignIn);
   $("authTabSignup").classList.toggle("active", !isSignIn);
   
-  // Toggle groups
+  // Toggle groups — display name only shown on signup
+  $("displayNameGroup").style.display = isSignIn ? "none" : "block";
   $("signUpRoleGroup").style.display = isSignIn ? "none" : "block";
   $("confirmPasswordGroup").style.display = isSignIn ? "none" : "block";
   $("pwStrengthContainer").style.display = isSignIn ? "none" : "block";
@@ -2120,12 +2217,15 @@ function applyRole(role) {
   const ro = role === "helper";
   document.querySelectorAll("#settingsGrid input").forEach(i => i.disabled = ro);
   
-  // Update active user display text
+  // Show the actual signed-in user's display name, not a hardcoded name
+  const displayName = sessionStorage.getItem("al_display_name") || "";
   const email = sessionStorage.getItem("al_user_email") || "";
-  const userDisplay = email ? ` (${email})` : "";
+  const nameTag = displayName || email || "";
   $("ownerWho").textContent = role === "owner"
-    ? `Full control · signed in as ${CONFIG.roles.ownerName}${userDisplay}`
-    : `Limited helper access · settings are read-only${userDisplay}`;
+    ? `Full control · signed in as ${nameTag}`
+    : role === "helper"
+    ? `Helper access · signed in as ${nameTag} · settings are read-only`
+    : "";
     
   if (role === "public" && $("view-owner").classList.contains("active")) showTab("market");
 }
@@ -2136,6 +2236,7 @@ function openLogin() {
   $("loginPw").value = "";
   $("confirmPw").value = "";
   $("operatorKey").value = "";
+  $("displayName").value = "";
   $("loginNotice").innerHTML = "";
   $("loginOverlay").classList.add("open");
 }
@@ -2168,7 +2269,15 @@ async function doLogin() {
   
   try {
     sessionStorage.setItem("logging_in", "true");
+    const nickname = authMode === "signup" ? ($("displayName").value.trim() || "") : "";
+
     if (authMode === "signup") {
+      if (!nickname) {
+        sessionStorage.removeItem("logging_in");
+        $("loginNotice").innerHTML = '<div class="notice err">Please enter a display name or nickname.</div>';
+        return;
+      }
+
       if (signUpRole === "owner") {
         const operatorKey = $("operatorKey").value.trim();
         if (!operatorKey) {
@@ -2180,7 +2289,7 @@ async function doLogin() {
         const r = await fetch("/api/signup-operator", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, operatorKey })
+          body: JSON.stringify({ email, password, operatorKey, displayName: nickname })
         });
         const res = await r.json();
         if (!r.ok) throw new Error(res.error || "Failed to sign up operator.");
@@ -2189,7 +2298,9 @@ async function doLogin() {
         const { data: signInData, error: signInError } = await _sb.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
         if (signInData?.user) {
-          resolveAndSetUserRole(signInData.user);
+          // Patch display_name into user metadata after sign-in (anon client can update own user)
+          await _sb.auth.updateUser({ data: { display_name: nickname, role: 'owner' } }).catch(() => {});
+          resolveAndSetUserRole({ ...signInData.user, user_metadata: { ...signInData.user.user_metadata, display_name: nickname, role: 'owner' } });
           $("loginOverlay").classList.remove("open");
           showTab("owner");
         }
@@ -2200,7 +2311,8 @@ async function doLogin() {
           options: {
             data: {
               role: "helper",
-              requested_role: "helper"
+              requested_role: "helper",
+              display_name: nickname
             }
           }
         });
@@ -2274,7 +2386,14 @@ function resolveAndSetUserRole(user) {
     role = "owner";
   }
   
+  // Store display name — prefer metadata, fall back to email prefix
+  const displayName = user.user_metadata?.display_name
+    || user.user_metadata?.full_name
+    || email.split('@')[0];
+  
+  sessionStorage.setItem("al_user_id", user.id);
   sessionStorage.setItem("al_user_email", user.email);
+  sessionStorage.setItem("al_display_name", displayName);
   setRole(role);
 }
 
@@ -2282,27 +2401,70 @@ async function doLogout() {
   if (_sb) {
     try { await _sb.auth.signOut(); } catch(e) {}
   }
+  sessionStorage.removeItem("al_user_id");
   sessionStorage.removeItem("al_user_email");
+  sessionStorage.removeItem("al_display_name");
   setRole("public");
 }
 
 // ╔═══════════════════════════════════════════════════════╗
 // ║  OWNER SETTINGS + DYNAMIC P&L ENGINE                  ║
 // ╚═══════════════════════════════════════════════════════╝
+function applySettingsToConfig(s) {
+  if (!s) return;
+  // Update CONFIG fees
+  if (CONFIG.fees) {
+    CONFIG.fees.registration = s.registrationFee;
+    CONFIG.fees.weeklyDues = s.weeklyDues;
+    CONFIG.fees.teamPerPerson = s.teamPerPerson;
+  }
+  // Update CONFIG payouts
+  if (CONFIG.payouts) {
+    CONFIG.payouts.champ = s.payoutChamp;
+    CONFIG.payouts.finalist = s.payoutFinalist;
+    CONFIG.payouts.semi = s.payoutSemi;
+    CONFIG.payouts.qf = s.payoutQf;
+  }
+  // Update CONFIG teamPayouts
+  if (CONFIG.teamPayouts) {
+    CONFIG.teamPayouts.champ = s.teamPayoutChamp;
+    CONFIG.teamPayouts.second = s.teamPayoutSecond;
+    CONFIG.teamPayouts.third = s.teamPayoutThird;
+  }
+  // Update CONFIG splits
+  if (CONFIG.split) {
+    CONFIG.split.opFee = s.splitOpFeePct / 100;
+    CONFIG.split.bar = s.splitBarPct / 100;
+    CONFIG.split.prizes = s.splitPrizesPct / 100;
+    CONFIG.split.investor = s.splitInvestorPct / 100;
+  }
+}
+
 const SETTINGS_DEF = [
   { k:"playersCount",       label:"Players",          def:30  },
   { k:"weeks",              label:"Season weeks",     def:8   },
-  { k:"registrationFee",    label:"Registration $",   def:CONFIG.fees.registration  },
-  { k:"weeklyDues",         label:"Weekly dues $",    def:CONFIG.fees.weeklyDues    },
+  { k:"registrationFee",    label:"Registration $",   def:150 },
+  { k:"weeklyDues",         label:"Weekly dues $",    def:25  },
   { k:"sharesPerPlayer",    label:"Shares / player",  def:30  },
   { k:"startingSharePrice", label:"Avg share price $",def:25  },
   { k:"shareSellPct",       label:"Shares sold %",    def:70  },
   { k:"teamCount",          label:"Teams",            def:6   },
-  { k:"teamPerPerson",      label:"Team $/person",    def:CONFIG.fees.teamPerPerson },
+  { k:"teamPerPerson",      label:"Team $/person",    def:225 },
   { k:"marketing",          label:"Marketing $",      def:1000},
   { k:"stripeFeePct",       label:"Stripe fee %",     def:3   },
   { k:"barCutPct",          label:"Bar cut %",        def:2.5 },
   { k:"barBonus",           label:"Bar bonus $",      def:0   },
+  { k:"payoutChamp",        label:"Indiv Champ Payout $", def:150 },
+  { k:"payoutFinalist",     label:"Indiv Finalist Payout $", def:80 },
+  { k:"payoutSemi",         label:"Indiv Semi Payout $", def:40 },
+  { k:"payoutQf",           label:"Indiv QF Payout $",   def:15 },
+  { k:"teamPayoutChamp",    label:"Team Champ Payout $",  def:100 },
+  { k:"teamPayoutSecond",   label:"Team 2nd Payout $",    def:60 },
+  { k:"teamPayoutThird",    label:"Team 3rd Payout $",    def:30 },
+  { k:"splitOpFeePct",      label:"Split Operator Fee %", def:17 },
+  { k:"splitBarPct",        label:"Split Bar %",          def:1.5 },
+  { k:"splitPrizesPct",     label:"Split Prizes %",       def:35 },
+  { k:"splitInvestorPct",   label:"Split Investor %",     def:46.5 },
 ];
 function getSettings() {
   let saved = {}; try { saved = JSON.parse(localStorage.getItem("al_settings") || "{}"); } catch {}
@@ -2333,9 +2495,28 @@ function computePnl(s) {
 }
 function buildSettings() {
   const s = getSettings();
-  $("settingsGrid").innerHTML = SETTINGS_DEF.map(d =>
-    `<div class="set-field"><label>${d.label}</label>
-       <input type="number" data-k="${d.k}" value="${s[d.k]}" oninput="onSettingInput()"></div>`).join("");
+  const settingsMap = {};
+  SETTINGS_DEF.forEach(d => settingsMap[d.k] = d);
+
+  const SETTINGS_GROUPS = [
+    { title: "League Config", keys: ["playersCount", "weeks", "teamCount"] },
+    { title: "Pricing & Fees", keys: ["registrationFee", "weeklyDues", "teamPerPerson"] },
+    { title: "Share Options", keys: ["sharesPerPlayer", "startingSharePrice", "shareSellPct"] },
+    { title: "Playoff Payouts / Share", keys: ["payoutChamp", "payoutFinalist", "payoutSemi", "payoutQf"] },
+    { title: "Team Tournament Payouts", keys: ["teamPayoutChamp", "teamPayoutSecond", "teamPayoutThird"] },
+    { title: "Cuts & Profit Splits", keys: ["splitOpFeePct", "splitBarPct", "splitPrizesPct", "splitInvestorPct", "marketing", "stripeFeePct", "barCutPct", "barBonus"] }
+  ];
+
+  $("settingsGrid").innerHTML = SETTINGS_GROUPS.map(g => {
+    const fieldsHtml = g.keys.map(k => {
+      const d = settingsMap[k];
+      if (!d) return "";
+      return `<div class="set-field"><label>${d.label}</label>
+        <input type="number" step="any" data-k="${d.k}" value="${s[d.k]}" oninput="onSettingInput()"></div>`;
+    }).join("");
+    return `<div class="set-group-title" style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 14px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05);">${g.title}</div>` + fieldsHtml;
+  }).join("");
+
   applyRole(currentRole());
 }
 function readSettingsInputs() {
@@ -2344,15 +2525,77 @@ function readSettingsInputs() {
   return s;
 }
 function onSettingInput() { buildPnl(readSettingsInputs()); }
-function saveSettings() {
+async function saveSettings() {
   const s = readSettingsInputs();
   localStorage.setItem("al_settings", JSON.stringify(s));
+  localStorage.setItem("al_bars", JSON.stringify(CONFIG.bars));
+  applySettingsToConfig(s);
+  
+  if (_sb) {
+    try {
+      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
+      let currentMetadata = {};
+      if (!fetchErr && data && data.settings) {
+        currentMetadata = data.settings.player_metadata || {};
+      }
+      
+      const mergedSettings = {
+        ...s,
+        player_metadata: currentMetadata,
+        bars: CONFIG.bars
+      };
+      
+      const { error } = await _sb
+        .from("app_state")
+        .update({ settings: mergedSettings })
+        .eq("id", 1);
+      if (error) throw error;
+    } catch (err) {
+      console.error("Error saving settings to Supabase:", err);
+      alert("⚠️ Settings saved locally, but failed to sync to Supabase: " + err.message);
+      return;
+    }
+  }
+  
   buildPnl(s);
-  alert("✅ Settings saved & P&L recalculated.");
+  renderAllViews();
+  alert("✅ Settings saved to database & P&L recalculated.");
 }
-function resetSettings() {
+async function resetSettings() {
+  if (!confirm("Reset settings to defaults? This will overwrite database settings.")) return;
   localStorage.removeItem("al_settings");
-  buildSettings(); buildPnl(getSettings());
+  
+  const s = {};
+  SETTINGS_DEF.forEach(d => s[d.k] = d.def);
+  applySettingsToConfig(s);
+  
+  if (_sb) {
+    try {
+      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
+      let currentMetadata = {};
+      if (!fetchErr && data && data.settings) {
+        currentMetadata = data.settings.player_metadata || {};
+      }
+      
+      const mergedSettings = {
+        ...s,
+        player_metadata: currentMetadata,
+        bars: CONFIG.bars
+      };
+      
+      const { error } = await _sb
+        .from("app_state")
+        .update({ settings: mergedSettings })
+        .eq("id", 1);
+      if (error) throw error;
+    } catch (err) {
+      console.error("Error resetting settings in Supabase:", err);
+    }
+  }
+  
+  buildSettings();
+  buildPnl(getSettings());
+  renderAllViews();
 }
 function buildPnl(s) {
   s = s || getSettings();
@@ -2695,27 +2938,625 @@ async function loadFeedback() {
 
 
 // ╔═══════════════════════════════════════════════════════╗
+// ║  DATABASE LOADING & SEEDING                           ║
+// ╚═══════════════════════════════════════════════════════╝
+async function loadDbData() {
+  if (!_sb) {
+    applySettingsToConfig(getSettings());
+    try { CONFIG.bars = JSON.parse(localStorage.getItem("al_bars")) || ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; } catch { CONFIG.bars = ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; }
+    renderAllViews();
+    return;
+  }
+  
+  try {
+    const { data: stateData, error: stateErr } = await _sb.from("app_state").select("settings, current_round").eq("id", 1).single();
+    if (stateErr) {
+      console.error("Error fetching app state:", stateErr);
+    }
+    
+    let dbSettings = {};
+    let dbMetadata = {};
+    if (stateData && stateData.settings) {
+      dbSettings = stateData.settings;
+      dbMetadata = dbSettings.player_metadata || {};
+      CONFIG.bars = dbSettings.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+      localStorage.setItem("al_bars", JSON.stringify(CONFIG.bars));
+      
+      const currentLocal = getSettings();
+      SETTINGS_DEF.forEach(d => {
+        if (dbSettings[d.k] !== undefined) {
+          currentLocal[d.k] = dbSettings[d.k];
+        }
+      });
+      localStorage.setItem("al_settings", JSON.stringify(currentLocal));
+      applySettingsToConfig(currentLocal);
+    } else {
+      applySettingsToConfig(getSettings());
+      try { CONFIG.bars = JSON.parse(localStorage.getItem("al_bars")) || ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; } catch { CONFIG.bars = ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; }
+    }
+    
+    const { data: dbPlayers, error: playersErr } = await _sb.from("players").select("*");
+    if (playersErr) throw playersErr;
+    
+    if (!dbPlayers || dbPlayers.length === 0) {
+      console.log("Database players table is empty.");
+      
+      // Try to seed ONLY if we have a logged-in session (so RLS doesn't block public users)
+      const hasAuth = !!sessionStorage.getItem("al_user_id");
+      if (hasAuth) {
+        console.log("Logged-in session detected. Attempting to seed default players...");
+        await seedDefaultPlayers(dbMetadata);
+        // Try loading again after seeding
+        const { data: dbPlayersRetry } = await _sb.from("players").select("*");
+        if (dbPlayersRetry && dbPlayersRetry.length > 0) {
+          mapAndSetPlayers(dbPlayersRetry, dbMetadata, stateData?.current_round || 1);
+          renderAllViews();
+          return;
+        }
+      }
+      
+      // Public view or seed failed: Use the hardcoded player list already in CONFIG.players
+      console.log("Using hardcoded fallback player list.");
+      renderAllViews();
+      return;
+    }
+    
+    mapAndSetPlayers(dbPlayers, dbMetadata, stateData?.current_round || 1);
+    renderAllViews();
+  } catch (err) {
+    console.error("Error loading Supabase data, falling back to local defaults:", err);
+    applySettingsToConfig(getSettings());
+    try { CONFIG.bars = JSON.parse(localStorage.getItem("al_bars")) || ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; } catch { CONFIG.bars = ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; }
+    renderAllViews();
+  }
+}
+
+function mapAndSetPlayers(dbPlayers, dbMetadata, currentRound) {
+  CONFIG.players = dbPlayers.map(p => {
+    const meta = dbMetadata[p.name] || {};
+    const duesCount = (p.weekly_dues_paid || []).length;
+    const duesPaid = duesCount >= currentRound;
+    
+    return {
+      id: p.id,
+      name: p.name,
+      rank: p.rank,
+      team_id: p.team_id,
+      wins: p.wins || 0,
+      losses: p.losses || 0,
+      registration_paid: p.registration_paid || false,
+      weekly_dues_paid: p.weekly_dues_paid || [],
+      active: p.active !== false,
+      bar: meta.bar || getStaticBar(p.name),
+      locked: meta.locked || false,
+      hot: meta.hot || false,
+      streak: meta.streak || getStaticStreak(p.name),
+      duesPaid: duesPaid,
+      duesDue: meta.duesDue || null
+    };
+  });
+}
+
+
+async function seedDefaultPlayers(existingMetadata) {
+  const defaultPlayers = [
+    { name:"Marcus P.",  rank:1,  bar:"Bar One",   locked:false, hot:true,  streak:"W W W W W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Jake T.",    rank:2,  bar:"Bar Two",   locked:false, hot:true,  streak:"W W W L W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Darius M.",  rank:3,  bar:"Bar Three", locked:false, hot:false, streak:"W L W W L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Caleb R.",   rank:4,  bar:"Bar One",   locked:false, hot:false, streak:"L W W L W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Derek S.",   rank:5,  bar:"Bar Four",  locked:false, hot:true,  streak:"W W L W W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Tony B.",    rank:6,  bar:"Bar Two",   locked:false, hot:false, streak:"L L W W W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Ray W.",     rank:7,  bar:"Bar Three", locked:false, hot:false, streak:"W L L W L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Chris L.",   rank:8,  bar:"Bar Four",  locked:false, hot:false, streak:"L W L L W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Mike H.",    rank:9,  bar:"Bar One",   locked:false, hot:false, streak:"W L L L L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Sam K.",     rank:10, bar:"Bar Two",   locked:false, hot:false, streak:"L L W L L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Leo G.",     rank:11, bar:"Bar Three", locked:false, hot:false, streak:"L L L W L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Nate F.",    rank:12, bar:"Bar Four",  locked:false, hot:false, streak:"L L L L W", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Omar J.",    rank:13, bar:"Bar One",   locked:false, hot:false, streak:"L L L L L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Paul D.",    rank:14, bar:"Bar Two",   locked:false, hot:false, streak:"L L L L L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Quan A.",    rank:15, bar:"Bar Three", locked:false, hot:false, streak:"L L L L L", registration_paid:true,  weekly_dues_paid:[1] },
+    { name:"Ron V.",     rank:16, bar:"Bar Four",  locked:false, hot:false, streak:"L L L L L", registration_paid:true,  weekly_dues_paid:[1] },
+  ];
+  
+  const insertRows = defaultPlayers.map(p => {
+    const streakArr = p.streak.split(" ");
+    const wins = streakArr.filter(x => x === "W").length;
+    const losses = streakArr.filter(x => x === "L").length;
+    
+    return {
+      id: crypto.randomUUID(),
+      name: p.name,
+      rank: p.rank,
+      wins: wins,
+      losses: losses,
+      registration_paid: p.registration_paid,
+      weekly_dues_paid: p.weekly_dues_paid,
+      active: true,
+      season: 1
+    };
+  });
+  
+  try {
+    const { error: seedErr } = await _sb.from("players").insert(insertRows);
+    if (seedErr) throw seedErr;
+    
+    const updatedMetadata = { ...existingMetadata };
+    defaultPlayers.forEach(p => {
+      if (!updatedMetadata[p.name]) {
+        updatedMetadata[p.name] = {
+          bar: p.bar,
+          locked: p.locked,
+          hot: p.hot,
+          streak: p.streak,
+          duesDue: null
+        };
+      }
+    });
+    
+    const defaultSettings = {};
+    SETTINGS_DEF.forEach(d => defaultSettings[d.k] = d.def);
+    defaultSettings.player_metadata = updatedMetadata;
+    
+    const { error: stateErr } = await _sb
+      .from("app_state")
+      .update({ settings: defaultSettings })
+      .eq("id", 1);
+      
+    if (stateErr) {
+      console.error("Error updating initial settings in app_state:", stateErr);
+    }
+    
+    console.log("Successfully seeded players and app_state settings.");
+  } catch (err) {
+    console.error("Error seeding default players:", err);
+  }
+}
+
+function getStaticBar(name) {
+  const bars = {
+    "Marcus P.": "Bar One", "Caleb R.": "Bar One", "Mike H.": "Bar One", "Omar J.": "Bar One",
+    "Jake T.": "Bar Two", "Tony B.": "Bar Two", "Sam K.": "Bar Two", "Paul D.": "Bar Two",
+    "Darius M.": "Bar Three", "Ray W.": "Bar Three", "Leo G.": "Bar Three", "Quan A.": "Bar Three",
+    "Derek S.": "Bar Four", "Chris L.": "Bar Four", "Nate F.": "Bar Four", "Ron V.": "Bar Four"
+  };
+  return bars[name] || "Bar One";
+}
+
+function getStaticStreak(name) {
+  const streaks = {
+    "Marcus P.": "W W W W W", "Jake T.": "W W W L W", "Darius M.": "W L W W L", "Caleb R.": "L W W L W",
+    "Derek S.": "W W L W W", "Tony B.": "L L W W W", "Ray W.": "W L L W L", "Chris L.": "L W L L W",
+    "Mike H.": "W L L L L", "Sam K.": "L L W L L", "Leo G.": "L L L W L", "Nate F.": "L L L L W",
+    "Omar J.": "L L L L L", "Paul D.": "L L L L L", "Quan A.": "L L L L L", "Ron V.": "L L L L L"
+  };
+  return streaks[name] || "L L L L L";
+}
+
+function buildFeeCards() {
+  const el = $("feeCards"); if (!el) return;
+  const F = CONFIG.fees;
+  el.innerHTML = `
+    <div class="dash-card">
+      <div class="dash-label">SEASON REGISTRATION</div>
+      <div class="dash-val tier-gold">$<span id="feeRegAmt">${F.registration}</span></div>
+      <button class="btn-buy" style="margin-top:12px" onclick="payFee('registration')" id="feeRegBtn">Register · $${F.registration}</button>
+    </div>
+    <div class="dash-card">
+      <div class="dash-label">WEEKLY DUES</div>
+      <div class="dash-val">$<span id="feeDuesAmt">${F.weeklyDues}</span><span style="font-size:13px;color:var(--gray)">/wk</span></div>
+      <button class="btn-buy" style="margin-top:12px" onclick="payFee('weeklyDues')" id="feeDuesBtn">Pay Dues · $${F.weeklyDues}</button>
+    </div>
+    <div class="dash-card">
+      <div class="dash-label">TEAM ENTRY</div>
+      <div class="dash-val tier-purple">$<span id="feeTeamAmt">${F.teamPerPerson}</span><span style="font-size:13px;color:var(--gray)">/person</span></div>
+      <button class="btn-buy" style="margin-top:12px" onclick="payFee('teamReg')" id="feeTeamBtn">Enter a Team · $${F.teamPerPerson}</button>
+    </div>`;
+}
+
+function renderAllViews() {
+  buildTicker();
+  setHeroStats();
+  buildGrid();
+  buildMath();
+  buildFeeCards();
+  renderPortfolio("individual");
+  
+  buildTeamGrid();
+  buildTeamStandings();
+  buildTeamResults();
+  buildTeamMath();
+  renderPortfolio("teams");
+  
+  buildSettings();
+  buildPnl();
+  buildOwnerPrizes();
+  renderMatchups();
+  buildPredGrid();
+  buildDuesManager();
+  buildBarsManagement();
+}
+
+// ── BARS & LOCATIONS MANAGEMENT FUNCTIONS ──────────────────────
+function buildBarsManagement() {
+  const container = $("barsManagementList");
+  if (!container) return;
+
+  const bars = CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+  const barsInUse = new Set(CONFIG.players.map(p => p.bar).filter(Boolean));
+
+  container.innerHTML = bars.map(bar => {
+    const inUse = barsInUse.has(bar);
+    const deleteBtn = inUse
+      ? `<span style="font-size:11px; color:var(--gray); margin-left:8px; cursor:help;" title="Bar is in use by active players">🔒</span>`
+      : `<button class="qty-btn" style="width:20px; height:20px; font-size:10px; margin-left:8px; background:rgba(255,59,48,0.15); border:1px solid rgba(255,59,48,0.3); color:#ff453a; line-height:1; display:inline-flex; align-items:center; justify-content:center; padding:0; border-radius:50%;" onclick="removeBar('${bar}')">✕</button>`;
+    
+    return `<div style="display:inline-flex; align-items:center; background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:6px 14px; border-radius:100px; font-size:13px; font-weight:700; margin:4px 0;">
+      <span>${bar}</span>
+      ${deleteBtn}
+    </div>`;
+  }).join("");
+}
+
+async function addNewBar() {
+  const input = $("newBarNameInput");
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+
+  if (CONFIG.bars.includes(name)) {
+    alert("This bar is already added!");
+    return;
+  }
+
+  CONFIG.bars.push(name);
+  input.value = "";
+
+  await saveBarsConfig();
+}
+
+async function removeBar(bar) {
+  if (!confirm(`Are you sure you want to remove the bar "${bar}"?`)) return;
+
+  CONFIG.bars = CONFIG.bars.filter(b => b !== bar);
+
+  await saveBarsConfig();
+}
+
+async function saveBarsConfig() {
+  localStorage.setItem("al_bars", JSON.stringify(CONFIG.bars));
+  
+  if (_sb) {
+    try {
+      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
+      let currentSettings = {};
+      if (!fetchErr && data && data.settings) {
+        currentSettings = data.settings;
+      }
+      currentSettings.bars = CONFIG.bars;
+
+      const { error } = await _sb
+        .from("app_state")
+        .update({ settings: currentSettings })
+        .eq("id", 1);
+      if (error) throw error;
+    } catch (err) {
+      console.error("Error saving bars configuration to Supabase:", err);
+      alert("⚠️ Bar updated locally, but failed to sync to Supabase: " + err.message);
+      return;
+    }
+  }
+
+  buildBarsManagement();
+  renderBarTabs();
+  renderAllViews();
+}
+
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  DUES & PAYMENTS MANAGER                              ║
+// ╚═══════════════════════════════════════════════════════╝
+function buildDuesManager() {
+  const tbody = $("duesManagerTable");
+  if (!tbody) return;
+  
+  const sortedPlayers = CONFIG.players.slice().sort((a, b) => a.name.localeCompare(b.name));
+  
+  tbody.innerHTML = sortedPlayers.map(p => {
+    const regPaid = p.registration_paid;
+    const regBtnText = regPaid ? "✅ Paid" : "❌ Unpaid";
+    const regBtnClass = regPaid ? "al-btn" : "al-btn ghost";
+    
+    const duesCount = (p.weekly_dues_paid || []).length;
+    const lockText = p.locked ? "🔒 Locked" : "🔓 Open";
+    const lockBtnClass = p.locked ? "al-btn ghost" : "al-btn";
+    
+    const barOptions = (CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"])
+      .map(b => `<option value="${b}" ${b === p.bar ? "selected" : ""}>${b}</option>`)
+      .join("");
+    
+    return `<tr>
+      <td>
+        <div style="font-weight:800; font-size:14px;">${p.name}</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px; display:inline-flex; align-items:center; gap:4px;">
+          <select onchange="updatePlayerBar('${p.id}', '${p.name}', this.value)" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:var(--white); border-radius:6px; padding:3px 6px; font-size:11px; font-family:inherit; outline:none; cursor:pointer;">
+            ${barOptions}
+          </select>
+          <span>· Rank #${p.rank}</span>
+        </div>
+      </td>
+      <td class="num">
+        <button class="${regBtnClass}" style="padding:6px 12px; font-size:12px;" onclick="togglePlayerRegistration('${p.id}', ${regPaid})">
+          ${regBtnText}
+        </button>
+      </td>
+      <td class="num" style="white-space:nowrap;">
+        <div style="display:inline-flex; align-items:center; gap:8px;">
+          <button class="qty-btn" style="width:24px; height:24px; font-size:14px;" onclick="adjustPlayerDues('${p.id}', -1)">−</button>
+          <span style="font-weight:900; font-size:15px; min-width:20px; text-align:center;">${duesCount}</span>
+          <button class="qty-btn" style="width:24px; height:24px; font-size:14px;" onclick="adjustPlayerDues('${p.id}', 1)">+</button>
+        </div>
+        <div style="font-size:10px; color:var(--gray); margin-top:4px;">Weeks Paid</div>
+      </td>
+      <td class="num">
+        <button class="${lockBtnClass}" style="padding:6px 12px; font-size:12px; min-width:85px;" onclick="togglePlayerLock('${p.name}', ${p.locked})">
+          ${lockText}
+        </button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+async function updatePlayerBar(playerId, playerName, newBar) {
+  // Update in-memory
+  const p = CONFIG.players.find(x => x.id === playerId);
+  if (p) p.bar = newBar;
+
+  if (!_sb) {
+    let saved = {}; try { saved = JSON.parse(localStorage.getItem("al_settings") || "{}"); } catch {}
+    saved.player_metadata = saved.player_metadata || {};
+    saved.player_metadata[playerName] = saved.player_metadata[playerName] || {};
+    saved.player_metadata[playerName].bar = newBar;
+    localStorage.setItem("al_settings", JSON.stringify(saved));
+    renderAllViews();
+    return;
+  }
+
+  try {
+    const { data: stateData, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
+    if (fetchErr) throw fetchErr;
+    
+    const currentSettings = stateData.settings || {};
+    const metadata = currentSettings.player_metadata || {};
+    
+    if (!metadata[playerName]) {
+      metadata[playerName] = {};
+    }
+    metadata[playerName].bar = newBar;
+    
+    currentSettings.player_metadata = metadata;
+    
+    const { error } = await _sb
+      .from("app_state")
+      .update({ settings: currentSettings })
+      .eq("id", 1);
+    if (error) throw error;
+    
+    await loadDbData();
+  } catch (err) {
+    console.error("Error updating player bar:", err);
+    alert("Error updating player bar: " + err.message);
+  }
+}
+
+async function togglePlayerRegistration(playerId, currentStatus) {
+  if (!_sb) return;
+  try {
+    const { error } = await _sb
+      .from("players")
+      .update({ registration_paid: !currentStatus })
+      .eq("id", playerId);
+    if (error) throw error;
+    await loadDbData();
+  } catch (err) {
+    console.error("Error toggling registration:", err);
+    alert("Error updating registration status: " + err.message);
+  }
+}
+
+async function adjustPlayerDues(playerId, delta) {
+  if (!_sb) return;
+  try {
+    const p = CONFIG.players.find(x => x.id === playerId);
+    if (!p) return;
+    
+    let paidWeeks = [...(p.weekly_dues_paid || [])];
+    if (delta > 0) {
+      paidWeeks.push(paidWeeks.length + 1);
+    } else if (delta < 0 && paidWeeks.length > 0) {
+      paidWeeks.pop();
+    }
+    
+    const { error } = await _sb
+      .from("players")
+      .update({ weekly_dues_paid: paidWeeks })
+      .eq("id", playerId);
+    if (error) throw error;
+    await loadDbData();
+  } catch (err) {
+    console.error("Error adjusting dues:", err);
+    alert("Error updating weekly dues: " + err.message);
+  }
+}
+
+async function togglePlayerLock(playerName, currentStatus) {
+  if (!_sb) return;
+  try {
+    const { data: stateData, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
+    if (fetchErr) throw fetchErr;
+    
+    const currentSettings = stateData.settings || {};
+    const metadata = currentSettings.player_metadata || {};
+    
+    if (!metadata[playerName]) {
+      metadata[playerName] = {};
+    }
+    metadata[playerName].locked = !currentStatus;
+    
+    currentSettings.player_metadata = metadata;
+    
+    const { error } = await _sb
+      .from("app_state")
+      .update({ settings: currentSettings })
+      .eq("id", 1);
+    if (error) throw error;
+    await loadDbData();
+  } catch (err) {
+    console.error("Error toggling lock status:", err);
+    alert("Error updating player lock status: " + err.message);
+  }
+}
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  SKELETON LOADERS                                     ║
+// ╚═══════════════════════════════════════════════════════╝
+
+/* ── Reusable skeleton primitives ───────────────────── */
+const _sk = (w, h, r, extra='') =>
+  `<span class="sk" style="width:${w};height:${h}px;border-radius:${r||6}px;margin:0;${extra}"></span>`;
+
+/* ── Player card skeleton (matches .p-card layout) ─── */
+function skPlayerCard() {
+  return `<div class="sk-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      ${_sk('60px',11)} ${_sk('52px',20,100)}
+    </div>
+    ${_sk('72%',24,'',  'margin-bottom:6px')}
+    ${_sk('48%',11,'',  'margin-bottom:20px')}
+    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:12px">
+      ${_sk('70px',40)} ${_sk('50px',11)}
+    </div>
+    ${_sk('100%',66,12, 'margin-bottom:12px')}
+    ${_sk('68%',12,'',  'margin-bottom:14px')}
+    ${_sk('100%',46,12)}
+  </div>`;
+}
+
+/* ── Metric tile skeleton (matches .dash-card layout) ─ */
+function skMetric() {
+  return `<div class="sk-metric">
+    ${_sk('58%',11,'', 'margin-bottom:8px')}
+    ${_sk('76%',26,4)}
+  </div>`;
+}
+
+/* ── Dues row skeleton ──────────────────────────────── */
+function skDuesRow() {
+  return `<tr style="border-bottom:1px solid rgba(255,255,255,.04)">
+    <td style="padding:13px 12px">
+      ${_sk('88px',14,'', 'margin-bottom:5px')}
+      ${_sk('130px',11)}
+    </td>
+    <td class="num" style="padding:13px 12px">
+      ${_sk('72px',28,100, 'margin:0 auto')}
+    </td>
+    <td class="num" style="padding:13px 12px">
+      ${_sk('90px',28,100, 'margin:0 auto')}
+    </td>
+    <td class="num" style="padding:13px 12px">
+      ${_sk('80px',28,100, 'margin:0 auto')}
+    </td>
+  </tr>`;
+}
+
+/* ── Fee card skeleton (matches .dash-card layout) ──── */
+function skFeeCard() {
+  return `<div class="dash-card">
+    ${_sk('58%',11,'', 'margin-bottom:10px')}
+    ${_sk('44%',30,'', 'margin-bottom:14px')}
+    ${_sk('100%',46,12)}
+  </div>`;
+}
+
+/* ── Ticker skeleton ──────────────────────────────── */
+function skTickerItems() {
+  return Array(14).fill(0).map(() =>
+    `<span class="t-item">${_sk('70px',12,4)}</span><span class="t-sep"> | </span>`
+  ).join('') +
+  // doubled for seamless loop (same as real ticker)
+  Array(14).fill(0).map(() =>
+    `<span class="t-item">${_sk('70px',12,4)}</span><span class="t-sep"> | </span>`
+  ).join('');
+}
+
+/* ── Main showSkeletons function ───────────────────── */
+function showSkeletons() {
+  // Ticker
+  const ticker = $('ticker');
+  if (ticker) ticker.innerHTML = skTickerItems();
+
+  // Player grid — 8 skeleton cards
+  const pg = $('playerGrid');
+  if (pg) pg.innerHTML = Array(8).fill(skPlayerCard()).join('');
+
+  // Team grid — 8 skeleton cards
+  const tg = $('teamGrid');
+  if (tg) tg.innerHTML = Array(8).fill(skPlayerCard()).join('');
+
+  // Predictions grid — 8 skeleton cards
+  const pred = $('predGrid');
+  if (pred) pred.innerHTML = Array(8).fill(skPlayerCard()).join('');
+
+  // P&L metric cards — 15 tiles
+  const pnl = $('pnlCards');
+  if (pnl) pnl.innerHTML = Array(15).fill(skMetric()).join('');
+
+  // Dues manager table — 8 rows
+  const dues = $('duesManagerTable');
+  if (dues) dues.innerHTML = Array(8).fill(skDuesRow()).join('');
+
+  // Fee cards — 3 tiles
+  const fees = $('feeCards');
+  if (fees) fees.innerHTML = Array(3).fill(skFeeCard()).join('');
+
+  // Bar tabs — 5 pill skeletons
+  const barTabs = $('barTabs');
+  if (barTabs) {
+    barTabs.innerHTML = Array(5).fill(0).map((_, i) =>
+      `<span class="sk" style="width:${[56,72,60,72,60][i]}px;height:32px;border-radius:100px;flex-shrink:0"></span>`
+    ).join('');
+  }
+
+  // Portfolio placeholders
+  const port = $('portfolio');
+  if (port) port.innerHTML = `<div class="port-empty" style="opacity:.4">
+    <div class="port-empty-icon">📭</div>Loading portfolio…</div>`;
+}
+
+// ╔═══════════════════════════════════════════════════════╗
 // ║  INIT                                                 ║
 // ╚═══════════════════════════════════════════════════════╝
-buildTicker();
-setHeroStats();
-buildGrid();
-buildMath();
-renderPortfolio("individual");
+applySettingsToConfig(getSettings());
 
-buildTeamGrid();
+// 1. Show skeleton placeholders for data-dependent areas immediately
+showSkeletons();
+
+// 2. Render config-only areas (no Supabase data needed)
+buildMath();
+buildSettings();
+buildOwnerPrizes();
+buildTeamMath();
 buildTeamStandings();
 buildTeamResults();
-buildTeamMath();
-renderPortfolio("teams");
-
-buildSettings();
 buildPnl();
-buildOwnerPrizes();
-setMatchupSeason(1);
-buildPredGrid();
+renderMatchups();
+
+// 3. Load real data — replaces skeletons once Supabase responds
+loadDbData();
+
 applyRole("public"); // Always start as public — require explicit login each visit
+sessionStorage.removeItem("al_user_id");
 sessionStorage.removeItem("al_user_email");
+sessionStorage.removeItem("al_display_name");
 // Silently clear any stale Supabase session so INITIAL_SESSION never auto-restores login
 if (_sb) { _sb.auth.signOut().catch(() => {}); }
 
@@ -2896,6 +3737,7 @@ if (_sb) {
         _sb.auth.signOut().catch(() => {});
       }
     } else if (event === 'SIGNED_OUT') {
+      sessionStorage.removeItem("al_user_id");
       sessionStorage.removeItem("al_user_email");
       sessionStorage.removeItem("logging_in");
       setRole("public");
