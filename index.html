@@ -257,7 +257,7 @@ footer .name { font-weight:800; color:var(--white); margin-bottom:4px; font-size
 
 /* ─── ROLE GATING ────────────────────────────────────────── */
 body.role-public .ownerOnly, body.role-public .staffOnly { display:none !important; }
-body.role-helper .ownerOnly { display:none !important; }
+body.role-helper .ownerOnly, body.role-helper .staffOnly { display:none !important; }
 
 /* ─── SETTINGS / DASHBOARD ───────────────────────────────── */
 .set-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
@@ -2094,7 +2094,15 @@ async function payFee(kind) {
 // ║  TABS                                                 ║
 // ╚═══════════════════════════════════════════════════════╝
 function showTab(t) {
-  if (t === "owner" && currentRole() === "public") { openLogin(); return; }
+  if (t === "owner" && currentRole() !== "owner") {
+    if (currentRole() === "public") {
+      openLogin();
+    } else {
+      alert("Access Denied: Only the Operator can access the Dashboard.");
+      showTab("market");
+    }
+    return;
+  }
   const map = { market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner" };
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === t));
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -2228,6 +2236,33 @@ function applyRole(role) {
     : "";
     
   if (role === "public" && $("view-owner").classList.contains("active")) showTab("market");
+}
+
+async function runAdminAction(action, params) {
+  if (!_sb) {
+    throw new Error("Supabase is not loaded.");
+  }
+  
+  const { data: { session } } = await _sb.auth.getSession();
+  const token = session?.access_token;
+  if (!token) {
+    throw new Error("No active session found to authorize admin action.");
+  }
+
+  const r = await fetch("/api/admin-action", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ action, params })
+  });
+
+  const res = await r.json();
+  if (!r.ok) {
+    throw new Error(res.error || `Admin action "${action}" failed.`);
+  }
+  return res;
 }
 
 function openLogin() {
@@ -2533,23 +2568,7 @@ async function saveSettings() {
   
   if (_sb) {
     try {
-      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
-      let currentMetadata = {};
-      if (!fetchErr && data && data.settings) {
-        currentMetadata = data.settings.player_metadata || {};
-      }
-      
-      const mergedSettings = {
-        ...s,
-        player_metadata: currentMetadata,
-        bars: CONFIG.bars
-      };
-      
-      const { error } = await _sb
-        .from("app_state")
-        .update({ settings: mergedSettings })
-        .eq("id", 1);
-      if (error) throw error;
+      await runAdminAction("save_settings", { settings: s });
     } catch (err) {
       console.error("Error saving settings to Supabase:", err);
       alert("⚠️ Settings saved locally, but failed to sync to Supabase: " + err.message);
@@ -2571,23 +2590,7 @@ async function resetSettings() {
   
   if (_sb) {
     try {
-      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
-      let currentMetadata = {};
-      if (!fetchErr && data && data.settings) {
-        currentMetadata = data.settings.player_metadata || {};
-      }
-      
-      const mergedSettings = {
-        ...s,
-        player_metadata: currentMetadata,
-        bars: CONFIG.bars
-      };
-      
-      const { error } = await _sb
-        .from("app_state")
-        .update({ settings: mergedSettings })
-        .eq("id", 1);
-      if (error) throw error;
+      await runAdminAction("save_settings", { settings: s });
     } catch (err) {
       console.error("Error resetting settings in Supabase:", err);
     }
@@ -3227,18 +3230,7 @@ async function saveBarsConfig() {
   
   if (_sb) {
     try {
-      const { data, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
-      let currentSettings = {};
-      if (!fetchErr && data && data.settings) {
-        currentSettings = data.settings;
-      }
-      currentSettings.bars = CONFIG.bars;
-
-      const { error } = await _sb
-        .from("app_state")
-        .update({ settings: currentSettings })
-        .eq("id", 1);
-      if (error) throw error;
+      await runAdminAction("save_bars", { bars: CONFIG.bars });
     } catch (err) {
       console.error("Error saving bars configuration to Supabase:", err);
       alert("⚠️ Bar updated locally, but failed to sync to Supabase: " + err.message);
@@ -3322,25 +3314,7 @@ async function updatePlayerBar(playerId, playerName, newBar) {
   }
 
   try {
-    const { data: stateData, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
-    if (fetchErr) throw fetchErr;
-    
-    const currentSettings = stateData.settings || {};
-    const metadata = currentSettings.player_metadata || {};
-    
-    if (!metadata[playerName]) {
-      metadata[playerName] = {};
-    }
-    metadata[playerName].bar = newBar;
-    
-    currentSettings.player_metadata = metadata;
-    
-    const { error } = await _sb
-      .from("app_state")
-      .update({ settings: currentSettings })
-      .eq("id", 1);
-    if (error) throw error;
-    
+    await runAdminAction("update_player_bar", { playerName, newBar });
     await loadDbData();
   } catch (err) {
     console.error("Error updating player bar:", err);
@@ -3351,11 +3325,7 @@ async function updatePlayerBar(playerId, playerName, newBar) {
 async function togglePlayerRegistration(playerId, currentStatus) {
   if (!_sb) return;
   try {
-    const { error } = await _sb
-      .from("players")
-      .update({ registration_paid: !currentStatus })
-      .eq("id", playerId);
-    if (error) throw error;
+    await runAdminAction("toggle_registration", { playerId });
     await loadDbData();
   } catch (err) {
     console.error("Error toggling registration:", err);
@@ -3366,21 +3336,7 @@ async function togglePlayerRegistration(playerId, currentStatus) {
 async function adjustPlayerDues(playerId, delta) {
   if (!_sb) return;
   try {
-    const p = CONFIG.players.find(x => x.id === playerId);
-    if (!p) return;
-    
-    let paidWeeks = [...(p.weekly_dues_paid || [])];
-    if (delta > 0) {
-      paidWeeks.push(paidWeeks.length + 1);
-    } else if (delta < 0 && paidWeeks.length > 0) {
-      paidWeeks.pop();
-    }
-    
-    const { error } = await _sb
-      .from("players")
-      .update({ weekly_dues_paid: paidWeeks })
-      .eq("id", playerId);
-    if (error) throw error;
+    await runAdminAction("adjust_dues", { playerId, delta });
     await loadDbData();
   } catch (err) {
     console.error("Error adjusting dues:", err);
@@ -3391,24 +3347,7 @@ async function adjustPlayerDues(playerId, delta) {
 async function togglePlayerLock(playerName, currentStatus) {
   if (!_sb) return;
   try {
-    const { data: stateData, error: fetchErr } = await _sb.from("app_state").select("settings").eq("id", 1).single();
-    if (fetchErr) throw fetchErr;
-    
-    const currentSettings = stateData.settings || {};
-    const metadata = currentSettings.player_metadata || {};
-    
-    if (!metadata[playerName]) {
-      metadata[playerName] = {};
-    }
-    metadata[playerName].locked = !currentStatus;
-    
-    currentSettings.player_metadata = metadata;
-    
-    const { error } = await _sb
-      .from("app_state")
-      .update({ settings: currentSettings })
-      .eq("id", 1);
-    if (error) throw error;
+    await runAdminAction("toggle_lock", { playerName });
     await loadDbData();
   } catch (err) {
     console.error("Error toggling lock status:", err);

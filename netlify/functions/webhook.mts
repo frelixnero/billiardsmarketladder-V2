@@ -42,6 +42,22 @@ export default async (req: Request) => {
       const s = event.data.object as Stripe.Checkout.Session;
       const meta = s.metadata || {};
       const { type, playerId, playerName, shareTier, buyerName, buyerEmail, playerRank, season } = meta;
+
+      // Webhook Idempotency Check
+      const { data: existingPayment, error: checkErr } = await supabase
+        .from("payments")
+        .select("id")
+        .eq("stripe_session_id", s.id)
+        .maybeSingle();
+
+      if (checkErr) {
+        console.error("Idempotency check lookup error:", checkErr);
+      }
+
+      if (existingPayment) {
+        console.warn(`Idempotency check: Stripe Session ID "${s.id}" has already been processed. Skipping.`);
+        return Response.json({ received: true, duplicate: true });
+      }
       
       const amount = (s.amount_total || 0) / 100;
       
