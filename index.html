@@ -256,8 +256,9 @@ footer .name { font-weight:800; color:var(--white); margin-bottom:4px; font-size
 .view.active { display:block; }
 
 /* ─── ROLE GATING ────────────────────────────────────────── */
-body.role-public .ownerOnly, body.role-public .staffOnly { display:none !important; }
-body.role-helper .ownerOnly, body.role-helper .staffOnly { display:none !important; }
+body:not(.role-owner) .ownerOnly { display: none !important; }
+body:not(.role-owner):not(.role-helper) .staffOnly { display: none !important; }
+body:not(.role-owner):not(.role-helper):not(.role-bar) .barOnly { display: none !important; }
 
 /* ─── SETTINGS / DASHBOARD ───────────────────────────────── */
 .set-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
@@ -605,6 +606,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   <button class="tab-btn"        data-tab="matchups"  onclick="showTab('matchups')">🗓️ Matchups</button>
   <button class="tab-btn"        data-tab="predict"   onclick="showTab('predict')">📈 Predictions</button>
   <button class="tab-btn"        data-tab="feedback"  onclick="showTab('feedback')">💬 Feedback</button>
+  <button class="tab-btn barOnly" data-tab="bar" onclick="showTab('bar')">📊 Bar Profits</button>
   <button class="tab-btn staffOnly" data-tab="owner"  onclick="showTab('owner')">🛠️ Dashboard</button>
 </div>
 
@@ -1095,6 +1097,69 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   </div>
 </div>
 
+<!-- ════════ BAR PROFITS VIEW ════════ -->
+<div class="view" id="view-bar">
+  <div class="wrap">
+    <div class="sec-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+      <div>
+        <div class="sec-title" style="color:var(--al-green)">📊 Bar Profits &amp; Revenue Cuts</div>
+        <div class="sec-sub" id="barOwnerWho">Bar Owner Profits and League Volume Analytics</div>
+      </div>
+      <div id="barDashboardSelectContainer" style="display:flex; align-items:center; gap:8px;">
+        <label for="barDashboardSelect" style="font-size:12px; font-weight:700; color:var(--gray);">Select Location:</label>
+        <select id="barDashboardSelect" onchange="onBarDashboardSelectChange(this.value)" style="background:var(--card); border:1.5px solid var(--border); color:var(--white); padding:8px 16px; border-radius:8px; font-weight:700; outline:none; cursor:pointer;">
+          <!-- populated dynamically by JavaScript -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="dash-grid" id="barMetricsGrid" style="margin-top:20px; margin-bottom:24px;">
+      <div class="dash-card">
+        <div class="dash-label">TOTAL SHARE VOLUME</div>
+        <div class="dash-val" id="barStatShareVol">$0</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Supporter trades at this bar</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">BAR SHARE CUT (@ <span id="barStatSharePctVal">1.5</span>%)</div>
+        <div class="dash-val" style="color:var(--al-green)" id="barStatShareCut">$0.00</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Your cut of trading volume</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">TOTAL LEAGUE BASE REVENUE</div>
+        <div class="dash-val" id="barStatBaseRev">$0</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Registration, weekly dues &amp; team entries</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">BAR BASE CUT (@ <span id="barStatBasePctVal">3</span>%)</div>
+        <div class="dash-val" style="color:var(--al-green)" id="barStatBaseCut">$0.00</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Your cut of player fees</div>
+      </div>
+      <div class="dash-card" style="grid-column: span 2; background: linear-gradient(135deg, rgba(25, 255, 117, 0.05), rgba(14, 14, 30, 0.5)); border-color: rgba(25, 255, 117, 0.25);">
+        <div class="dash-label" style="color:var(--al-green)">TOTAL ACCUMULATED PROFITS</div>
+        <div class="dash-val" style="color:var(--gold); font-size:32px;" id="barStatTotalProfits">$0.00</div>
+        <div style="font-size:11px; color:var(--white); opacity:0.8; margin-top:4px;">Sum of share volume cut + base revenue cut</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">ACTIVE PLAYERS</div>
+        <div class="dash-val" id="barStatActivePlayers">0</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Players calling this bar home</div>
+      </div>
+    </div>
+
+    <!-- Trend Analytics Graph Card -->
+    <div class="card" style="background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:22px; margin-top:16px;">
+      <div class="m-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+        <span>📈 PROFIT ACCUMULATION TREND (SEASON)</span>
+        <span style="font-size:11px; color:var(--gray); font-weight:normal;" id="barTrendsChartSub">Cumulative earnings growth</span>
+      </div>
+      <div id="barTrendsChartContainer" style="width:100%; height:260px; position:relative; overflow:hidden;">
+        <!-- Inline SVG will be generated here -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ════════ OWNER / DASHBOARD VIEW ════════ -->
 <div class="view" id="view-owner">
   <div class="wrap">
@@ -1188,10 +1253,19 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       <!-- Signup Role Selection -->
       <div id="signUpRoleGroup" style="display:none; margin-bottom:18px;">
         <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Dashboard role</label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
           <button id="roleBtnHelper" type="button" onclick="setSignUpRole('helper')" class="auth-button-role active">Player</button>
+          <button id="roleBtnBar" type="button" onclick="setSignUpRole('bar')" class="auth-button-role">Bar Owner</button>
           <button id="roleBtnOwner" type="button" onclick="setSignUpRole('owner')" class="auth-button-role">Operator</button>
         </div>
+      </div>
+
+      <!-- Signup Bar Selection -->
+      <div id="signUpBarGroup" style="display:none; margin-bottom:18px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Select your bar</label>
+        <select id="signUpBarSelect" class="auth-input" style="background: rgba(0, 0, 0, 0.45); color: #f0f0ff; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; padding: 12px 14px; font-family: inherit; font-size: 14px; width: 100%; outline: none;">
+          <!-- dynamically populated from CONFIG.bars -->
+        </select>
       </div>
 
       <!-- Operator Key field -->
@@ -2103,10 +2177,24 @@ function showTab(t) {
     }
     return;
   }
-  const map = { market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner" };
+  if (t === "bar" && !["owner", "helper", "bar"].includes(currentRole())) {
+    if (currentRole() === "public") {
+      openLogin();
+    } else {
+      alert("Access Denied: You do not have permission to view Bar Profits.");
+      showTab("market");
+    }
+    return;
+  }
+  const map = { market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar" };
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === t));
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   const el = $(map[t]); if (el) el.classList.add("active");
+  if (t === "bar") {
+    const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
+    let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
+    loadBarDashboardData(selected);
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -2135,6 +2223,15 @@ function setAuthMode(mode) {
   const isOperator = signUpRole === "owner";
   $("operatorKeyGroup").style.display = (!isSignIn && isOperator) ? "block" : "none";
   
+  // Toggle Bar Group based on role
+  const isBar = signUpRole === "bar";
+  $("signUpBarGroup").style.display = (!isSignIn && isBar) ? "block" : "none";
+  if (!isSignIn && isBar) {
+    const barSelect = $("signUpBarSelect");
+    const bars = CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+    barSelect.innerHTML = bars.map(b => `<option value="${b}">${b}</option>`).join("");
+  }
+  
   // Update submit button
   $("loginSubmitBtn").textContent = isSignIn ? "Log in" : "Create account";
   $("loginNotice").innerHTML = "";
@@ -2147,14 +2244,23 @@ function setAuthMode(mode) {
 
 function setSignUpRole(role) {
   signUpRole = role;
-  const isOperator = role === "owner";
   
   // Style buttons
-  $("roleBtnHelper").classList.toggle("active", !isOperator);
-  $("roleBtnOwner").classList.toggle("active", isOperator);
+  $("roleBtnHelper").classList.toggle("active", role === "helper");
+  $("roleBtnBar").classList.toggle("active", role === "bar");
+  $("roleBtnOwner").classList.toggle("active", role === "owner");
   
   // Toggle operator key input
-  $("operatorKeyGroup").style.display = isOperator ? "block" : "none";
+  $("operatorKeyGroup").style.display = role === "owner" ? "block" : "none";
+  
+  // Toggle bar group input
+  const showBarGroup = role === "bar";
+  $("signUpBarGroup").style.display = showBarGroup ? "block" : "none";
+  if (showBarGroup) {
+    const barSelect = $("signUpBarSelect");
+    const bars = CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+    barSelect.innerHTML = bars.map(b => `<option value="${b}">${b}</option>`).join("");
+  }
 }
 
 let showPassword = false;
@@ -2217,12 +2323,12 @@ function onConfirmPasswordInput() {
 function currentRole() { return sessionStorage.getItem("al_role") || "public"; }
 function setRole(role) { sessionStorage.setItem("al_role", role); applyRole(role); }
 function applyRole(role) {
-  document.body.classList.remove("role-public", "role-helper", "role-owner");
+  document.body.classList.remove("role-public", "role-helper", "role-owner", "role-bar");
   document.body.classList.add("role-" + role);
   $("rolePill").textContent = role.toUpperCase();
   $("loginBtn").style.display  = role === "public" ? "" : "none";
   $("logoutBtn").style.display = role === "public" ? "none" : "";
-  const ro = role === "helper";
+  const ro = role === "helper" || role === "bar";
   document.querySelectorAll("#settingsGrid input").forEach(i => i.disabled = ro);
   
   // Show the actual signed-in user's display name, not a hardcoded name
@@ -2234,8 +2340,18 @@ function applyRole(role) {
     : role === "helper"
     ? `Helper access · signed in as ${nameTag} · settings are read-only`
     : "";
+
+  const userBar = sessionStorage.getItem("al_user_bar") || "";
+  const barWho = $("barOwnerWho");
+  if (barWho) {
+    barWho.textContent = role === "bar"
+      ? `Signed in as ${nameTag} · Location: ${userBar}`
+      : `Analytics for pool halls & partner locations`;
+  }
+  
+  setupBarDashboardSelect();
     
-  if (role === "public" && $("view-owner").classList.contains("active")) showTab("market");
+  if (role === "public" && ($("view-owner").classList.contains("active") || $("view-bar").classList.contains("active"))) showTab("market");
 }
 
 async function runAdminAction(action, params) {
@@ -2296,8 +2412,14 @@ async function doLogin() {
   
   $("loginNotice").innerHTML = '<div class="notice info">Authenticating...</div>';
   
-  // Fallback to local passwords if Supabase library isn't loaded
-  if (!_sb) {
+  // Check local fallback credentials first for easy local testing / fallback
+  const isLocalElliot = email === "elliot" || (CONFIG.roles.operators && CONFIG.roles.operators.map(x => x.toLowerCase()).includes(email) && password === CONFIG.roles.ownerPassword);
+  const isLocalHelper = email === "helper" && password === CONFIG.roles.helperPassword;
+  const isLocalBar = (email.startsWith("bar") || email === "bar") && password === "bar2026";
+  const isGenericOwnerPw = password === CONFIG.roles.ownerPassword;
+  const isGenericHelperPw = password === CONFIG.roles.helperPassword;
+
+  if (!_sb || isLocalElliot || isLocalHelper || isLocalBar || isGenericOwnerPw || isGenericHelperPw) {
     handleLocalAuthFallback(email, password);
     return;
   }
@@ -2340,15 +2462,22 @@ async function doLogin() {
           showTab("owner");
         }
       } else {
+        const isBarRole = signUpRole === "bar";
+        const metaRole = isBarRole ? "bar" : "helper";
+        const metadata = {
+          role: metaRole,
+          requested_role: metaRole,
+          display_name: nickname
+        };
+        if (isBarRole) {
+          metadata.bar_name = $("signUpBarSelect").value;
+        }
+        
         const { data, error } = await _sb.auth.signUp({
           email,
           password,
           options: {
-            data: {
-              role: "helper",
-              requested_role: "helper",
-              display_name: nickname
-            }
+            data: metadata
           }
         });
         if (error) throw error;
@@ -2356,7 +2485,15 @@ async function doLogin() {
         if (data?.user) {
           resolveAndSetUserRole(data.user);
           $("loginOverlay").classList.remove("open");
-          showTab("owner");
+          
+          const resolvedRole = sessionStorage.getItem("al_role");
+          if (resolvedRole === "owner") {
+            showTab("owner");
+          } else if (resolvedRole === "bar") {
+            showTab("bar");
+          } else {
+            showTab("market");
+          }
         } else {
           sessionStorage.removeItem("logging_in");
           $("loginNotice").innerHTML = '<div class="notice ok">Account created! Check your email to confirm registration.</div>';
@@ -2368,7 +2505,15 @@ async function doLogin() {
       if (data?.user) {
         resolveAndSetUserRole(data.user);
         $("loginOverlay").classList.remove("open");
-        showTab("owner");
+        
+        const resolvedRole = sessionStorage.getItem("al_role");
+        if (resolvedRole === "owner") {
+          showTab("owner");
+        } else if (resolvedRole === "bar") {
+          showTab("bar");
+        } else {
+          showTab("market");
+        }
       }
     }
   } catch (err) {
@@ -2381,6 +2526,7 @@ async function doLogin() {
 function handleLocalAuthFallback(email, password) {
   const isElliot = email === "elliot" || CONFIG.roles.operators.includes(email);
   const isHelper = email === "helper";
+  const isBar = email.startsWith("bar") || email === "bar";
   
   let ok = false;
   let role = "public";
@@ -2391,6 +2537,10 @@ function handleLocalAuthFallback(email, password) {
   } else if (isHelper && password === CONFIG.roles.helperPassword) {
     ok = true;
     role = "helper";
+  } else if (isBar && password === "bar2026") {
+    ok = true;
+    role = "bar";
+    sessionStorage.setItem("al_user_bar", "Bar One");
   } else if (password === CONFIG.roles.ownerPassword) {
     ok = true;
     role = "owner";
@@ -2403,7 +2553,9 @@ function handleLocalAuthFallback(email, password) {
     sessionStorage.setItem("al_user_email", email);
     setRole(role);
     $("loginOverlay").classList.remove("open");
-    showTab("owner");
+    if (role === "owner") showTab("owner");
+    else if (role === "bar") showTab("bar");
+    else showTab("market");
   } else {
     $("loginNotice").innerHTML = '<div class="notice err">Wrong email or password.</div>';
   }
@@ -2419,6 +2571,14 @@ function resolveAndSetUserRole(user) {
   let role = "helper";
   if (isOperator || metadataRole === "owner") {
     role = "owner";
+  } else if (metadataRole === "bar") {
+    role = "bar";
+  }
+  
+  if (role === "bar" && user.user_metadata?.bar_name) {
+    sessionStorage.setItem("al_user_bar", user.user_metadata.bar_name);
+  } else {
+    sessionStorage.removeItem("al_user_bar");
   }
   
   // Store display name — prefer metadata, fall back to email prefix
@@ -2439,6 +2599,7 @@ async function doLogout() {
   sessionStorage.removeItem("al_user_id");
   sessionStorage.removeItem("al_user_email");
   sessionStorage.removeItem("al_display_name");
+  sessionStorage.removeItem("al_user_bar");
   setRole("public");
 }
 
@@ -3177,6 +3338,11 @@ function renderAllViews() {
   buildPredGrid();
   buildDuesManager();
   buildBarsManagement();
+  if ($("view-bar") && $("view-bar").classList.contains("active")) {
+    const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
+    let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
+    loadBarDashboardData(selected);
+  }
 }
 
 // ── BARS & LOCATIONS MANAGEMENT FUNCTIONS ──────────────────────
@@ -3354,6 +3520,256 @@ async function togglePlayerLock(playerName, currentStatus) {
     alert("Error updating player lock status: " + err.message);
   }
 }
+
+// ── BAR PROFITS DASHBOARD FUNCTIONS ──────────────────────
+function setupBarDashboardSelect() {
+  const select = $("barDashboardSelect");
+  if (!select) return;
+  const role = currentRole();
+  const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
+  const bars = CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+  
+  if (role === "bar") {
+    select.innerHTML = `<option value="${userBar}">${userBar}</option>`;
+    select.disabled = true;
+    $("barDashboardSelectContainer").style.display = "none";
+  } else {
+    select.disabled = false;
+    $("barDashboardSelectContainer").style.display = "";
+    
+    const hasOptions = select.options.length > 0;
+    const currentVal = select.value;
+    
+    if (!hasOptions || select.options[0].value !== "All" || select.options.length !== bars.length + 1) {
+      select.innerHTML = `<option value="All">All Locations</option>` + 
+        bars.map(b => `<option value="${b}">${b}</option>`).join("");
+      if (currentVal && Array.from(select.options).some(opt => opt.value === currentVal)) {
+        select.value = currentVal;
+      } else {
+        select.value = "All";
+      }
+    }
+  }
+}
+
+function onBarDashboardSelectChange(val) {
+  loadBarDashboardData(val);
+}
+
+async function loadBarDashboardData(barName) {
+  const role = currentRole();
+  const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
+  if (role === "bar") {
+    barName = userBar;
+  }
+  
+  setupBarDashboardSelect();
+  const select = $("barDashboardSelect");
+  if (select && select.value !== barName) {
+    select.value = barName;
+  }
+  
+  if (!_sb) {
+    simulateLocalBarDashboard(barName);
+    return;
+  }
+
+  try {
+    const { data: { session } } = await _sb.auth.getSession();
+    const token = session?.access_token;
+    if (!token) {
+      simulateLocalBarDashboard(barName);
+      return;
+    }
+
+    const r = await fetch("/api/bar-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ barName })
+    });
+
+    const res = await r.json();
+    if (!r.ok) {
+      throw new Error(res.error || "Failed to load bar analytics");
+    }
+
+    $("barStatShareVol").textContent = $$(res.shareVolume);
+    $("barStatSharePctVal").textContent = res.shareCutPct.toFixed(1);
+    $("barStatShareCut").textContent = $$(res.shareCut);
+    
+    $("barStatBaseRev").textContent = $$(res.baseRevenue);
+    $("barStatBasePctVal").textContent = res.baseCutPct.toFixed(1);
+    $("barStatBaseCut").textContent = $$(res.baseCut);
+    
+    $("barStatTotalProfits").textContent = $$(res.totalProfits);
+    $("barStatActivePlayers").textContent = res.activePlayersCount;
+
+    window.barTrendsDataCache = res.trends;
+    drawBarTrendsGraph(res.trends);
+
+  } catch (err) {
+    console.error("Error loading bar metrics from backend, calling simulator fallback:", err);
+    simulateLocalBarDashboard(barName);
+  }
+}
+
+function simulateLocalBarDashboard(barName) {
+  const players = barName === "All"
+    ? CONFIG.players
+    : CONFIG.players.filter(p => p.bar === barName);
+
+  let totalBaseRevenue = 0;
+  let totalShareVolume = 0;
+
+  players.forEach(p => {
+    totalBaseRevenue += CONFIG.fees.registration;
+    const weeklyDuesCount = (p.weekly_dues_paid || [1]).length;
+    totalBaseRevenue += weeklyDuesCount * CONFIG.fees.weeklyDues;
+    if (p.team_id) {
+      totalBaseRevenue += CONFIG.fees.teamPerPerson;
+    }
+
+    const estimatedShares = Math.max(12, 45 - p.rank * 2);
+    totalShareVolume += sharePrice(p.rank) * estimatedShares;
+  });
+
+  const shareCutPct = (Number(getSettings().splitBarPct) || 1.5) / 100;
+  const baseCutPct = 0.03;
+
+  const shareCut = totalShareVolume * shareCutPct;
+  const baseCut = totalBaseRevenue * baseCutPct;
+  const totalProfits = shareCut + baseCut;
+
+  $("barStatShareVol").textContent = $$(totalShareVolume);
+  $("barStatSharePctVal").textContent = (shareCutPct * 100).toFixed(1);
+  $("barStatShareCut").textContent = $$(shareCut);
+  
+  $("barStatBaseRev").textContent = $$(totalBaseRevenue);
+  $("barStatBasePctVal").textContent = (baseCutPct * 100).toFixed(1);
+  $("barStatBaseCut").textContent = $$(baseCut);
+  
+  $("barStatTotalProfits").textContent = $$(totalProfits);
+  $("barStatActivePlayers").textContent = players.length;
+
+  const trends = [];
+  const weeksCount = 6;
+  const now = new Date();
+  
+  for (let w = 1; w <= weeksCount; w++) {
+    const date = new Date();
+    date.setDate(now.getDate() - (weeksCount - w) * 7);
+    const dateStr = date.toISOString().split("T")[0];
+
+    const baseW = (totalBaseRevenue / weeksCount) * (w + 0.1 * Math.sin(w));
+    const shareW = (totalShareVolume / weeksCount) * (w + 0.15 * Math.cos(w));
+    
+    const profitW = (baseW * baseCutPct) + (shareW * shareCutPct);
+    trends.push({
+      date: dateStr,
+      baseRevenue: Math.round(baseW),
+      shareVolume: Math.round(shareW),
+      barProfit: Number(profitW.toFixed(2))
+    });
+  }
+
+  window.barTrendsDataCache = trends;
+  drawBarTrendsGraph(trends);
+}
+
+function drawBarTrendsGraph(trends) {
+  const container = $("barTrendsChartContainer");
+  if (!container) return;
+  if (!trends || trends.length === 0) {
+    container.innerHTML = `<div class="port-empty"><div class="port-empty-icon">📈</div>No transaction history yet.</div>`;
+    return;
+  }
+
+  const sorted = trends.slice().sort((a, b) => a.date.localeCompare(b.date));
+  const width = container.clientWidth || 600;
+  const height = 260;
+  const padding = { top: 20, right: 30, bottom: 40, left: 50 };
+
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+
+  const profits = sorted.map(t => t.barProfit);
+  const maxProfit = Math.max(...profits, 10);
+  const minProfit = 0;
+
+  const pointsCount = sorted.length;
+  const getX = (index) => padding.left + (pointsCount > 1 ? (index / (pointsCount - 1)) * chartWidth : chartWidth / 2);
+  const getY = (val) => padding.top + chartHeight - ((val - minProfit) / (maxProfit - minProfit)) * chartHeight;
+
+  let yGridHtml = "";
+  const gridCount = 4;
+  for (let i = 0; i <= gridCount; i++) {
+    const val = minProfit + (maxProfit - minProfit) * (i / gridCount);
+    const y = getY(val);
+    yGridHtml += `
+      <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,4" />
+      <text x="${padding.left - 10}" y="${y + 4}" fill="var(--gray)" font-size="10" text-anchor="end" font-weight="700">$${val.toFixed(0)}</text>
+    `;
+  }
+
+  let xLabelsHtml = "";
+  const labelInterval = Math.max(1, Math.ceil(pointsCount / 5));
+  sorted.forEach((t, i) => {
+    if (i % labelInterval === 0 || i === pointsCount - 1) {
+      const x = getX(i);
+      const dateParts = t.date.split("-");
+      const labelText = dateParts.length >= 3 ? `${dateParts[1]}/${dateParts[2]}` : t.date;
+      xLabelsHtml += `
+        <text x="${x}" y="${height - padding.bottom + 20}" fill="var(--gray)" font-size="10" text-anchor="middle" font-weight="700">${labelText}</text>
+      `;
+    }
+  });
+
+  const points = sorted.map((t, i) => `${getX(i)},${getY(t.barProfit)}`);
+  const pathD = `M ${points.join(" L ")}`;
+  const areaD = `${pathD} L ${getX(pointsCount - 1)},${padding.top + chartHeight} L ${getX(0)},${padding.top + chartHeight} Z`;
+
+  let interactivePointsHtml = "";
+  sorted.forEach((t, i) => {
+    const x = getX(i);
+    const y = getY(t.barProfit);
+    interactivePointsHtml += `
+      <g class="chart-point-group" style="cursor: pointer;">
+        <circle cx="${x}" cy="${y}" r="4" fill="var(--gold)" stroke="var(--bg)" stroke-width="2" />
+        <circle cx="${x}" cy="${y}" r="8" fill="var(--gold)" opacity="0" class="hover-trigger" />
+        <title>${t.date}\nProfit: $${t.barProfit.toFixed(2)}\nBase Rev: $${t.baseRevenue}\nShare Vol: $${t.shareVolume}</title>
+      </g>
+    `;
+  });
+
+  const svgHtml = `
+    <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--al-green)" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="var(--al-green)" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      ${yGridHtml}
+      <path d="${areaD}" fill="url(#chartGradient)" />
+      <path d="${pathD}" fill="none" stroke="var(--al-green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      ${xLabelsHtml}
+      ${interactivePointsHtml}
+    </svg>
+  `;
+
+  container.innerHTML = svgHtml;
+}
+
+window.addEventListener("resize", () => {
+  if ($("view-bar") && $("view-bar").classList.contains("active")) {
+    if (window.barTrendsDataCache) {
+      drawBarTrendsGraph(window.barTrendsDataCache);
+    }
+  }
+});
 
 // ╔═══════════════════════════════════════════════════════╗
 // ║  SKELETON LOADERS                                     ║
