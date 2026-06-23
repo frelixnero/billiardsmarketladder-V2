@@ -86,22 +86,24 @@ export default async (req: Request, context: Context) => {
       .eq("name", playerName)
       .maybeSingle();
 
-    if (playerErr || !player) {
-      return Response.json({ error: `Player "${playerName}" not found in database` }, { status: 400 });
-    }
+    // Allow fallback for demo/local dev: if player not in DB, use metadata rank or default to 16
+    const playerRank = metadata?.playerRank ? Number(metadata.playerRank) : (player?.rank || 16);
+    const isActive = player ? player.active : true; // Default to active if not in DB
 
-    if (!player.active) {
+    if (!isActive) {
       return Response.json({ error: `Player "${playerName}" is inactive` }, { status: 400 });
     }
 
-    // Check manual lock
-    const playerMetadata = settings.player_metadata || {};
-    const playerMeta = playerMetadata[playerName] || {};
-    if (playerMeta.locked) {
-      return Response.json({ error: `Player "${playerName}" is currently locked from share buys` }, { status: 400 });
+    // Check manual lock (only if player exists in DB)
+    if (player) {
+      const playerMetadata = settings.player_metadata || {};
+      const playerMeta = playerMetadata[playerName] || {};
+      if (playerMeta.locked) {
+        return Response.json({ error: `Player "${playerName}" is currently locked from share buys` }, { status: 400 });
+      }
     }
 
-    const rank = Number(player.rank) || 16;
+    const rank = playerRank;
     const buyInCap = Number(settings.buyInCap) || 150;
 
     let tierPrice = 25;

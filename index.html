@@ -6,254 +6,912 @@
 <title>ActionLadder · Billiards Market Ladder · Own the Action</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎱</text></svg>">
 <style>
-/* ─── RESET ─────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ─── RESET & DESIGN VARIABLES ───────────────────────────── */
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 :root {
-  --bg:#060610; --card:#0e0e1e; --card2:#12122a; --border:#1a1a35;
-  --green:#00e5a0; --red:#ff3b5c; --gold:#39ff14; --blue:#4488ff;
-  --purple:#c470f5; --orange:#ff9500; --white:#f0f0ff; --gray:#6060a0; --dim:#282848;
-  --al-green:#19ff75; --al-black:#050805;
+  --bg: #02060d;
+  --card: rgba(7, 12, 20, 0.7);
+  --card2: rgba(13, 21, 39, 0.75);
+  --border: #1e293b;
+  --al-green: #a3e635; /* Neon lime */
+  --green: #a3e635;
+  --red: #ff453a;
+  --gold: #fbbf24;
+  --blue: #38bdf8;
+  --purple: #c470f5;
+  --orange: #ff9500;
+  --white: #ffffff;
+  --gray: #94a3b8;
+  --dim: #1e293b;
+  --al-black: #02060d;
+  
+  --font-body: 'Inter', sans-serif;
+  --font-header: 'Space Grotesk', sans-serif;
+  --font-button: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --glow: 0 0 15px rgba(163, 230, 53, 0.15);
 }
+
 html { scroll-behavior: smooth; }
-body { background:var(--bg); color:var(--white); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; overflow-x:hidden; }
+body { 
+  background-color: var(--bg); 
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(163, 230, 53, 0.03) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(56, 189, 248, 0.02) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--white); 
+  font-family: var(--font-body); 
+  min-height: 100vh; 
+  overflow-x: hidden; 
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--al-green); }
 
 /* ─── TICKER ─────────────────────────────────────────────── */
-.ticker-wrap { background:#000; border-bottom:1px solid var(--border); overflow:hidden; height:38px; display:flex; align-items:center; position:sticky; top:0; z-index:200; }
-.ticker-label { background:var(--red); color:#fff; font-size:11px; font-weight:800; letter-spacing:1.5px; padding:0 12px; height:100%; display:flex; align-items:center; flex-shrink:0; gap:6px; }
-.live-dot { width:7px; height:7px; background:#fff; border-radius:50%; animation:pulse 1.5s infinite; }
-.ticker-track { overflow:hidden; flex:1; }
-.ticker-scroll { display:flex; animation:scroll 40s linear infinite; white-space:nowrap; will-change:transform; }
-.ticker-scroll:hover { animation-play-state:paused; }
-.t-item { display:inline-flex; align-items:center; gap:6px; padding:0 20px; font-size:12px; font-weight:600; }
-.t-name { color:var(--gray); }
-.t-price { color:var(--white); }
-.t-badge-hot { color:var(--orange); }
-.t-badge-lock { color:var(--gold); }
-.t-sep { color:var(--border); }
-@keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+.ticker-wrap { 
+  background: #000000; 
+  border-bottom: 1px solid var(--border); 
+  overflow: hidden; 
+  height: 38px; 
+  display: flex; 
+  align-items: center; 
+  position: sticky; 
+  top: 60px; 
+  z-index: 100; 
+}
+.ticker-label { 
+  background: var(--red); 
+  color: #fff; 
+  font-family: var(--font-button);
+  font-size: 11px; 
+  font-weight: 800; 
+  letter-spacing: 1.5px; 
+  padding: 0 16px; 
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  flex-shrink: 0; 
+  gap: 6px; 
+}
+.live-dot { 
+  width: 7px; 
+  height: 7px; 
+  background: #fff; 
+  border-radius: 50%; 
+  animation: pulse 1.5s infinite; 
+}
+.ticker-track { overflow: hidden; flex: 1; }
+.ticker-scroll { 
+  display: flex; 
+  animation: scroll 40s linear infinite; 
+  white-space: nowrap; 
+  will-change: transform; 
+}
+.ticker-scroll:hover { animation-play-state: paused; }
+.t-item { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 6px; 
+  padding: 0 24px; 
+  font-family: var(--font-mono);
+  font-size: 12px; 
+  font-weight: 700; 
+}
+.t-name { color: var(--white); }
+.t-price { color: var(--al-green); }
+.t-badge-hot { color: var(--orange); }
+.t-badge-lock { color: var(--gold); }
+.t-sep { color: var(--border); }
 
-/* ─── HERO ───────────────────────────────────────────────── */
-.hero { text-align:center; padding:56px 20px 44px; background:radial-gradient(ellipse at 50% -20%,rgba(68,136,255,.18),transparent 65%); position:relative; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:7px; background:rgba(0,229,160,.1); border:1px solid rgba(0,229,160,.3); color:var(--green); font-size:11px; font-weight:800; letter-spacing:2px; padding:6px 14px; border-radius:100px; margin-bottom:20px; }
-.hero h1 { font-size:clamp(38px,9vw,78px); font-weight:900; line-height:.95; letter-spacing:-3px; margin-bottom:14px; }
-.hero h1 em { font-style:normal; color:var(--gold); }
-.hero-sub { font-size:clamp(15px,3vw,19px); color:var(--gray); max-width:460px; margin:0 auto 32px; line-height:1.55; }
-.hero-stats { display:flex; justify-content:center; gap:36px; flex-wrap:wrap; }
-.stat { text-align:center; }
-.stat-val { font-size:30px; font-weight:900; color:var(--gold); letter-spacing:-1px; }
-.stat-label { font-size:11px; color:var(--gray); margin-top:3px; letter-spacing:.5px; font-weight:600; }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(0.85); } }
+
+/* ─── HERO & SPLIT HERO LAYOUT ───────────────────────────── */
+.hero { 
+  text-align: center; 
+  padding: 56px 20px 44px; 
+  background: radial-gradient(ellipse at 50% -20%, rgba(163, 230, 53, 0.08), transparent 65%); 
+  position: relative; 
+}
+.hero-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  align-items: center;
+}
+@media (max-width: 992px) {
+  .hero-dashboard-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-center-col { display: none; }
+}
+.hero-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.hero-eyebrow { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 7px; 
+  background: rgba(163, 230, 53, 0.1); 
+  border: 1px solid rgba(163, 230, 53, 0.3); 
+  color: var(--al-green); 
+  font-family: var(--font-button);
+  font-size: 11px; 
+  font-weight: 800; 
+  letter-spacing: 2px; 
+  padding: 6px 14px; 
+  border-radius: 100px; 
+  margin-bottom: 20px; 
+}
+.hero-title {
+  font-family: var(--font-header);
+  font-size: clamp(36px, 4.5vw, 64px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.neon-highlight {
+  color: var(--al-green);
+  text-shadow: 0 0 20px rgba(163, 230, 53, 0.2);
+}
+.hero h1 em { font-style: normal; color: var(--gold); }
+.hero-sub { 
+  font-size: 15px; 
+  color: var(--gray); 
+  max-width: 520px; 
+  margin-bottom: 32px; 
+  line-height: 1.6; 
+}
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.btn-primary {
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 14px 28px;
+  background: var(--al-green);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(163, 230, 53, 0.25);
+}
+.btn-primary:hover {
+  background: #bbf846;
+  box-shadow: 0 6px 20px rgba(163, 230, 53, 0.4);
+  transform: translateY(-1px);
+}
+.btn-outline {
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 14px 28px;
+  background: transparent;
+  color: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.btn-outline:hover {
+  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.05);
+}
+.hero-active-users {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--gray);
+}
+.avatar-group {
+  display: flex;
+}
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--bg);
+  margin-left: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+.avatar:first-child { margin-left: 0; }
+
+.hero-stats { 
+  display: flex; 
+  justify-content: flex-start; 
+  gap: 36px; 
+  flex-wrap: wrap; 
+}
+.stat { text-align: left; }
+.stat-val { 
+  font-family: var(--font-mono);
+  font-size: 30px; 
+  font-weight: 900; 
+  color: var(--al-green); 
+  letter-spacing: -1px; 
+}
+.stat-label { 
+  font-family: var(--font-button);
+  font-size: 10px; 
+  color: var(--gray); 
+  margin-top: 3px; 
+  letter-spacing: 1px; 
+  font-weight: 700; 
+}
+
+/* Center sphere (8-ball visual) */
+.felt-sphere-container {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto;
+}
+.sphere-8ball {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle at 60px 60px, #333 0%, #111 60%, #000 100%);
+  border-radius: 50%;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  box-shadow: 
+    inset -10px -10px 40px rgba(0,0,0,0.9), 
+    10px 20px 30px rgba(0,0,0,0.6), 
+    0 0 40px rgba(163, 230, 53, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.eight-circle {
+  width: 76px;
+  height: 76px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 900;
+  color: #000000;
+  font-family: var(--font-header);
+  box-shadow: inset 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+/* Featured card in hero */
+.hero-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.featured-team-card {
+  padding: 20px;
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s;
+}
+.featured-team-card:hover {
+  border-color: var(--al-green);
+  box-shadow: var(--glow);
+  transform: translateY(-2px);
+}
+.featured-team-card.hot {
+  border-color: rgba(163, 230, 53, 0.4);
+}
+.hot-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(163, 230, 53, 0.1);
+  border: 1px solid rgba(163, 230, 53, 0.3);
+  color: var(--al-green);
+  font-family: var(--font-button);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+.team-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.mascot-emoji {
+  font-size: 28px;
+}
+.team-meta {
+  display: flex;
+  flex-direction: column;
+}
+.team-name-title {
+  font-family: var(--font-header);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.team-subtitle {
+  font-size: 11px;
+  color: var(--gray);
+}
+.team-traits {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--gray);
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+.price-trend-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.featured-price {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+.featured-change {
+  font-size: 11px;
+  font-weight: 700;
+}
+.featured-change.up { color: var(--al-green); }
+.featured-change.down { color: var(--red); }
+.sparkline-container {
+  height: 25px;
+  margin-bottom: 14px;
+}
+.sparkline {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.btn-buy-featured {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--white);
+  font-family: var(--font-button);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-buy-featured:hover {
+  background: var(--al-green);
+  border-color: var(--al-green);
+  color: #000000;
+}
+
+/* ─── PROMO BANNER ──────────────────────────────────────── */
+.promo-banner-container {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 16px;
+}
+@media (max-width: 900px) {
+  .promo-banner-container { grid-template-columns: 1fr; }
+}
+.features-list {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+}
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.feature-icon {
+  font-size: 20px;
+}
+.feature-title {
+  font-family: var(--font-header);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.feature-desc {
+  font-size: 10px;
+  color: var(--gray);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+.starter-credit-card {
+  background: linear-gradient(135deg, rgba(163, 230, 53, 0.1), rgba(13, 21, 39, 0.75));
+  border: 1px solid rgba(163, 230, 53, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.credit-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.credit-title {
+  font-family: var(--font-header);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: var(--al-green);
+}
+.credit-desc {
+  font-size: 11px;
+  color: var(--white);
+  margin: 6px 0 14px;
+  line-height: 1.3;
+}
+.btn-claim {
+  font-family: var(--font-button);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 8px 16px;
+  background: var(--al-green);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-claim:hover {
+  background: #bbf846;
+}
+.credit-gift-visual {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.glowing-gift {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(163, 230, 53, 0.3));
+}
 
 /* ─── LAYOUT ─────────────────────────────────────────────── */
-.wrap { max-width:920px; margin:0 auto; padding:44px 16px; }
-.sec-head { margin-bottom:24px; }
-.sec-title { font-size:22px; font-weight:900; letter-spacing:-.5px; }
-.sec-sub { font-size:13px; color:var(--gray); margin-top:4px; }
-.divider { height:1px; background:var(--border); margin:0 16px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 44px 16px; }
+.sec-head { margin-bottom: 24px; }
+.sec-title { 
+  font-family: var(--font-header);
+  font-size: 24px; 
+  font-weight: 900; 
+  letter-spacing: -0.5px; 
+  text-transform: uppercase;
+}
+.sec-sub { font-size: 13px; color: var(--gray); margin-top: 4px; }
+.divider { height: 1px; background: var(--border); margin: 0 16px; }
 
 /* ─── BAR TABS ───────────────────────────────────────────── */
-.bar-tabs { display:flex; gap:8px; overflow-x:auto; padding:0 4px 16px; margin-bottom:16px; scrollbar-width:none; }
-.bar-tabs::-webkit-scrollbar { display:none; }
-.bar-tab { background:var(--card); border:1.5px solid var(--border); color:var(--gray); padding:8px 18px; border-radius:100px; font-size:13px; font-weight:800; cursor:pointer; transition:all .15s; letter-spacing:.3px; white-space:nowrap; }
-.bar-tab:hover { border-color:var(--dim); color:var(--white); }
-.bar-tab.active { background:rgba(57,255,20,.1); border-color:rgba(57,255,20,.35); color:var(--gold); }
+.bar-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 0 4px 16px; margin-bottom: 16px; scrollbar-width: none; }
+.bar-tabs::-webkit-scrollbar { display: none; }
+.bar-tab { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  color: var(--gray); 
+  padding: 8px 18px; 
+  border-radius: 100px; 
+  font-family: var(--font-button);
+  font-size: 13px; 
+  font-weight: 800; 
+  cursor: pointer; 
+  transition: all .15s; 
+  letter-spacing: .3px; 
+  white-space: nowrap; 
+}
+.bar-tab:hover { border-color: var(--al-green); color: var(--white); }
+.bar-tab.active { background: rgba(163, 230, 53, 0.1); border-color: var(--al-green); color: var(--al-green); }
 
 /* ─── PLAYER GRID ────────────────────────────────────────── */
-.player-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
-.p-card { background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:20px; position:relative; overflow:hidden; transition:transform .18s,border-color .18s; }
-.p-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent,transparent); }
-.p-card:hover { transform:translateY(-3px); border-color:var(--dim); }
-.p-card.is-hot { border-color:rgba(255,149,0,.35); }
-.p-card.is-locked { opacity:.65; }
+.player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.p-card { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  border-radius: 16px; 
+  padding: 20px; 
+  position: relative; 
+  overflow: hidden; 
+  transition: all 0.3s; 
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.p-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent, transparent); }
+.p-card:hover { transform: translateY(-3px); border-color: var(--al-green); box-shadow: var(--glow); }
+.p-card.is-hot { border-color: rgba(255, 149, 0, 0.35); }
+.p-card.is-locked { opacity: .65; }
 
-.p-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
-.p-rank { font-size:12px; font-weight:700; color:var(--gray); }
-.p-badges { display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
-.badge { font-size:9px; font-weight:800; letter-spacing:.5px; padding:3px 7px; border-radius:100px; }
-.b-hot  { background:rgba(255,149,0,.18); color:var(--orange); border:1px solid rgba(255,149,0,.3); }
-.b-lock { background:rgba(57,255,20,.1);  color:var(--gold);   border:1px solid rgba(57,255,20,.2); }
-.b-deal { background:rgba(0,229,160,.12); color:var(--green);  border:1px solid rgba(0,229,160,.25); }
+.p-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.p-rank { 
+  font-family: var(--font-button);
+  font-size: 11px; 
+  font-weight: 700; 
+  color: var(--gray); 
+  letter-spacing: 0.5px;
+}
+.p-badges { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.badge { 
+  font-family: var(--font-button);
+  font-size: 9px; 
+  font-weight: 800; 
+  letter-spacing: .5px; 
+  padding: 3px 8px; 
+  border-radius: 100px; 
+}
+.b-hot  { background: rgba(255,149,0, .15); color: var(--orange); border: 1px solid rgba(255,149,0, .3); }
+.b-lock { background: rgba(163,230,53, .1);  color: var(--al-green); border: 1px solid rgba(163,230,53, .2); }
+.b-deal { background: rgba(56,189,248, .12); color: var(--blue);  border: 1px solid rgba(56,189,248, .25); }
 
-.p-name { font-size:23px; font-weight:900; letter-spacing:-.5px; }
-.p-meta { font-size:12px; color:var(--gray); margin-top:3px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-.streak-dot { display:inline-block; width:7px; height:7px; border-radius:50%; }
+.p-name { 
+  font-family: var(--font-header);
+  font-size: 22px; 
+  font-weight: 900; 
+  letter-spacing: -.5px; 
+  text-transform: uppercase;
+}
+.p-meta { 
+  font-size: 12px; 
+  color: var(--gray); 
+  margin-top: 4px; 
+  display: flex; 
+  gap: 10px; 
+  align-items: center; 
+  flex-wrap: wrap; 
+}
+.streak-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; }
 
-.p-price-row { display:flex; align-items:flex-end; gap:8px; margin:16px 0 4px; }
-.p-price { font-size:38px; font-weight:900; letter-spacing:-1.5px; line-height:1; }
-.p-price-label { font-size:12px; color:var(--gray); padding-bottom:5px; }
-.tier-gold { color:var(--gold); }
-.tier-purple { color:var(--purple); }
-.tier-blue { color:var(--blue); }
-.tier-gray { color:var(--gray); }
+.p-price-row { display: flex; align-items: flex-end; gap: 8px; margin: 16px 0 4px; }
+.p-price { 
+  font-family: var(--font-mono);
+  font-size: 34px; 
+  font-weight: 900; 
+  letter-spacing: -1.5px; 
+  line-height: 1; 
+}
+.p-price-label { font-size: 12px; color: var(--gray); padding-bottom: 5px; }
+.tier-gold { color: var(--gold); }
+.tier-purple { color: var(--purple); }
+.tier-blue { color: var(--blue); }
+.tier-gray { color: var(--gray); }
 
-.payouts-box { background:rgba(255,255,255,.04); border-radius:12px; padding:10px 12px; margin:12px 0; }
-.payouts-label { font-size:10px; color:var(--gray); font-weight:700; letter-spacing:.5px; margin-bottom:7px; }
-.payouts-row { display:flex; gap:6px; }
-.pout { flex:1; text-align:center; }
-.pout-val { font-size:14px; font-weight:800; }
-.pout-label { font-size:9px; color:var(--gray); margin-top:2px; letter-spacing:.3px; }
-.pout-champ { color:var(--gold); }
+.payouts-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 10px 12px; margin: 12px 0; }
+.payouts-label { 
+  font-family: var(--font-button);
+  font-size: 9px; 
+  color: var(--gray); 
+  font-weight: 800; 
+  letter-spacing: .5px; 
+  margin-bottom: 8px; 
+}
+.payouts-row { display: flex; gap: 6px; }
+.pout { flex: 1; text-align: center; }
+.pout-val { 
+  font-family: var(--font-mono);
+  font-size: 14px; 
+  font-weight: 800; 
+}
+.pout-label { font-size: 9px; color: var(--gray); margin-top: 2px; letter-spacing: .3px; }
+.pout-champ { color: var(--gold); }
 
-.p-roi { font-size:12px; color:var(--green); font-weight:700; margin-bottom:14px; min-height:18px; }
-.p-roi.muted { color:var(--gray); }
+.p-roi { 
+  font-family: var(--font-button);
+  font-size: 12px; 
+  color: var(--al-green); 
+  font-weight: 800; 
+  margin-bottom: 14px; 
+  min-height: 18px; 
+}
+.p-roi.muted { color: var(--gray); }
 
-.btn-buy { width:100%; padding:14px; background:var(--green); color:#000; border:none; border-radius:12px; font-size:14px; font-weight:900; letter-spacing:.5px; cursor:pointer; transition:all .15s; text-transform:uppercase; }
-.btn-buy:hover:not(:disabled) { background:#00ffb0; transform:scale(1.02); }
-.btn-buy:active:not(:disabled) { transform:scale(.98); }
-.btn-buy:disabled { background:var(--dim); color:var(--gray); cursor:not-allowed; }
+.btn-buy { 
+  width: 100%; 
+  padding: 14px; 
+  background: var(--al-green); 
+  color: #000; 
+  border: none; 
+  border-radius: 12px; 
+  font-family: var(--font-button);
+  font-size: 13px; 
+  font-weight: 900; 
+  letter-spacing: .5px; 
+  cursor: pointer; 
+  transition: all .2s; 
+  text-transform: uppercase; 
+  box-shadow: 0 4px 12px rgba(163, 230, 53, 0.15);
+}
+.btn-buy:hover:not(:disabled) { background: #bbf846; transform: scale(1.01); box-shadow: 0 6px 16px rgba(163, 230, 53, 0.35); }
+.btn-buy:active:not(:disabled) { transform: scale(.99); }
+.btn-buy:disabled { background: var(--dim); border: 1px solid var(--border); color: var(--gray); cursor: not-allowed; box-shadow: none; }
 
 /* ─── HOW IT WORKS ───────────────────────────────────────── */
-.how-wrap { background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:20px; }
-.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; padding:28px 24px; }
-.step { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px 18px; text-align:center; }
-.step-circle { width:46px; height:46px; background:rgba(68,136,255,.14); border:1.5px solid rgba(68,136,255,.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:900; color:var(--blue); margin:0 auto 14px; }
-.step-title { font-size:15px; font-weight:800; margin-bottom:7px; }
-.step-body { font-size:13px; color:var(--gray); line-height:1.55; }
+.how-wrap { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border); border-radius: 20px; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; padding: 28px 24px; }
+.step { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 18px; text-align: center; }
+.step-circle { 
+  width: 44px; 
+  height: 44px; 
+  background: rgba(56, 189, 248, 0.1); 
+  border: 1.5px solid rgba(56, 189, 248, 0.3); 
+  border-radius: 50%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 18px; 
+  font-weight: 900; 
+  color: var(--blue); 
+  margin: 0 auto 14px; 
+  font-family: var(--font-header);
+}
+.step-title { font-family: var(--font-header); font-size: 15px; font-weight: 800; margin-bottom: 7px; text-transform: uppercase; }
+.step-body { font-size: 13px; color: var(--gray); line-height: 1.55; }
 
 /* ─── MATH SECTION ───────────────────────────────────────── */
-.math-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-@media(max-width:600px){ .math-grid { grid-template-columns:1fr; } }
-.m-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; }
-.m-card.full { grid-column:1/-1; }
-.m-head { font-size:12px; font-weight:800; letter-spacing:.8px; color:var(--gray); text-transform:uppercase; margin-bottom:16px; }
-.m-big { font-size:46px; font-weight:900; letter-spacing:-2px; line-height:1; }
-.m-sub { font-size:13px; color:var(--gray); margin-top:5px; }
-.m-note { font-size:12px; color:var(--gray); line-height:1.6; margin-top:12px; }
+.math-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width: 768px){ .math-grid { grid-template-columns: 1fr; } }
+.m-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+.m-card.full { grid-column: 1/-1; }
+.m-head { 
+  font-family: var(--font-header);
+  font-size: 12px; 
+  font-weight: 900; 
+  letter-spacing: .8px; 
+  color: var(--gray); 
+  text-transform: uppercase; 
+  margin-bottom: 16px; 
+}
+.m-big { 
+  font-family: var(--font-mono);
+  font-size: 46px; 
+  font-weight: 900; 
+  letter-spacing: -2px; 
+  line-height: 1; 
+}
+.m-sub { font-size: 13px; color: var(--gray); margin-top: 5px; }
+.m-note { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 12px; }
 
-.split-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.split-label { font-size:13px; font-weight:700; min-width:150px; }
-.split-bar-bg { flex:1; height:10px; background:var(--border); border-radius:100px; overflow:hidden; }
-.split-bar { height:100%; border-radius:100px; }
-.split-pct { font-size:13px; font-weight:800; min-width:36px; text-align:right; }
-.split-amt { font-size:12px; color:var(--gray); min-width:48px; text-align:right; }
-.split-note { font-size:11px; color:var(--gray); margin:-10px 0 14px 0; padding-left:4px; }
+.split-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.split-label { font-size: 13px; font-weight: 700; min-width: 150px; }
+.split-bar-bg { flex: 1; height: 10px; background: var(--border); border-radius: 100px; overflow: hidden; }
+.split-bar { height: 100%; border-radius: 100px; }
+.split-pct { font-size: 13px; font-weight: 800; min-width: 36px; text-align: right; }
+.split-amt { font-size: 12px; color: var(--gray); min-width: 48px; text-align: right; }
+.split-note { font-size: 11px; color: var(--gray); margin: -10px 0 14px 0; padding-left: 4px; }
 
-.partner-box { background:rgba(57,255,20,.06); border:1px solid rgba(57,255,20,.2); border-radius:12px; padding:14px 16px; font-size:13px; color:var(--gray); line-height:1.7; margin-top:10px; }
-.partner-box strong { color:var(--gold); }
+.partner-box { 
+  background: rgba(163, 230, 53, 0.05); 
+  border: 1px solid rgba(163, 230, 53, 0.2); 
+  border-radius: 12px; 
+  padding: 14px 16px; 
+  font-size: 13px; 
+  color: var(--gray); 
+  line-height: 1.7; 
+  margin-top: 10px; 
+}
+.partner-box strong { color: var(--gold); }
 
-.roi-tbl { width:100%; border-collapse:collapse; }
-.roi-tbl th { font-size:11px; color:var(--gray); font-weight:700; letter-spacing:.5px; text-align:left; padding:0 8px 12px; border-bottom:1px solid var(--border); }
-.roi-tbl td { padding:11px 8px; font-size:14px; border-bottom:1px solid rgba(255,255,255,.04); }
-.roi-tbl tr:last-child td { border-bottom:none; }
-.td-champ { color:var(--gold); font-weight:800; }
-.td-roi-great { color:var(--green); font-weight:800; }
-.td-roi-good  { color:var(--blue);  font-weight:800; }
-.td-roi-neg   { color:var(--red);   font-weight:800; }
+.roi-tbl { width: 100%; border-collapse: collapse; }
+.roi-tbl th { font-family: var(--font-button); font-size: 11px; color: var(--gray); font-weight: 700; letter-spacing: .5px; text-align: left; padding: 0 8px 12px; border-bottom: 1px solid var(--border); }
+.roi-tbl td { padding: 11px 8px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.roi-tbl tr:last-child td { border-bottom: none; }
+.td-champ { color: var(--gold); font-weight: 800; }
+.td-roi-great { color: var(--al-green); font-weight: 800; }
+.td-roi-good  { color: var(--blue);  font-weight: 800; }
+.td-roi-neg   { color: var(--red);   font-weight: 800; }
 
-.scenario-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:14px; }
-.scenario { background:rgba(255,255,255,.04); border-radius:12px; padding:14px; text-align:center; }
-.sc-buy { font-size:11px; color:var(--gray); margin-bottom:4px; font-weight:600; }
-.sc-payout { font-size:22px; font-weight:900; color:var(--green); }
-.sc-roi { font-size:13px; color:var(--gray); margin-top:3px; }
-.sc-roi.great { color:var(--green); font-weight:700; }
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top:14px; }
+.scenario { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.sc-buy { font-size: 11px; color: var(--gray); margin-bottom: 4px; font-weight: 600; }
+.sc-payout { font-family: var(--font-mono); font-size: 22px; font-weight: 900; color: var(--al-green); }
+.sc-roi { font-size: 13px; color: var(--gray); margin-top: 3px; }
+.sc-roi.great { color: var(--al-green); font-weight: 700; }
 
 /* ─── PORTFOLIO ──────────────────────────────────────────── */
-.port-empty { text-align:center; padding:44px 20px; color:var(--gray); }
-.port-empty-icon { font-size:50px; margin-bottom:12px; }
-.port-grid { display:grid; gap:10px; }
-.port-item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 20px; display:flex; align-items:center; gap:14px; }
-.port-left { flex:1; }
-.port-name { font-size:16px; font-weight:800; }
-.port-detail { font-size:12px; color:var(--gray); margin-top:3px; }
-.port-right { text-align:right; }
-.port-val { font-size:20px; font-weight:900; }
-.port-val.up   { color:var(--green); }
-.port-val.even { color:var(--white); }
-.port-gain { font-size:12px; margin-top:3px; }
-.port-gain.up   { color:var(--green); }
-.port-gain.down { color:var(--red); }
-.port-gain.even { color:var(--gray); }
-.port-total { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:rgba(0,229,160,.06); border:1px solid rgba(0,229,160,.2); border-radius:14px; font-weight:800; }
-.clear-btn { background:transparent; border:1px solid var(--border); color:var(--gray); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:12px; }
-.clear-btn:hover { border-color:var(--dim); color:var(--white); }
+.port-empty { text-align: center; padding: 44px 20px; color: var(--gray); }
+.port-empty-icon { font-size: 40px; margin-bottom: 12px; }
+.port-grid { display: grid; gap: 10px; }
+.port-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+.port-left { flex: 1; }
+.port-name { font-family: var(--font-header); font-size: 16px; font-weight: 800; }
+.port-detail { font-size: 12px; color: var(--gray); margin-top: 3px; }
+.port-right { text-align: right; }
+.port-val { font-family: var(--font-mono); font-size: 20px; font-weight: 900; }
+.port-val.up   { color: var(--al-green); }
+.port-val.even { color: var(--white); }
+.port-gain { font-size: 12px; margin-top: 3px; font-weight: 600; }
+.port-gain.up   { color: var(--al-green); }
+.port-gain.down { color: var(--red); }
+.port-gain.even { color: var(--gray); }
+.port-total { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: rgba(163, 230, 53, 0.08); border: 1px solid rgba(163, 230, 53, 0.25); border-radius: 14px; font-weight: 800; }
+.clear-btn { background: transparent; border: 1px solid var(--border); color: var(--gray); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-family: var(--font-button); font-size: 12px; font-weight: 700; transition: all 0.2s; }
+.clear-btn:hover { border-color: var(--white); color: var(--white); }
 
 /* ─── MODAL ──────────────────────────────────────────────── */
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:500; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s; }
-.overlay.open { opacity:1; pointer-events:all; }
-.modal { background:var(--card2); border:1.5px solid var(--border); border-radius:24px 24px 0 0; padding:28px 22px 44px; width:100%; max-width:480px; transform:translateY(100%); transition:transform .32s cubic-bezier(.34,1.56,.64,1); }
-.overlay.open .modal { transform:translateY(0); }
-.modal-handle { width:40px; height:4px; background:var(--dim); border-radius:100px; margin:0 auto 22px; }
-.modal-title { font-size:21px; font-weight:900; margin-bottom:4px; }
-.modal-sub { font-size:14px; color:var(--gray); margin-bottom:22px; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; padding: 20px; }
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 480px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+.modal-handle { display: none; }
+.modal-title { font-family: var(--font-header); font-size: 24px; font-weight: 900; margin-bottom: 4px; text-transform: uppercase; }
+.modal-sub { font-size: 14px; color: var(--gray); margin-bottom: 22px; }
 
-.qty-row { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
-.qty-label { font-size:14px; color:var(--gray); flex:1; }
-.qty-ctrl { display:flex; align-items:center; gap:12px; }
-.qty-btn { width:36px; height:36px; background:var(--border); border:none; border-radius:9px; color:var(--white); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
-.qty-btn:hover { background:var(--dim); }
-.qty-num { font-size:24px; font-weight:900; min-width:30px; text-align:center; }
+.qty-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.qty-label { font-size: 14px; color: var(--gray); flex: 1; }
+.qty-ctrl { display: flex; align-items: center; gap: 12px; }
+.qty-btn { width: 36px; height: 36px; background: var(--border); border: none; border-radius: 9px; color: var(--white); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s; }
+.qty-btn:hover { background: var(--dim); border-color: var(--gray); }
+.qty-num { font-family: var(--font-mono); font-size: 24px; font-weight: 900; min-width: 30px; text-align: center; }
 
-.modal-total-box { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:rgba(255,255,255,.04); border-radius:13px; margin-bottom:16px; }
-.modal-total-label { font-size:14px; color:var(--gray); }
-.modal-total-val { font-size:28px; font-weight:900; color:var(--gold); }
+.modal-total-box { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 13px; margin-bottom: 16px; }
+.modal-total-label { font-size: 14px; color: var(--gray); }
+.modal-total-val { font-family: var(--font-mono); font-size: 28px; font-weight: 900; color: var(--gold); }
 
-.modal-preview { background:rgba(0,229,160,.07); border:1px solid rgba(0,229,160,.22); border-radius:12px; padding:14px; margin-bottom:18px; font-size:13px; color:var(--green); line-height:1.6; }
-.modal-preview strong { color:var(--white); }
+.modal-preview { background: rgba(163,230,53,.07); border: 1px solid rgba(163,230,53,.2); border-radius: 12px; padding: 14px; margin-bottom: 18px; font-size: 13px; color: var(--al-green); line-height: 1.6; }
+.modal-preview strong { color: var(--white); }
 
-.btn-stripe { display:block; width:100%; padding:16px; background:var(--green); color:#000; border:none; border-radius:13px; font-size:15px; font-weight:900; cursor:pointer; text-align:center; text-decoration:none; letter-spacing:.5px; margin-bottom:11px; }
-.btn-stripe:hover { background:#00ffb0; }
-.modal-fine { font-size:11px; color:var(--gray); text-align:center; line-height:1.5; }
+.btn-stripe { display: block; width: 100%; padding: 16px; background: var(--al-green); color: #000; border: none; border-radius: 13px; font-family: var(--font-button); font-size: 15px; font-weight: 900; cursor: pointer; text-align: center; text-decoration: none; letter-spacing: .5px; margin-bottom: 11px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(163, 230, 53, 0.2); }
+.btn-stripe:hover { background: #bbf846; box-shadow: 0 6px 16px rgba(163, 230, 53, 0.35); }
+.modal-fine { font-size: 11px; color: var(--gray); text-align: center; line-height: 1.5; }
 
 /* ─── FOOTER ─────────────────────────────────────────────── */
-footer { text-align:center; padding:40px 20px; border-top:1px solid var(--border); color:var(--gray); font-size:13px; }
-footer .logo { font-size:24px; margin-bottom:8px; }
-footer .name { font-weight:800; color:var(--white); margin-bottom:4px; font-size:15px; }
+footer { text-align: center; padding: 50px 20px; border-top: 1px solid var(--border); color: var(--gray); font-size: 13px; background: #00000088; }
+footer .logo { font-size: 32px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(163, 230, 53, 0.2)); }
+footer .name { font-family: var(--font-header); font-weight: 900; color: var(--white); margin-bottom: 6px; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; }
 
 /* ─── MODE SWITCHER ──────────────────────────────────────── */
-.mode-switch { display:flex; gap:6px; justify-content:center; padding:14px 16px 0; max-width:920px; margin:0 auto; }
-.mode-btn { flex:0 0 auto; background:var(--card); border:1.5px solid var(--border); color:var(--gray); font-size:14px; font-weight:800; padding:10px 22px; border-radius:100px; cursor:pointer; transition:all .15s; letter-spacing:.3px; }
-.mode-btn:hover { border-color:var(--dim); color:var(--white); }
-.mode-btn.active { background:rgba(57,255,20,.1); border-color:rgba(57,255,20,.35); color:var(--gold); }
+.mode-switch { display: flex; gap: 8px; justify-content: center; padding: 14px 16px 0; max-width: 1200px; margin: 0 auto; }
+.mode-btn { flex: 0 0 auto; background: var(--card); border: 1.5px solid var(--border); color: var(--gray); font-family: var(--font-button); font-size: 14px; font-weight: 800; padding: 10px 22px; border-radius: 100px; cursor: pointer; transition: all .15s; letter-spacing: .3px; }
+.mode-btn:hover { border-color: var(--al-green); color: var(--white); }
+.mode-btn.active { background: rgba(163, 230, 53, 0.1); border-color: var(--al-green); color: var(--al-green); }
 
 /* ─── TEAM STANDINGS TABLE ───────────────────────────────── */
-.stand-tbl { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-.stand-tbl th { font-size:11px; color:var(--gray); font-weight:700; letter-spacing:.5px; text-align:left; padding:14px 12px; border-bottom:1px solid var(--border); }
-.stand-tbl td { padding:13px 12px; font-size:14px; border-bottom:1px solid rgba(255,255,255,.04); }
-.stand-tbl tr:last-child td { border-bottom:none; }
-.stand-tbl td.num, .stand-tbl th.num { text-align:center; }
-.stand-rank { font-weight:900; color:var(--gray); }
-.stand-team { display:flex; align-items:center; gap:9px; font-weight:800; }
-.stand-dot { width:11px; height:11px; border-radius:50%; flex-shrink:0; }
-.stand-cap { font-size:11px; color:var(--gray); font-weight:600; margin-top:2px; }
-.stand-pts { font-weight:900; color:var(--gold); }
-.stand-price { font-weight:800; }
-.medal-1 td { background:rgba(57,255,20,.05); }
-.medal-2 td { background:rgba(192,192,200,.04); }
-.medal-3 td { background:rgba(205,127,50,.05); }
+.stand-tbl { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.stand-tbl th { font-family: var(--font-button); font-size: 11px; color: var(--gray); font-weight: 700; letter-spacing: .5px; text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--border); }
+.stand-tbl td { padding: 13px 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.stand-tbl tr:last-child td { border-bottom: none; }
+.stand-tbl td.num, .stand-tbl th.num { text-align: center; }
+.stand-rank { font-weight: 900; color: var(--gray); }
+.stand-team { display: flex; align-items: center; gap: 9px; font-weight: 800; font-family: var(--font-header); }
+.stand-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.stand-cap { font-size: 11px; color: var(--gray); font-weight: 600; margin-top: 2px; }
+.stand-pts { font-family: var(--font-mono); font-weight: 900; color: var(--gold); }
+.stand-price { font-family: var(--font-mono); font-weight: 800; }
+.medal-1 td { background: rgba(163, 230, 53, 0.05); }
+.medal-2 td { background: rgba(192, 192, 200, 0.03); }
+.medal-3 td { background: rgba(205, 127, 50, 0.04); }
 
 /* ─── UTILITY ────────────────────────────────────────────── */
-@media(max-width:480px){
-  .hero { padding:40px 14px 32px; }
-  .player-grid { grid-template-columns:1fr; }
-  .p-price { font-size:32px; }
-  .m-big { font-size:36px; }
+@media(max-width: 768px){
+  .player-grid { grid-template-columns: 1fr; }
+  .p-price { font-size: 30px; }
+  .m-big { font-size: 36px; }
 }
 
 /* ─── ACTIONLADDER BRAND BAR ─────────────────────────────── */
-.al-bar { display:flex; align-items:center; justify-content:space-between; gap:12px;
-  background:linear-gradient(90deg,var(--al-black),#08160c 60%,var(--al-black));
-  border-bottom:1px solid rgba(25,255,117,.35); padding:10px 16px; flex-wrap:wrap; }
-.al-brand { display:flex; align-items:center; gap:9px; font-weight:900; letter-spacing:.5px; }
-.al-mark { width:26px; height:26px; border-radius:7px; background:var(--al-green); color:#021; display:flex;
-  align-items:center; justify-content:center; font-size:15px; box-shadow:0 0 16px rgba(25,255,117,.5); }
-.al-name { font-size:15px; }
-.al-name span { color:var(--al-green); }
-.al-tag { font-size:10px; color:var(--gray); letter-spacing:.5px; font-weight:700; }
-.al-access { display:flex; align-items:center; gap:8px; }
-.al-role-pill { font-size:10px; font-weight:800; letter-spacing:.5px; padding:4px 10px; border-radius:100px;
-  border:1px solid rgba(25,255,117,.3); color:var(--al-green); background:rgba(25,255,117,.08); }
-.al-btn { font-size:12px; font-weight:800; padding:7px 14px; border-radius:100px; cursor:pointer;
-  background:var(--al-green); color:#021; border:none; }
-.al-btn.ghost { background:transparent; color:var(--al-green); border:1px solid rgba(25,255,117,.4); }
+.al-bar { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px;
+  background: rgba(2, 6, 13, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border); 
+  padding: 12px 24px; 
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.al-brand { display: flex; align-items: center; gap: 10px; font-weight: 900; letter-spacing: .5px; }
+.al-mark { 
+  width: 28px; 
+  height: 28px; 
+  border-radius: 50%; 
+  background: var(--bg); 
+  border: 2.5px solid var(--al-green); 
+  color: var(--white); 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  font-size: 14px; 
+  box-shadow: 0 0 10px rgba(163, 230, 53, 0.2); 
+  font-family: var(--font-header);
+}
+.al-name { font-family: var(--font-header); font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+.al-name span { color: var(--al-green); }
+.al-tag { font-size: 10px; color: var(--gray); letter-spacing: .5px; font-weight: 700; margin-top: 1px; }
+.al-access { display: flex; align-items: center; gap: 10px; }
+.al-role-pill { 
+  font-family: var(--font-button);
+  font-size: 10px; 
+  font-weight: 900; 
+  letter-spacing: .5px; 
+  padding: 4px 10px; 
+  border-radius: 100px;
+  border: 1px solid rgba(163, 230, 53, .3); 
+  color: var(--al-green); 
+  background: rgba(163, 230, 53, .08); 
+}
+.al-btn { 
+  font-family: var(--font-button);
+  font-size: 12px; 
+  font-weight: 800; 
+  padding: 8px 16px; 
+  border-radius: 100px; 
+  cursor: pointer;
+  background: var(--al-green); 
+  color: #000000; 
+  border: none; 
+  transition: all 0.2s;
+}
+.al-btn:hover { background: #bbf846; }
+.al-btn.ghost { background: transparent; color: var(--white); border: 1.5px solid var(--border); }
+.al-btn.ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
 
 /* ─── TABS ───────────────────────────────────────────────── */
-.tabbar { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; padding:14px 16px 0; max-width:980px; margin:0 auto; }
-.tab-btn { background:var(--card); border:1.5px solid var(--border); color:var(--gray); font-size:13px; font-weight:800;
-  padding:9px 16px; border-radius:100px; cursor:pointer; transition:all .15s; }
-.tab-btn:hover { border-color:var(--dim); color:var(--white); }
-.tab-btn.active { background:rgba(25,255,117,.1); border-color:rgba(25,255,117,.4); color:var(--al-green); }
-.view { display:none; }
-.view.active { display:block; }
+.tabbar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 14px 16px 0; max-width: 1200px; margin: 0 auto; }
+.tab-btn { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  color: var(--gray); 
+  font-family: var(--font-button);
+  font-size: 13px; 
+  font-weight: 800;
+  padding: 9px 18px; 
+  border-radius: 100px; 
+  cursor: pointer; 
+  transition: all .15s; 
+}
+.tab-btn:hover { border-color: var(--al-green); color: var(--white); }
+.tab-btn.active { background: rgba(163, 230, 53, 0.1); border-color: var(--al-green); color: var(--al-green); }
+.view { display: none; }
+.view.active { display: block; }
 
 /* ─── ROLE GATING ────────────────────────────────────────── */
 body:not(.role-owner) .ownerOnly { display: none !important; }
@@ -261,56 +919,54 @@ body:not(.role-owner):not(.role-helper) .staffOnly { display: none !important; }
 body:not(.role-owner):not(.role-helper):not(.role-bar) .barOnly { display: none !important; }
 
 /* ─── SETTINGS / DASHBOARD ───────────────────────────────── */
-.set-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
-.set-field label { display:block; font-size:11px; color:var(--gray); font-weight:700; margin-bottom:5px; letter-spacing:.3px; }
+.set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.set-field label { display: block; font-size: 11px; color: var(--gray); font-weight: 700; margin-bottom: 5px; letter-spacing: .3px; }
 .set-field input, .form-field input, .form-field select, .form-field textarea {
-  width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--border);
-  background:var(--card); color:var(--white); font-size:14px; font-family:inherit; }
+  width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); color: var(--white); font-size: 14px; font-family: inherit; }
 .set-field input:focus, .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-  outline:none; border-color:var(--al-green); }
-.dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
-.dash-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; }
-.dash-label { font-size:11px; color:var(--gray); font-weight:700; margin-bottom:6px; }
-.dash-val { font-size:24px; font-weight:900; letter-spacing:-1px; }
+  outline: none; border-color: var(--al-green); }
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+.dash-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.dash-label { font-size: 11px; color: var(--gray); font-weight: 700; margin-bottom: 6px; }
+.dash-val { font-family: var(--font-mono); font-size: 24px; font-weight: 900; letter-spacing: -1px; }
 
 /* ─── BRACKET / MATCHUPS ─────────────────────────────────── */
-.bracket { display:flex; gap:18px; overflow-x:auto; padding-bottom:10px; }
-.round { display:flex; flex-direction:column; justify-content:space-around; gap:12px; min-width:210px; }
-.round-title { font-size:11px; font-weight:800; color:var(--gray); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
-.match-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px 12px; }
-.match-card.live { border-color:rgba(25,255,117,.4); }
-.match-side { display:flex; justify-content:space-between; align-items:center; font-size:13px; padding:4px 0; }
-.match-side .seed { color:var(--gray); font-size:11px; margin-right:7px; }
-.match-vs { font-size:10px; color:var(--gray); text-align:center; }
-.next-box { background:rgba(25,255,117,.05); border:1px solid rgba(25,255,117,.2); border-radius:10px;
-  padding:10px 12px; font-size:12px; color:var(--al-green); margin-top:6px; line-height:1.5; }
+.bracket { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 10px; }
+.round { display: flex; flex-direction: column; justify-content: space-around; gap: 12px; min-width: 210px; }
+.round-title { font-family: var(--font-header); font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
+.match-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; }
+.match-card.live { border-color: rgba(163, 230, 53, 0.4); }
+.match-side { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; }
+.match-side .seed { color: var(--gray); font-size: 11px; margin-right: 7px; }
+.match-vs { font-size: 10px; color: var(--gray); text-align: center; }
+.next-box { background: rgba(163, 230, 53, 0.05); border: 1px solid rgba(163, 230, 53, 0.2); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--al-green); margin-top: 6px; line-height: 1.5; }
 
 /* ─── PREDICTIONS ────────────────────────────────────────── */
-.pred-bar-bg { height:7px; background:var(--border); border-radius:100px; overflow:hidden; margin-top:4px; }
-.pred-bar { height:100%; background:var(--al-green); border-radius:100px; }
-.pred-stat { font-size:11px; color:var(--gray); }
-.pred-stat b { color:var(--white); font-weight:800; }
-.pred-narr { font-size:12px; color:var(--gray); line-height:1.6; margin-top:10px; }
+.pred-bar-bg { height: 7px; background: var(--border); border-radius: 100px; overflow: hidden; margin-top: 4px; }
+.pred-bar { height: 100%; background: var(--al-green); border-radius: 100px; }
+.pred-stat { font-size: 11px; color: var(--gray); }
+.pred-stat b { color: var(--white); font-weight: 800; }
+.pred-narr { font-size: 12px; color: var(--gray); line-height: 1.6; margin-top: 10px; }
 
 /* ─── FORM / FEEDBACK ────────────────────────────────────── */
-.form-field { margin-bottom:14px; }
-.form-field textarea { min-height:90px; resize:vertical; }
-.feed-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
-.feed-type { font-size:10px; font-weight:800; letter-spacing:.5px; padding:3px 8px; border-radius:100px;
-  background:rgba(25,255,117,.1); color:var(--al-green); }
-.notice { font-size:13px; padding:12px 14px; border-radius:10px; margin-top:10px; }
-.notice.ok  { background:rgba(25,255,117,.1); color:var(--al-green); border:1px solid rgba(25,255,117,.25); }
-.notice.err { background:rgba(255,59,92,.1); color:var(--red); border:1px solid rgba(255,59,92,.25); }
+.form-field { margin-bottom: 14px; }
+.form-field textarea { min-height: 90px; resize: vertical; }
+.feed-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.feed-type { font-family: var(--font-button); font-size: 10px; font-weight: 800; letter-spacing: .5px; padding: 3px 8px; border-radius: 100px; background: rgba(163, 230, 53, .15); color: var(--al-green); }
+.notice { font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-top: 10px; }
+.notice.ok  { background: rgba(163, 230, 53, .1); color: var(--al-green); border: 1px solid rgba(163, 230, 53, .25); }
+.notice.err { background: rgba(255, 59, 92, .1); color: var(--red); border: 1px solid rgba(255, 59, 92, .25); }
 
 /* ─── ROLE GATING PORTFOLIO ──────────────────────────────── */
-body.role-public .portfolio-section { display:none !important; }
-body:not(.role-public) .public-cta-section { display:none !important; }
+body.role-public .portfolio-section { display: none !important; }
+body:not(.role-public) .public-cta-section { display: none !important; }
 
 /* ─── FULLSCREEN AUTH OVERLAY ───────────────────────────── */
-#loginOverlay {
+#loginOverlay, #purchaseQrOverlay {
   position: fixed;
   inset: 0;
-  background-image: linear-gradient(rgba(10,10,24,0.72) 0%, rgba(10,10,24,0.85) 100%), url('/hero-bg.png');
+  background-image: linear-gradient(rgba(2,6,13,0.85) 0%, rgba(2,6,13,0.95) 100%), url('/hero-bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -325,274 +981,650 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   overflow-y: auto;
   padding: 20px;
 }
-#loginOverlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-#loginOverlay .auth-wrapper {
-  width: 100%;
-  max-width: 440px;
-  margin: auto;
-  position: relative;
-}
-#loginOverlay .auth-card {
-  background: rgba(22, 22, 42, 0.85);
-  border: 1px solid rgba(42, 42, 69, 0.9);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
-  padding: 28px;
-}
-.auth-input {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f0f0ff;
-  border-radius: 6px;
-  padding: 12px 14px;
-  font-family: inherit;
-  font-size: 14px;
-  width: 100%;
-  outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
-}
-.auth-input:focus {
-  border-color: #39ff14;
-  box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.15);
-}
-.auth-button-role {
-  background: #131b2e;
-  border: 1px solid #2d3449;
-  color: #cbc3d7;
-  border-radius: 6px;
-  padding: 12px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  transition: all 0.2s;
-}
-.auth-button-role.active {
-  background: #39ff14;
-  border-color: #39ff14;
-  color: #071400;
-  box-shadow: 0 4px 12px rgba(57, 255, 20, 0.35);
-}
-.auth-button-role:hover:not(.active) {
-  border-color: #958ea0;
-  color: #dae2fd;
-}
-.auth-tab-btn {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: #cbc3d7;
-  padding: 10px 0;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.25s;
-  text-align: center;
-}
-.auth-tab-btn.active {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  color: #dae2fd;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-.auth-submit-btn {
-  width: 100%;
-  border: none;
-  border-radius: 8px;
-  padding: 14px;
-  background: linear-gradient(135deg, #1a9900, #39ff14);
-  color: #071400;
-  font-weight: 800;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(57, 255, 20, 0.25);
-}
-.auth-submit-btn:hover {
-  background: #39ff14;
-  box-shadow: 0 6px 20px rgba(57, 255, 20, 0.35);
-}
-.auth-submit-btn:active {
-  transform: translateY(1px);
-}
-.auth-submit-btn:disabled {
-  background: #2d3449;
-  color: #cbc3d7;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-.auth-close-btn {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: rgba(22, 22, 42, 0.9);
-  border: 1px solid rgba(42, 42, 69, 0.9);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  color: var(--gray);
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 510;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  transition: all 0.15s;
-}
-.auth-close-btn:hover {
-  color: var(--white);
-  border-color: var(--dim);
-  transform: scale(1.05);
-}
-/* ═══════════════════════════════════════════════
-   SHARE CERTIFICATE MODAL
-   ═══════════════════════════════════════════════ */
-#certOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(8px);
-  z-index: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  padding: 20px;
-  overflow-y: auto;
-}
+#loginOverlay.open, #purchaseQrOverlay.open { opacity: 1; pointer-events: all; }
+#loginOverlay .auth-wrapper, #purchaseQrOverlay .auth-wrapper { width: 100%; max-width: 440px; margin: auto; position: relative; }
+#loginOverlay .auth-card, #purchaseQrOverlay .auth-card { background: rgba(7, 12, 20, 0.9); border: 1.5px solid var(--border); border-radius: 20px; overflow: hidden; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7); padding: 32px; }
+.auth-input { background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; color: var(--white); font-family: inherit; font-size: 14px; width: 100%; padding: 12px 14px; outline: none; margin-top: 4px; }
+.auth-input:focus { border-color: var(--al-green); box-shadow: 0 0 10px rgba(163,230,53,0.25); }
+.auth-tab-btn { flex: 1; border: none; background: transparent; color: var(--gray); font-family: var(--font-button); font-weight: 800; font-size: 13px; text-transform: uppercase; padding: 10px 0; cursor: pointer; transition: all 0.2s; }
+.auth-tab-btn.active { background: rgba(255, 255, 255, 0.05); border-radius: 6px; color: var(--white); }
+.auth-button-role { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--gray); font-family: var(--font-button); font-size: 11px; font-weight: 800; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
+.auth-button-role.active { background: rgba(163,230,53,0.1); border-color: var(--al-green); color: var(--al-green); }
+.auth-submit-btn { width: 100%; border: none; border-radius: 10px; padding: 14px; background: var(--al-green); color: #000; font-family: var(--font-button); font-weight: 900; cursor: pointer; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.2s; box-shadow: 0 4px 16px rgba(163, 230, 53, 0.2); }
+.auth-submit-btn:hover { background: #bbf846; box-shadow: 0 6px 20px rgba(163, 230, 53, 0.35); }
+.auth-submit-btn:active { transform: translateY(1px); }
+.auth-submit-btn:disabled { background: var(--dim); color: var(--gray); cursor: not-allowed; box-shadow: none; }
+.auth-close-btn { position: absolute; top: -8px; right: -8px; background: rgba(7, 12, 20, 0.95); border: 1.5px solid var(--border); border-radius: 50%; width: 32px; height: 32px; color: var(--gray); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 510; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.15s; }
+.auth-close-btn:hover { color: var(--white); border-color: var(--white); transform: scale(1.05); }
+
+/* ─── SHARE CERTIFICATE MODAL ───────────────────────────── */
+#certOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 600; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; overflow-y: auto; }
 #certOverlay.open { opacity: 1; pointer-events: all; }
-.cert-card {
-  position: relative;
-  background: linear-gradient(160deg, #10102a 0%, #1a1a3a 60%, #0d1a0d 100%);
-  border: 1px solid rgba(57,255,20,0.3);
-  border-radius: 20px;
-  max-width: 420px;
-  width: 100%;
-  overflow: hidden;
-  box-shadow: 0 0 60px rgba(57,255,20,0.15), 0 24px 64px rgba(0,0,0,0.6);
-  animation: certSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes certSlideIn {
-  from { transform: scale(0.8) translateY(40px); opacity: 0; }
-  to   { transform: scale(1)   translateY(0);    opacity: 1; }
-}
-.cert-close {
-  position: absolute; top: 12px; right: 12px;
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 50%; width: 30px; height: 30px;
-  color: #aaa; font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2; transition: all 0.15s;
-}
-.cert-close:hover { color: #fff; border-color: #555; }
-.cert-header {
-  background: linear-gradient(135deg, #071400, #0a1f00, #071400);
-  border-bottom: 1px solid rgba(57,255,20,0.25);
-  padding: 28px 24px 20px; text-align: center; position: relative; overflow: hidden;
-}
-.cert-header::before {
-  content:''; position:absolute; inset:0;
-  background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(57,255,20,0.03) 8px,rgba(57,255,20,0.03) 9px);
-}
-.cert-logo { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(57,255,20,0.6)); }
-.cert-brand { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(57,255,20,0.6); margin-bottom: 6px; }
-.cert-title { font-size: 18px; font-weight: 800; color: #39ff14; text-shadow: 0 0 20px rgba(57,255,20,0.5); letter-spacing: 1px; }
+.cert-card { position: relative; background: linear-gradient(160deg, #05080c 0%, #0d1527 60%, #061106 100%); border: 1.5px solid rgba(163,230,53,0.3); border-radius: 20px; max-width: 420px; width: 100%; overflow: hidden; box-shadow: 0 0 60px rgba(163,230,53,0.15), 0 24px 64px rgba(0,0,0,0.6); animation: certSlideIn 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes certSlideIn { from { transform: scale(0.85) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.cert-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 30px; height: 30px; color: var(--gray); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; transition: all 0.15s; }
+.cert-close:hover { color: #fff; border-color: var(--white); }
+.cert-header { background: linear-gradient(135deg, #02060d, #081105, #02060d); border-bottom: 1.5px solid rgba(163,230,53,0.25); padding: 28px 24px 20px; text-align: center; position: relative; overflow: hidden; }
+.cert-header::before { content:''; position:absolute; inset:0; background: repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(163,230,53,0.02) 8px,rgba(163,230,53,0.02) 9px); }
+.cert-logo { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(163,230,53,0.6)); }
+.cert-brand { font-family: var(--font-header); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(163,230,53,0.6); margin-bottom: 6px; }
+.cert-title { font-family: var(--font-header); font-size: 18px; font-weight: 900; color: var(--al-green); text-shadow: 0 0 20px rgba(163,230,53,0.4); letter-spacing: 0.5px; }
 .cert-body { padding: 20px 24px 8px; }
-.cert-player-name { font-size: 26px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 4px; }
-.cert-tier-badge {
-  display: block; width: fit-content; margin: 4px auto 16px;
-  padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-align: center;
-}
-.cert-tier-badge.gold   { background:rgba(57,255,20,0.15);   color:#39ff14; border:1px solid rgba(57,255,20,0.3); }
+.cert-player-name { font-family: var(--font-header); font-size: 26px; font-weight: 900; color: #fff; text-align: center; margin-bottom: 4px; text-transform: uppercase; }
+.cert-tier-badge { display: block; width: fit-content; margin: 4px auto 16px; padding: 4px 14px; border-radius: 20px; font-family: var(--font-button); font-size: 12px; font-weight: 700; text-align: center; }
+.cert-tier-badge.gold   { background:rgba(163,230,53,0.15);   color:var(--al-green); border: 1px solid rgba(163,230,53,0.3); }
 .cert-tier-badge.purple { background:rgba(196,112,245,0.15); color:#c470f5; border:1px solid rgba(196,112,245,0.3); }
-.cert-tier-badge.blue   { background:rgba(68,136,255,0.15);  color:#4488ff; border:1px solid rgba(68,136,255,0.3); }
-.cert-tier-badge.gray   { background:rgba(100,100,130,0.15); color:#aaa;    border:1px solid rgba(100,100,130,0.3); }
-.cert-rows { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
-.cert-row { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:10px 12px; }
-.cert-row-label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:#666; margin-bottom:4px; }
-.cert-row-value { font-size:16px; font-weight:700; color:#fff; }
-.cert-streak .w { color:var(--al-green); }
-.cert-streak .l { color:var(--red); }
-.cert-hot { display:inline-block; background:rgba(255,100,0,0.15); color:#ff6400; border:1px solid rgba(255,100,0,0.3); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; }
-.cert-qr-wrap { display:flex; flex-direction:column; align-items:center; padding:16px 24px; background:rgba(57,255,20,0.04); border-top:1px solid rgba(57,255,20,0.1); border-bottom:1px solid rgba(57,255,20,0.1); gap:8px; }
-#certQRBox { border-radius:10px; border:3px solid rgba(57,255,20,0.3); padding:6px; background:#fff; overflow:hidden; line-height:0; }
-#certQRBox canvas, #certQRBox img { display:block; border-radius:6px; }
-.cert-qr-label { font-size:11px; color:rgba(57,255,20,0.5); letter-spacing:1px; text-transform:uppercase; }
-.cert-actions { display:flex; gap:10px; padding:16px 24px 12px; }
-.cert-btn { flex:1; padding:11px 0; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; border:none; }
-.cert-btn.primary { background:linear-gradient(135deg,#1a9900,#39ff14); color:#0a0a14; }
-.cert-btn.primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
-.cert-btn.ghost { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
-.cert-btn.ghost:hover { color:#fff; border-color:#555; }
-.cert-footer { font-size:10px; color:#444; text-align:center; padding:0 24px 16px; line-height:1.6; }
-
-/* ─── SKELETON SHIMMER ───────────────────────────────────── */
-@keyframes sk-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position:  600px 0; }
-}
-.sk {
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.04) 0%,
-    rgba(255,255,255,0.11) 40%,
-    rgba(255,255,255,0.04) 100%
-  );
-  background-size: 600px 100%;
-  animation: sk-shimmer 1.6s ease-in-out infinite;
-  border-radius: 6px;
-  display: block;
-}
-/* Skeleton card wrapper — mimics .p-card */
+.cert-tier-badge.blue   { background:rgba(56,189,248,0.15);  color:#38bdf8; border:1px solid rgba(56,189,248,0.3); }
+.cert-tier-badge.gray   { background:rgba(148,163,184,0.15); color:#aaa; border:1px solid rgba(148,163,184,0.3); }
+.cert-rows { display:grid; grid-template-columns:1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.cert-row { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:10px 12px; }
+.cert-row-label { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--gray); margin-bottom:4px; font-weight: 700; }
+.cert-row-value { font-size:16px; font-weight:900; color:var(--white); font-family:var(--font-header); }
+.cert-streak { display: flex; gap: 3px; align-items: center; }
+.cert-streak span { font-size:11px; font-weight:900; font-family:var(--font-mono); padding:2px 4px; border-radius:4px; }
+.cert-streak span.w { background:rgba(163,230,53,0.3); color:var(--al-green); }
+.cert-streak span.l { background:rgba(239,68,68,0.2); color:#ff6b6b; }
+.cert-hot { font-size:11px; font-weight:700; color:#ff6b6b; display:inline-block; margin-left:6px; }
+.cert-qr-wrap { padding:20px 24px; text-align:center; border-top:1.5px solid rgba(163,230,53,0.15); border-bottom:1.5px solid rgba(163,230,53,0.15); }
+.cert-qr-label { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--gray); margin-top:12px; font-weight:700; }
+#certQRBox { width:140px; height:140px; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; }
+.cert-actions { display:flex; gap:10px; padding:16px 24px; }
+.cert-btn { flex:1; padding:11px 16px; border:1px solid rgba(163,230,53,0.3); border-radius:10px; background:rgba(163,230,53,0.08); color:var(--al-green); font-family:var(--font-button); font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; transition:all 0.2s; }
+.cert-btn.primary { background:rgba(163,230,53,0.15); border-color:rgba(163,230,53,0.4); }
+.cert-btn.primary:hover { background:var(--al-green); color:#000; border-color:var(--al-green); }
+.cert-btn.ghost { background:transparent; }
+.cert-btn.ghost:hover { background:rgba(163,230,53,0.1); }
+.cert-footer { padding:16px 24px; text-align:center; font-size:10px; color:var(--gray); line-height:1.5; border-top:1.5px solid rgba(163,230,53,0.15); }
 .sk-card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 20px;
-  overflow: hidden;
-}
-/* Skeleton metric tile — mimics .dash-card */
-.sk-metric {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px;
-  overflow: hidden;
-}
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    overflow: hidden;
+  }
+  .sk-metric {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    overflow: hidden;
+  }
 
+  /* ─── NEW ESPORTS WIDGETS & GRID LAYOUTS ────────────────── */
+  .esports-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(2, 6, 13, 0.95);
+    border-bottom: 1.5px solid var(--border);
+    padding: 16px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .esports-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .esports-logo-mark {
+    font-size: 22px;
+    color: var(--al-green);
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.6));
+    font-weight: 900;
+  }
+  .esports-logo-text {
+    font-family: var(--font-header);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .esports-logo-text span {
+    color: var(--al-green);
+  }
+  .esports-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  @media (max-width: 992px) {
+    .esports-nav { display: none; }
+  }
+  .esports-nav-link {
+    font-family: var(--font-button);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--gray);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .esports-nav-link:hover, .esports-nav-link.active {
+    color: var(--al-green);
+  }
+  .esports-nav-link .badge-new {
+    position: absolute;
+    top: -10px;
+    right: -24px;
+    background: var(--al-green);
+    color: #000;
+    font-size: 8px;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .esports-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-join-league {
+    font-family: var(--font-button);
+    font-size: 11px;
+    font-weight: 900;
+    padding: 8px 16px;
+    background: var(--al-green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(163,230,53,0.2);
+  }
+  .btn-join-league:hover {
+    background: #bbf846;
+    box-shadow: 0 4px 15px rgba(163,230,53,0.35);
+  }
+  .btn-signin {
+    font-family: var(--font-button);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-signin:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .dashboard-mid-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    padding: 0 16px;
+  }
+  @media (max-width: 992px) {
+    .dashboard-mid-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Column 1: Heatmap Widget */
+  .heatmap-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .heatmap-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .heatmap-tile {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+  .heatmap-tile:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(163,230,53,0.15);
+  }
+  .heatmap-tile-name {
+    font-family: var(--font-header);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .heatmap-tile-price {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .heatmap-tile-change {
+    font-size: 9px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+  
+  /* Column 2: Live Match Center */
+  .match-center-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .match-center-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 59, 92, 0.15);
+    border: 1px solid rgba(255, 59, 92, 0.3);
+    color: var(--red);
+    font-family: var(--font-button);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .match-center-teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+  .match-center-team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 40%;
+  }
+  .match-center-team-logo {
+    font-size: 28px;
+  }
+  .match-center-team-name {
+    font-family: var(--font-header);
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .match-center-scores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+  }
+  .match-center-score-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--white);
+  }
+  .match-center-score-divider {
+    color: var(--border);
+  }
+  .match-center-status {
+    font-family: var(--font-button);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--al-green);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .momentum-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .momentum-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--gray);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .momentum-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+    display: flex;
+  }
+  .momentum-team-a {
+    height: 100%;
+    background: var(--al-green);
+    transition: width 0.3s;
+  }
+  .momentum-team-b {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  
+  /* Column 3: Scrolling Reactions & Leaderboard */
+  .reactions-leaderboard-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .scrolling-reactions-container {
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .reactions-track {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: scrollReactions 15s linear infinite;
+  }
+  .reactions-track:hover {
+    animation-play-state: paused;
+  }
+  @keyframes scrollReactions {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+  .reaction-bubble {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .reaction-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .reaction-user {
+    color: var(--gold);
+  }
+  .reaction-time {
+    color: var(--gray);
+  }
+  .reaction-text {
+    font-size: 11px;
+    color: var(--white);
+    line-height: 1.4;
+  }
+  .mini-leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .leaderboard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.01);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  .leaderboard-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .leaderboard-rank {
+    font-family: var(--font-header);
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--gray);
+    width: 16px;
+  }
+  .leaderboard-name {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .leaderboard-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--al-green);
+  }
+
+  .testimonials-container {
+    background: rgba(255,255,255,0.01);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .testimonials-slider {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .testimonial-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .testimonial-quote {
+    font-family: var(--font-header);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.5;
+  }
+  .testimonial-author {
+    font-family: var(--font-button);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--al-green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+/* --- GLOBAL APP LOADERS --------------------------------- */
+body.checkout-loading { overflow: hidden; }
+#appBootLoader { position: fixed; inset: 0; z-index: 1200; background: radial-gradient(1200px 500px at 50% -20%, rgba(163,230,53,0.08), transparent 65%), #02060d; display: flex; align-items: stretch; justify-content: stretch; padding: 0; transition: opacity 0.35s ease; }
+#appBootLoader.done { opacity: 0; pointer-events: none; }
+.app-boot-shell { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+.app-boot-topbar { height: 64px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 270px 1fr 300px; align-items: center; gap: 16px; padding: 0 20px; background: rgba(2,6,13,0.9); }
+.app-boot-ticker { height: 38px; border-bottom: 1px solid rgba(30,41,59,0.85); display: grid; grid-template-columns: 84px 1fr; align-items: center; }
+.app-boot-live { height: 100%; border-right: 1px solid var(--border); padding: 0 12px; display: flex; align-items: center; }
+.app-boot-main { padding: 0; }
+.app-boot-hero { display: grid; grid-template-columns: 1.2fr 0.8fr 1fr; gap: 30px; max-width: 1200px; margin: 0 auto; padding: 40px 16px; align-items: center; }
+.app-boot-left { display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; }
+.app-boot-center { display: flex; align-items: center; justify-content: center; }
+.app-boot-sphere { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.14) 0%, rgba(18,18,18,0.95) 55%, #000 100%); box-shadow: inset -10px -10px 40px rgba(0,0,0,0.9), 10px 20px 30px rgba(0,0,0,0.6), 0 0 40px rgba(163,230,53,0.14); }
+.app-boot-right { display: flex; flex-direction: column; gap: 16px; }
+.app-boot-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px; background: rgba(7,12,20,0.7); min-height: 228px; }
+.app-boot-card.hot { border-color: rgba(163,230,53,0.35); }
+.app-boot-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.app-boot-bar { display: block; height: 12px; border-radius: 8px; background: linear-gradient(90deg, rgba(148,163,184,.16) 25%, rgba(255,255,255,.10) 40%, rgba(148,163,184,.16) 55%); background-size: 220% 100%; animation: appShimmer 1.2s linear infinite; }
+.app-boot-pill { height: 32px; border-radius: 999px; }
+.app-boot-headline { height: 72px; border-radius: 10px; }
+.app-boot-copy { height: 16px; border-radius: 8px; }
+.app-boot-btn { height: 44px; border-radius: 12px; }
+.app-boot-nav { display: flex; gap: 16px; justify-content: center; }
+.app-boot-actions { display: flex; justify-content: flex-end; gap: 10px; }
+@keyframes appShimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+#checkoutLoader { position: fixed; inset: 0; z-index: 1300; background: rgba(2,6,13,0.78); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 18px; }
+#checkoutLoader.open { display: flex; }
+.checkout-loader-card { min-width: min(440px, 92vw); background: rgba(7,12,20,0.94); border: 1.5px solid rgba(163,230,53,0.35); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+.checkout-loader-spinner { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid rgba(163,230,53,0.3); border-top-color: var(--al-green); animation: spin 0.8s linear infinite; }
+.checkout-loader-text { font-family: var(--font-button); font-size: 13px; font-weight: 800; letter-spacing: .3px; color: var(--white); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 1100px) {
+  .app-boot-topbar { grid-template-columns: 1fr; height: auto; padding: 12px 14px; gap: 10px; }
+  .app-boot-hero { grid-template-columns: 1fr; gap: 36px; padding: 28px 14px; }
+  .app-boot-center { display: none; }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-<!-- ════════ ACTIONLADDER BRAND BAR ════════ -->
-<div class="al-bar">
-  <div class="al-brand">
-    <div class="al-mark">▲</div>
-    <div>
-      <div class="al-name">Action<span>Ladder</span></div>
-      <div class="al-tag">Billiards Market Ladder</div>
+<div id="appBootLoader" aria-live="polite" aria-label="Loading app">
+  <div class="app-boot-shell">
+    <div class="app-boot-topbar">
+      <div class="app-boot-row" style="margin:0"><span class="app-boot-bar" style="width:220px;height:34px"></span></div>
+      <div class="app-boot-nav">
+        <span class="app-boot-bar" style="width:72px"></span>
+        <span class="app-boot-bar" style="width:62px"></span>
+        <span class="app-boot-bar" style="width:66px"></span>
+        <span class="app-boot-bar" style="width:64px"></span>
+      </div>
+      <div class="app-boot-actions">
+        <span class="app-boot-bar app-boot-pill" style="width:88px"></span>
+        <span class="app-boot-bar app-boot-pill" style="width:118px"></span>
+      </div>
+    </div>
+
+    <div class="app-boot-ticker">
+      <div class="app-boot-live"><span class="app-boot-bar" style="width:54px"></span></div>
+      <div class="app-boot-row" style="margin:0;padding:0 12px">
+        <span class="app-boot-bar" style="width:120px"></span>
+        <span class="app-boot-bar" style="width:100px"></span>
+        <span class="app-boot-bar" style="width:116px"></span>
+        <span class="app-boot-bar" style="width:88px"></span>
+        <span class="app-boot-bar" style="width:105px"></span>
+      </div>
+    </div>
+
+    <div class="app-boot-main">
+      <div class="app-boot-hero">
+        <div class="app-boot-left">
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-pill" style="width:210px"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-headline" style="width:82%"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-headline" style="width:68%"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-headline" style="width:77%"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-copy" style="width:86%"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-copy" style="width:89%"></span></div>
+          <div class="app-boot-row"><span class="app-boot-bar app-boot-copy" style="width:71%"></span></div>
+          <div class="app-boot-row" style="margin-top:8px">
+            <span class="app-boot-bar app-boot-btn" style="width:190px"></span>
+            <span class="app-boot-bar app-boot-btn" style="width:180px"></span>
+          </div>
+        </div>
+
+        <div class="app-boot-center">
+          <div class="app-boot-sphere"></div>
+        </div>
+
+        <div class="app-boot-right">
+          <div class="app-boot-card hot">
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:72px"></span><span class="app-boot-bar" style="width:148px"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:84%"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:56%;height:34px"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:32%;height:14px"></span></div>
+            <div class="app-boot-row" style="margin-top:14px"><span class="app-boot-bar app-boot-btn" style="width:100%"></span></div>
+          </div>
+          <div class="app-boot-card">
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:66px"></span><span class="app-boot-bar" style="width:134px"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:72%"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:48%;height:34px"></span></div>
+            <div class="app-boot-row"><span class="app-boot-bar" style="width:30%;height:14px"></span></div>
+            <div class="app-boot-row" style="margin-top:14px"><span class="app-boot-bar app-boot-btn" style="width:100%"></span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="al-access">
-    <span class="al-role-pill" id="rolePill">PUBLIC</span>
-    <button class="al-btn ghost" id="loginBtn" onclick="openLogin()">Login</button>
-    <button class="al-btn" id="logoutBtn" onclick="doLogout()" style="display:none">Exit to Public</button>
+</div>
+
+<div id="checkoutLoader" role="status" aria-live="polite" aria-label="Redirecting to Stripe">
+  <div class="checkout-loader-card">
+    <span class="checkout-loader-spinner" aria-hidden="true"></span>
+    <span class="checkout-loader-text" id="checkoutLoaderMsg">Preparing secure Stripe checkout...</span>
   </div>
 </div>
+
+<!-- ════════ ESPORTS HEADER / NAVIGATION BAR ════════ -->
+<header class="esports-header">
+  <div class="esports-logo-section">
+    <div class="esports-logo-mark">🎱</div>
+    <div>
+      <div class="esports-logo-text">Action<span>Ladder</span></div>
+      <div class="al-tag" style="font-size: 9px; color: var(--gray); letter-spacing: 0.5px; font-weight: 700; margin-top: 1px;">BILLIARDS MARKET LADDER</div>
+    </div>
+  </div>
+  
+  <nav class="esports-nav">
+    <a class="esports-nav-link active" data-tab="market" data-mode="individual" onclick="showTab('market'); setMode('individual');">Market</a>
+    <a class="esports-nav-link" data-tab="market" data-mode="teams" onclick="showTab('market'); setMode('teams');">Teams</a>
+    <a class="esports-nav-link" data-tab="matchups" onclick="showTab('matchups')">Matches</a>
+    <a class="esports-nav-link" data-tab="predict" onclick="showTab('predict')">Players</a>
+    <a class="esports-nav-link" data-tab="feedback" onclick="showTab('feedback')">Feedback</a>
+    <a class="esports-nav-link barOnly" data-tab="bar" onclick="showTab('bar')">Bar Profits</a>
+    <a class="esports-nav-link staffOnly" data-tab="owner" onclick="showTab('owner')">Dashboard</a>
+    <a class="esports-nav-link" href="#" onclick="alert('Shop coming soon in Season 2! 🛒'); return false;">Shop <span class="badge-new">NEW</span></a>
+  </nav>
+  
+  <div class="esports-actions">
+    <span class="al-role-pill" id="rolePill">PUBLIC</span>
+    <button class="btn-join-league" id="joinLeagueBtn" onclick="payFee('registration')">Join League</button>
+    <button class="btn-signin" id="loginBtn" onclick="openLogin()">Sign In</button>
+    <button class="btn-signin" id="logoutBtn" onclick="doLogout()" style="display:none">Sign Out</button>
+  </div>
+</header>
 
 <!-- ════════ TICKER ════════ -->
 <div class="ticker-wrap">
@@ -600,8 +1632,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   <div class="ticker-track"><div class="ticker-scroll" id="ticker"></div></div>
 </div>
 
-<!-- ════════ TAB BAR ════════ -->
-<div class="tabbar" id="tabbar">
+<!-- Hidden original tabbar for backing compatibilities -->
+<div class="tabbar" id="tabbar" style="display:none">
   <button class="tab-btn active" data-tab="market"    onclick="showTab('market')">🎱 Market</button>
   <button class="tab-btn"        data-tab="matchups"  onclick="showTab('matchups')">🗓️ Matchups</button>
   <button class="tab-btn"        data-tab="predict"   onclick="showTab('predict')">📈 Predictions</button>
@@ -613,8 +1645,8 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <!-- ════════ MARKET VIEW ════════ -->
 <div class="view active" id="view-market">
 
-<!-- ════════ MODE SWITCHER ════════ -->
-<div class="mode-switch">
+<!-- Hidden mode switcher to keep bindings alive -->
+<div class="mode-switch" style="display:none">
   <button class="mode-btn active" id="modeBtnIndiv" onclick="setMode('individual')">🎯 Individual</button>
   <button class="mode-btn" id="modeBtnTeams" onclick="setMode('teams')">🏆 Teams</button>
 </div>
@@ -622,66 +1654,91 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <!-- ════════ INDIVIDUAL MODE ════════ -->
 <div id="indivMode">
 
-<!-- ════════ HERO ════════ -->
-<div class="hero">
-  <div class="hero-eyebrow"><div class="live-dot"></div>SEASON IN PROGRESS</div>
-  <h1>OWN THE<br><em>ACTION.</em></h1>
-  <p class="hero-sub">Buy shares in pool players. Watch your value rise as they climb the ladder. Cash out big when they win the championship.</p>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-val" id="stat-shares">–</div><div class="stat-label">SHARES SOLD</div></div>
-    <div class="stat"><div class="stat-val" id="stat-vol">–</div><div class="stat-label">TOTAL INVESTED</div></div>
-    <div class="stat"><div class="stat-val">500%</div><div class="stat-label">MAX ROI</div></div>
-  </div>
-</div>
-
-<div class="divider"></div>
-
-<!-- ════════ JOIN THE LEAGUE (fees) ════════ -->
-<div class="wrap" style="padding-bottom:8px">
-  <div class="sec-head">
-    <div class="sec-title">🎟️ Join the League</div>
-    <div class="sec-sub">Player fees &amp; team entry · paid securely through Stripe</div>
-  </div>
-  <div class="dash-grid" id="feeCards">
-    <!-- dynamically populated by buildFeeCards() -->
-  </div>
-</div>
-
-<div class="divider"></div>
-
-<!-- ════════ PLAYER BOARD ════════ -->
-<div class="wrap">
-  <div class="sec-head">
-    <div class="sec-title">📊 Live Share Prices</div>
-    <div class="sec-sub">Price locks in at purchase · Rises with standings · Every investor gets paid at playoffs</div>
-  </div>
-  <div class="bar-tabs" id="barTabs"></div>
-  <div class="player-grid" id="playerGrid"></div>
-</div>
-
-<div class="divider"></div>
-
-<!-- ════════ HOW IT WORKS ════════ -->
-<div class="wrap" style="padding-bottom:8px">
-  <div class="sec-head"><div class="sec-title">⚡ How It Works</div><div class="sec-sub">Three steps. No experience needed.</div></div>
-</div>
-<div style="max-width:920px;margin:0 auto;padding:0 16px 44px">
-  <div class="how-wrap">
-    <div class="steps">
-      <div class="step">
-        <div class="step-circle">1</div>
-        <div class="step-title">Pick a Player</div>
-        <div class="step-body">Browse the leaderboard. Find someone you believe in. Lower-ranked players cost less — and pay out the most ROI if they shock everyone and win.</div>
+<!-- SPLIT HERO LAYOUT -->
+<div class="hero" style="background:none; padding: 0;">
+  <div class="hero-dashboard-grid">
+    <!-- Left Column: Tagline & CTA -->
+    <div class="hero-left-col">
+      <div class="hero-eyebrow"><div class="live-dot"></div>SEASON IN PROGRESS</div>
+      <h1 class="hero-title">OWN THE<br><span class="neon-highlight">ACTION.</span><br>PLAY THE GAME.<br><span class="neon-highlight">BUILD THE MARKET.</span></h1>
+      <p class="hero-sub" style="text-align: left; margin-left: 0;">Buy shares in pool players. Watch your value rise as they climb the ladder. Seasons 1–3 run as in-house leagues competing internally at each home bar, leading to the Inter-Bar playoffs where the top players represent their bar!</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="showTab('market'); selectBar('All');">Back Players</button>
+        <button class="btn-outline" onclick="payFee('registration')">Join the League</button>
       </div>
-      <div class="step">
-        <div class="step-circle">2</div>
-        <div class="step-title">Buy Shares via Stripe</div>
-        <div class="step-body">Tap BUY, select how many shares, and pay securely through Stripe. You'll get an email receipt. Your price is permanently locked in — it never goes up on you.</div>
+      <div style="display:flex; gap:32px; margin-bottom:24px; border-left:2px solid var(--al-green); padding-left:16px;">
+        <div>
+          <div style="font-size:10px; color:var(--gray); letter-spacing:1.5px; text-transform:uppercase; font-weight:800;">Shares Tracked</div>
+          <div id="stat-shares" style="font-size:22px; font-weight:900; color:var(--white); font-family:var(--font-header)">0</div>
+        </div>
+        <div>
+          <div style="font-size:10px; color:var(--gray); letter-spacing:1.5px; text-transform:uppercase; font-weight:800;">Total Volume</div>
+          <div id="stat-vol" style="font-size:22px; font-weight:900; color:var(--al-green); font-family:var(--font-header)">$0</div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-circle">3</div>
-        <div class="step-title">Collect at Playoffs</div>
-        <div class="step-body">When playoffs hit, your payout depends on how far your player goes. Champion backers collect $150/share. Even if they lose in quarterfinals, you still get $15/share back.</div>
+
+      <div class="hero-active-users">
+        <div class="avatar-group">
+          <div class="avatar">👨‍💼</div>
+          <div class="avatar">👨‍🎤</div>
+          <div class="avatar">👨‍🎨</div>
+          <div class="avatar" style="background:var(--al-green);color:#000;font-weight:900">+42</div>
+        </div>
+        <span>45+ active backers trading live</span>
+      </div>
+    </div>
+    
+    <!-- Center Column: 8-Ball Felt Sphere -->
+    <div class="hero-center-col">
+      <div class="felt-sphere-container">
+        <div class="sphere-8ball">
+          <div class="eight-circle">8</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column: Featured Team Cards -->
+    <div class="hero-right-col">
+      <div class="featured-team-card hot">
+        <div class="hot-badge">🔥 HOT BUY</div>
+        <div class="team-header-row">
+          <span class="mascot-emoji">👑</span>
+          <div class="team-meta">
+            <span class="team-name-title" style="color:var(--gold)">Cue Kings</span>
+            <span class="team-subtitle">Captain Marcus P. · 14 PTS</span>
+          </div>
+        </div>
+        <span class="team-traits">CHAMPION FAVORITES · 6W–1L</span>
+        <div class="price-trend-row">
+          <span class="featured-price">$150.00</span>
+          <span class="featured-change up">+3.2% (24h)</span>
+        </div>
+        <div class="sparkline-container">
+          <svg class="sparkline" viewBox="0 0 100 25">
+            <path d="M0 25 L20 22 L40 15 L60 10 L80 5 L100 2" fill="none" stroke="var(--al-green)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <button class="btn-buy-featured" onclick="showTab('market'); setMode('teams');">Buy Shares</button>
+      </div>
+      <div class="featured-team-card">
+        <div class="team-header-row">
+          <span class="mascot-emoji">🤠</span>
+          <div class="team-meta">
+            <span class="team-name-title" style="color:var(--orange)">Chalk Outlaws</span>
+            <span class="team-subtitle">Captain Derek S. · 9 PTS</span>
+          </div>
+        </div>
+        <span class="team-traits">DARK HORSE CONTENDER · 3W–3L</span>
+        <div class="price-trend-row">
+          <span class="featured-price">$35.00</span>
+          <span class="featured-change up">+12.4% (24h)</span>
+        </div>
+        <div class="sparkline-container">
+          <svg class="sparkline" viewBox="0 0 100 25">
+            <path d="M0 20 L20 15 L40 18 L60 8 L80 12 L100 2" fill="none" stroke="var(--al-green)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <button class="btn-buy-featured" onclick="showTab('market'); setMode('teams');">Buy Shares</button>
       </div>
     </div>
   </div>
@@ -689,13 +1746,199 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 
 <div class="divider"></div>
 
-<!-- ════════ THE MATH ════════ -->
-<div class="wrap">
-  <div class="sec-head">
-    <div class="sec-title">💰 The Math — Full Transparency</div>
-    <div class="sec-sub">Every dollar accounted for. Here's exactly how money flows.</div>
+<!-- PROMO FEATURE HIGHLIGHTS BANNER -->
+<div class="promo-banner-container" style="margin-top: 40px;">
+  <div class="features-list">
+    <div class="feature-item">
+      <span class="feature-icon">🛡️</span>
+      <span class="feature-title">OWN TEAMS</span>
+      <span class="feature-desc">Back whole squads with weekly payouts.</span>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">💸</span>
+      <span class="feature-title">EARN PAYOUTS</span>
+      <span class="feature-desc">Top 3 backers collect payouts at playoffs.</span>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">🔒</span>
+      <span class="feature-title">SECURE ESCROW</span>
+      <span class="feature-desc">All player funds fully locked and audited.</span>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">💳</span>
+      <span class="feature-title">STRIPE CHECKOUT</span>
+      <span class="feature-desc">Fast, secure checkout on any device.</span>
+    </div>
   </div>
-  <div class="math-grid" id="mathGrid"></div>
+  <div class="starter-credit-card">
+    <div class="credit-text">
+      <span class="credit-title">NEW HERE? CLAIM $5 NOW</span>
+      <p class="credit-desc">Get a $5 free starter credit when you create an account to back your first player.</p>
+      <button class="btn-claim" onclick="openLogin()">Claim Reward</button>
+    </div>
+    <div class="credit-gift-visual">
+      <span style="font-size: 38px;">🎁</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 3-COLUMN MID-GRID DASHBOARD SECTION -->
+<div class="dashboard-mid-grid" style="margin-top: 40px;">
+  <!-- Column 1: Market Heatmap -->
+  <div class="heatmap-card">
+    <div class="heatmap-title-row">
+      <span class="sec-title" style="font-size: 14px;">🔥 MARKET HEATMAP</span>
+      <span style="font-size: 10px; color: var(--gray); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">24H SWINGS</span>
+    </div>
+    <div class="heatmap-grid" id="heatmapGrid"></div>
+    <div style="font-size: 10px; color: var(--gray); line-height: 1.4; margin-top: 4px;">
+      Green borders denote players on win streaks. Tap tile to buy shares.
+    </div>
+  </div>
+
+  <!-- Column 2: Live Match Center -->
+  <div class="match-center-card">
+    <div class="heatmap-title-row">
+      <span class="sec-title" style="font-size: 14px;">🔴 LIVE MATCH CENTER</span>
+      <div class="match-center-live-badge"><div class="live-dot"></div>LIVE</div>
+    </div>
+    <div class="match-center-teams">
+      <div class="match-center-team">
+        <span class="match-center-team-logo">👑</span>
+        <span class="match-center-team-name" style="color:var(--al-green)">Cue Kings</span>
+      </div>
+      <div class="match-center-scores">
+        <div class="match-center-score-row">
+          <span>4</span>
+          <span class="match-center-score-divider">:</span>
+          <span>3</span>
+        </div>
+        <span class="match-center-status">Race to 9</span>
+      </div>
+      <div class="match-center-team">
+        <span class="match-center-team-logo">🚂</span>
+        <span class="match-center-team-name" style="color:var(--gold)">Rail Riders</span>
+      </div>
+    </div>
+    <div class="momentum-bar-container">
+      <div class="momentum-label">
+        <span>Momentum (57%)</span>
+        <span>(43%)</span>
+      </div>
+      <div class="momentum-track">
+        <div class="momentum-team-a" style="width: 57%;"></div>
+        <div class="momentum-team-b" style="width: 43%;"></div>
+      </div>
+    </div>
+    <div style="border-top:1.5px solid var(--border); padding-top:12px; margin-top:4px;">
+      <div class="m-head" style="margin-bottom:8px">LIVE PROBABILITY TREND</div>
+      <div style="height:70px;">
+        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 15 Q25 10 50 18 T100 8" fill="none" stroke="var(--al-green)" stroke-width="2" />
+          <path d="M0 15 Q25 10 50 18 T100 8 L100 30 L0 30 Z" fill="rgba(163,230,53,0.05)" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Column 3: Reactions & Leaderboard -->
+  <div class="reactions-leaderboard-card">
+    <div class="heatmap-title-row">
+      <span class="sec-title" style="font-size: 14px;">💬 PUBLIC REACTIONS</span>
+    </div>
+    <div class="scrolling-reactions-container">
+      <div class="reactions-track">
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@CueShark22</span>
+            <span class="reaction-time">2m ago</span>
+          </div>
+          <p class="reaction-text">Marcus P. is absolute fire tonight! Unbelievable runout on leg 3! 🔥</p>
+        </div>
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@BilliardsBoss</span>
+            <span class="reaction-time">8m ago</span>
+          </div>
+          <p class="reaction-text">Just loaded up 10 shares in Chalk Outlaws. Incredible odds for the playoffs.</p>
+        </div>
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@BarFlyMike</span>
+            <span class="reaction-time">15m ago</span>
+          </div>
+          <p class="reaction-text">Bar One home crowd is going wild. Best season of the ladder yet.</p>
+        </div>
+        <!-- duplicated list for infinite loop -->
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@CueShark22</span>
+            <span class="reaction-time">2m ago</span>
+          </div>
+          <p class="reaction-text">Marcus P. is absolute fire tonight! Unbelievable runout on leg 3! 🔥</p>
+        </div>
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@BilliardsBoss</span>
+            <span class="reaction-time">8m ago</span>
+          </div>
+          <p class="reaction-text">Just loaded up 10 shares in Chalk Outlaws. Incredible odds for the playoffs.</p>
+        </div>
+        <div class="reaction-bubble">
+          <div class="reaction-header">
+            <span class="reaction-user">@BarFlyMike</span>
+            <span class="reaction-time">15m ago</span>
+          </div>
+          <p class="reaction-text">Bar One home crowd is going wild. Best season of the ladder yet.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="m-head" style="margin-bottom:8px">👑 TOP BACKER LEADERBOARD</div>
+      <div class="mini-leaderboard">
+        <div class="leaderboard-row">
+          <div class="leaderboard-left">
+            <span class="leaderboard-rank">1</span>
+            <span class="leaderboard-name">Dave R.</span>
+          </div>
+          <span class="leaderboard-value">$1,850.00</span>
+        </div>
+        <div class="leaderboard-row">
+          <div class="leaderboard-left">
+            <span class="leaderboard-rank">2</span>
+            <span class="leaderboard-name">Sarah M.</span>
+          </div>
+          <span class="leaderboard-value">$1,240.00</span>
+        </div>
+        <div class="leaderboard-row">
+          <div class="leaderboard-left">
+            <span class="leaderboard-rank">3</span>
+            <span class="leaderboard-name">Elliot K.</span>
+          </div>
+          <span class="leaderboard-value">$950.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS SECTION -->
+<div class="testimonials-container">
+  <div class="sec-head" style="text-align: center;">
+    <div class="sec-title">What Players &amp; Bar Owners Say</div>
+    <div class="sec-sub">Real testimonials from competitive pool halls across the state</div>
+  </div>
+  <div class="testimonials-slider">
+    <div class="testimonial-slide">
+      <p class="testimonial-quote">"ActionLadder changed the game for us. Dues payments are seamless, and our crowd goes crazy tracking supporter shares."</p>
+      <span class="testimonial-author">Elliot K. · Bar One Owner</span>
+    </div>
+  </div>
 </div>
 
 <div class="divider"></div>
@@ -707,13 +1950,13 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       <div class="sec-title">🎯 My Portfolio</div>
       <div class="sec-sub">Tracked locally on this device · Not a substitute for your Stripe receipt</div>
     </div>
-    <button class="clear-btn" onclick="clearPortfolio()">Clear All</button>
+    <button class="clear-btn" onclick="clearPortfolio('individual')">Clear All</button>
   </div>
   <div id="portfolio"></div>
 </div>
 
 <div class="wrap public-cta-section">
-  <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(57, 255, 20, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+  <div style="background: rgba(7, 12, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
     <div style="font-size: 40px; margin-bottom: 16px;">🎱</div>
     <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Own the Action?</h2>
     <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
@@ -723,11 +1966,41 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   </div>
 </div>
 
+<div class="divider"></div>
+
+<!-- NEXT MATCH DETAILS / COUNTDOWNS -->
+<div class="card" style="background:linear-gradient(135deg, rgba(7, 12, 20, 0.7), rgba(2, 6, 13, 0.95)); border:1px solid var(--border); border-radius:20px; padding:32px; max-width:1200px; margin:40px auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px;">
+  <div style="flex:1; min-width:280px;">
+    <div class="hero-eyebrow" style="margin-bottom:12px;"><div class="live-dot"></div>UPCOMING MATCH OF THE WEEK</div>
+    <h3 style="font-family:var(--font-header); font-size:24px; font-weight:900; text-transform:uppercase; color: var(--white); margin: 0;">Marcus P. <span style="color:var(--al-green)">vs</span> Jake T.</h3>
+    <p style="font-size:13px; color:var(--gray); margin-top:6px; margin-bottom: 0;">Championship rematch · Bar One Home felt · High Stakes</p>
+  </div>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <div style="text-align:center;">
+      <div id="countdownHours" style="font-family:var(--font-mono); font-size:32px; font-weight:900; color:var(--al-green);">02</div>
+      <div style="font-size:9px; color:var(--gray); font-weight:700; text-transform:uppercase; margin-top:2px;">Hours</div>
+    </div>
+    <span style="font-size:24px; font-weight:900; color:var(--border);">:</span>
+    <div style="text-align:center;">
+      <div id="countdownMinutes" style="font-family:var(--font-mono); font-size:32px; font-weight:900; color:var(--al-green);">14</div>
+      <div style="font-size:9px; color:var(--gray); font-weight:700; text-transform:uppercase; margin-top:2px;">Minutes</div>
+    </div>
+    <span style="font-size:24px; font-weight:900; color:var(--border);">:</span>
+    <div style="text-align:center;">
+      <div id="countdownSeconds" style="font-family:var(--font-mono); font-size:32px; font-weight:900; color:var(--al-green);">32</div>
+      <div style="font-size:9px; color:var(--gray); font-weight:700; text-transform:uppercase; margin-top:2px;">Seconds</div>
+    </div>
+  </div>
+  <div>
+    <button class="btn-primary" style="padding: 12px 24px;" onclick="showTab('market'); selectBar('All');">Back Player</button>
+  </div>
+</div>
+
 <!-- ════════ OPERATOR MODEL ════════ -->
 <div class="divider ownerOnly"></div>
 <div class="ownerOnly" style="max-width:920px;margin:0 auto;padding:32px 16px 0">
   <button id="opToggle" onclick="toggleOp()"
-    style="display:flex;align-items:center;gap:8px;background:rgba(57,255,20,.08);border:1px solid rgba(57,255,20,.25);color:var(--gold);font-size:13px;font-weight:800;padding:10px 18px;border-radius:100px;cursor:pointer;letter-spacing:.5px;margin-bottom:20px;">
+    style="display:flex;align-items:center;gap:8px;background:rgba(163,230,53,.08);border:1px solid rgba(163,230,53,.25);color:var(--gold);font-size:13px;font-weight:800;padding:10px 18px;border-radius:100px;cursor:pointer;letter-spacing:.5px;margin-bottom:20px;">
     🔐 OPERATOR P&amp;L MODEL <span id="opArrow">▼</span>
   </button>
   <div id="opPanel" style="display:none">
@@ -743,7 +2016,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
       .op-prow:last-child{border-bottom:none}
       .op-plabel{color:var(--gray)}
       .op-pval{font-weight:700}
-      .op-partner-box{background:rgba(57,255,20,.07);border:1px solid rgba(57,255,20,.2);border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+      .op-partner-box{background:rgba(163,230,53,.07);border:1px solid rgba(163,230,53,.2);border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
       .op-partner-num{font-size:42px;font-weight:900;line-height:1;color:var(--gold)}
       .op-slider-block{margin-bottom:1rem}
       .op-slider-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -832,68 +2105,6 @@ body:not(.role-public) .public-cta-section { display:none !important; }
     <div style="position:relative;height:160px;margin-bottom:28px">
       <canvas id="op-chart"></canvas>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script>
-    (function(){
-      const OP_FEE=0.17, BAR_SHARE=0.015, BAR_BASE=0.03;
-      const SEASON_PRIZES=3200, PLAYOFF_PRIZES=1175, PARTNERS=4;
-      let opShareVol=10500, opBaseRev=7000;
-
-      function opCalcBase(base){ return base - Math.round(base*BAR_BASE) - SEASON_PRIZES - PLAYOFF_PRIZES; }
-      function opCalcNet(base,sv){ return opCalcBase(base) + Math.round(sv*OP_FEE) - Math.round(sv*BAR_SHARE); }
-      function opPP(base,sv){ return Math.round(opCalcNet(base,sv)/PARTNERS); }
-      function opFmt(n){ return '$'+Math.abs(Math.round(n)).toLocaleString(); }
-
-      function opUpdate(){
-        const bp=opCalcBase(opBaseRev);
-        const opFee=Math.round(opShareVol*OP_FEE);
-        const barShare=Math.round(opShareVol*BAR_SHARE);
-        const net=bp+opFee-barShare;
-        const pp=Math.round(net/PARTNERS);
-        const bpp=Math.round(bp/PARTNERS);
-        document.getElementById('op-baseRevDisp').textContent=opFmt(opBaseRev);
-        document.getElementById('op-barBaseDisp').textContent='−'+opFmt(opBaseRev*BAR_BASE);
-        document.getElementById('op-baseProfitDisp').textContent=opFmt(bp);
-        document.getElementById('op-opFeeDisp').textContent='+'+opFmt(opFee);
-        document.getElementById('op-barShareDisp').textContent='−'+opFmt(barShare);
-        document.getElementById('op-netDisp').textContent=opFmt(net);
-        document.getElementById('op-partnerNum').textContent=opFmt(pp);
-        document.getElementById('op-partnerBreak').innerHTML=opFmt(bpp)+' base<br>+'+(opFmt(pp-bpp))+' shares';
-        const badge=document.getElementById('op-floorBadge');
-        badge.textContent=pp>=1000?'above $1k floor':'below $1k floor';
-        badge.style.background=pp>=1000?'rgba(0,229,160,.14)':'rgba(255,59,92,.14)';
-        badge.style.color=pp>=1000?'var(--green)':'var(--red)';
-        document.getElementById('op-shareValDisp').textContent=opFmt(opShareVol);
-        document.getElementById('op-baseValDisp').textContent=opFmt(opBaseRev);
-        opChart.data.datasets[0].data=[0,5000,10500,15000,20000].map(v=>opPP(opBaseRev,v));
-        opChart.data.datasets[0].backgroundColor=[0,5000,10500,15000,20000].map(v=>opPP(opBaseRev,v)>=1000?'rgba(0,229,160,.75)':'rgba(68,136,255,.75)');
-        opChart.update('none');
-      }
-
-      const opChart=new Chart(document.getElementById('op-chart'),{
-        type:'bar',
-        data:{
-          labels:['$0','$5k','$10.5k','$15k','$20k'],
-          datasets:[{data:[0,0,0,0,0],borderRadius:4,borderSkipped:false}]
-        },
-        options:{
-          responsive:true,maintainAspectRatio:false,
-          plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+Math.round(c.raw).toLocaleString()+'/partner'}}},
-          scales:{
-            x:{ticks:{color:'rgba(96,96,160,.9)',font:{size:11}},grid:{display:false},border:{display:false}},
-            y:{ticks:{color:'rgba(96,96,160,.9)',font:{size:11},callback:v=>'$'+Math.round(v/1000)+'k'},grid:{color:'rgba(26,26,53,.8)'},border:{display:false}}
-          }
-        }
-      });
-
-      document.getElementById('op-shareSlider').addEventListener('input',e=>{opShareVol=+e.target.value;opUpdate();});
-      document.getElementById('op-baseSlider').addEventListener('input',e=>{opBaseRev=+e.target.value;opUpdate();});
-      opUpdate();
-    })();
-    </script>
   </div>
 </div>
 
@@ -903,14 +2114,39 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 <div id="teamMode" style="display:none">
 
   <!-- Team hero -->
-  <div class="hero">
-    <div class="hero-eyebrow"><div class="live-dot"></div>WEEKLY HEAD-TO-HEAD</div>
-    <h1>BACK A<br><em>TEAM.</em></h1>
-    <p class="hero-sub">Eight teams. Weekly matchups decided by 1v1 legs — most wins takes the match. Buy shares in a whole squad and ride them to the title.</p>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-val">8</div><div class="stat-label">TEAMS</div></div>
-      <div class="stat"><div class="stat-val">$7,500</div><div class="stat-label">TEAM PRIZE POOL</div></div>
-      <div class="stat"><div class="stat-val">$150</div><div class="stat-label">TOP TEAM SHARE</div></div>
+  <div class="hero" style="background:none; padding: 0;">
+    <div class="hero-dashboard-grid">
+      <!-- Left Column: Team Tagline -->
+      <div class="hero-left-col">
+        <div class="hero-eyebrow"><div class="live-dot"></div>WEEKLY HEAD-TO-HEAD</div>
+        <h1 class="hero-title">BACK A<br><span class="neon-highlight">TEAM.</span><br>SQUAD PLAY.<br><span class="neon-highlight">DOMINATE LEAGUE.</span></h1>
+        <p class="hero-sub" style="text-align: left; margin-left: 0;">Eight teams. Weekly matchups decided by 1v1 legs. Seasons 1–3 run as in-house leagues competing internally at each home bar, with the top teams advancing to represent their bar in the Inter-Bar tournaments!</p>
+        <div class="hero-ctas">
+          <button class="btn-primary" onclick="showTab('market');">View Standings</button>
+          <button class="btn-outline" onclick="payFee('teamReg')">Enter Team</button>
+        </div>
+      </div>
+      
+      <!-- Center Column: 8-Ball visual -->
+      <div class="hero-center-col">
+        <div class="felt-sphere-container">
+          <div class="sphere-8ball">
+            <div class="eight-circle">T</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Stats -->
+      <div class="hero-right-col">
+        <div class="featured-team-card" style="border-color: rgba(163, 230, 53, 0.25);">
+          <div class="m-head" style="margin-bottom:12px">TEAM DIVISION TOTALS</div>
+          <div class="hero-stats" style="display:flex; flex-direction:column; gap:16px;">
+            <div class="stat"><div class="stat-val" style="font-size:28px;">8 SQUADS</div><div class="stat-label">ACTIVE TEAMS</div></div>
+            <div class="stat"><div class="stat-val" style="color:var(--gold); font-size:28px;">$7,500</div><div class="stat-label">TEAM PRIZE POOL</div></div>
+            <div class="stat"><div class="stat-val" style="color:var(--al-green); font-size:28px;">$150 CAP</div><div class="stat-label">MAX SHARE PRICE</div></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -942,7 +2178,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
         <div class="step">
           <div class="step-circle">2</div>
           <div class="step-title">Legs Decide the Match</div>
-          <div class="step-body">Teams meet head-to-head each week. The individual legs are played out and the squad that wins the most legs takes the match.</div>
+          <div class="step-body">Teams meet head-to-head each week. Compete internally at your home bar for Seasons 1–3, with top teams playing for their bar against other bars later.</div>
         </div>
         <div class="step">
           <div class="step-circle">3</div>
@@ -1001,7 +2237,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
   </div>
 
   <div class="wrap public-cta-section">
-    <div style="background: rgba(22, 22, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(57, 255, 20, 0.20); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+    <div style="background: rgba(7, 12, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
       <div style="font-size: 40px; margin-bottom: 16px;">🏆</div>
       <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Back a Team?</h2>
       <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
@@ -1135,7 +2371,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
         <div class="dash-val" style="color:var(--al-green)" id="barStatBaseCut">$0.00</div>
         <div style="font-size:11px; color:var(--gray); margin-top:4px;">Your cut of player fees</div>
       </div>
-      <div class="dash-card" style="grid-column: span 2; background: linear-gradient(135deg, rgba(25, 255, 117, 0.05), rgba(14, 14, 30, 0.5)); border-color: rgba(25, 255, 117, 0.25);">
+      <div class="dash-card" style="grid-column: span 2; background: linear-gradient(135deg, rgba(163, 230, 53, 0.05), rgba(14, 14, 30, 0.5)); border-color: rgba(163, 230, 53, 0.25);">
         <div class="dash-label" style="color:var(--al-green)">TOTAL ACCUMULATED PROFITS</div>
         <div class="dash-val" style="color:var(--gold); font-size:32px;" id="barStatTotalProfits">$0.00</div>
         <div style="font-size:11px; color:var(--white); opacity:0.8; margin-top:4px;">Sum of share volume cut + base revenue cut</div>
@@ -1217,6 +2453,23 @@ body:not(.role-public) .public-cta-section { display:none !important; }
     <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:14px">
       <div class="m-head" style="margin-bottom:14px">SEASON PRIZE STRUCTURE</div>
       <div class="math-grid" id="ownerPrizes"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PURCHASE QR OVERLAY ════════ -->
+<div id="purchaseQrOverlay" onclick="if(event.target.id==='purchaseQrOverlay')this.classList.remove('open')">
+  <div class="auth-wrapper" style="max-width: 400px;">
+    <div class="auth-card" style="text-align: center; padding: 32px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <button class="auth-close-btn" onclick="$('purchaseQrOverlay').classList.remove('open')">✕</button>
+      <div id="pqTitle" style="color: var(--al-green); font-family: var(--font-header); font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px;">Cue Kings</div>
+      <div style="font-size: 12px; color: var(--gray); margin-bottom: 20px; font-weight: 500;" id="pqSub">Scan to buy supporter shares</div>
+      <div style="background: #ffffff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" id="pqQRBox"></div>
+      <div style="font-size: 11px; color: var(--gray); font-family: var(--font-mono); word-break: break-all; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; width: 100%; text-align: center;" id="pqUrlText">https://...</div>
+      <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+        <button class="btn-primary" style="padding: 10px 20px; font-size: 12px; flex: 1;" onclick="downloadPurchaseQR()">Download QR</button>
+        <button class="btn-outline" style="padding: 10px 20px; font-size: 12px; flex: 1; border-color: var(--border);" onclick="copyPurchaseLink()">Copy Link</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1344,7 +2597,7 @@ body:not(.role-public) .public-cta-section { display:none !important; }
 </div>
 
 <!-- ════════ FOOTER ════════ -->
-<footer>
+<footer style="margin-top: 60px;">
   <div class="logo">🎱</div>
   <div class="name" style="color:var(--al-green)">ActionLadder · Billiards Market Ladder</div>
   <div>Competitive pool ecosystem · Secure payments by Stripe</div>
@@ -1453,6 +2706,14 @@ const CONFIG = {
   brand: {
     name:    "ActionLadder",
     tagline: "Competitive pool ecosystem",
+  },
+
+  // ── SUPPORTER PURCHASE QR LINKS ──────────────────────
+  // Dev scans should always land on localhost. Live scans should use your
+  // deployed production site domain.
+  qrLinks: {
+    devBaseUrl: "http://localhost:8888/",
+    productionBaseUrl: "https://billiardsmarketladder.com/",
   },
 
   // ── PLAYOFF PAYOUTS (per share, regardless of purchase price) ──
@@ -1570,6 +2831,31 @@ const CONFIG = {
 // ╚═══════════════════════════════════════════════════════╝
 const $  = (id) => document.getElementById(id);
 const $$ = (n)  => n == null ? "$0" : "$" + Math.abs(n).toLocaleString();
+
+function hideAppBootLoader() {
+  const loader = $("appBootLoader");
+  if (!loader) return;
+  loader.classList.add("done");
+  setTimeout(() => { loader.style.display = "none"; }, 360);
+}
+
+function setCheckoutLoading(isLoading, text) {
+  const overlay = $("checkoutLoader");
+  const msg = $("checkoutLoaderMsg");
+  if (!overlay) return;
+  if (text && msg) msg.textContent = text;
+  overlay.classList.toggle("open", !!isLoading);
+  document.body.classList.toggle("checkout-loading", !!isLoading);
+}
+
+function getPurchaseQrBaseUrl() {
+  const host = window.location.hostname;
+  const isLocalHost = host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const base = isLocalHost
+    ? (CONFIG.qrLinks && CONFIG.qrLinks.devBaseUrl)
+    : (CONFIG.qrLinks && CONFIG.qrLinks.productionBaseUrl);
+  return base || (window.location.origin + "/");
+}
 
 function sharePrice(rank) {
   // Tier price by rank, then clamp to the buy-in cap so no share can be
@@ -1732,7 +3018,10 @@ function buildGrid() {
     const btn = lock
       ? `<button class="btn-buy" disabled>${lock === "dues" ? "Dues Overdue" : "Locked"}</button>` +
         (lock === "dues" ? `<div style="text-align:center;margin-top:8px"><a href="#" onclick="operatorUnlock('${p.name}');return false" style="font-size:11px;color:var(--gray)">Operator unlock</a></div>` : "")
-      : `<button class="btn-buy" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">Buy Shares · ${$$(price)}</button>`;
+      : `<div style="display:flex; gap:8px; width:100%;">
+          <button class="btn-buy" style="flex:1;" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">Buy Shares · ${$$(price)}</button>
+          <button class="btn-outline" style="width:48px; padding:0; display:flex; align-items:center; justify-content:center; border-radius:12px; border-color:var(--border);" title="Get Supporter Purchase QR Code" onclick="openPurchaseQR('individual','${p.name}')">📱</button>
+        </div>`;
     return `<div class="p-card ${p.hot ? "is-hot" : ""} ${lock ? "is-locked" : ""}" style="--accent:${accentColor(p.rank)}">
       <div class="p-top"><div class="p-rank">${rankLabel(p.rank)}</div><div class="p-badges">${badges.join("")}</div></div>
       <div class="p-name ${tierClass(p.rank)}">${p.name}</div>
@@ -1788,6 +3077,75 @@ const PKEY = m => `pml_portfolio_${m}`;
 function getPort(m)  { try { return JSON.parse(localStorage.getItem(PKEY(m)) || "[]"); } catch { return []; } }
 function savePort(m, a) { try { localStorage.setItem(PKEY(m), JSON.stringify(a)); } catch {} }
 
+const portfolioSyncTimers = { individual: null, teams: null };
+
+async function getAuthAccessToken() {
+  if (!_sb) return "";
+  try {
+    const { data } = await _sb.auth.getSession();
+    return data?.session?.access_token || "";
+  } catch {
+    return "";
+  }
+}
+
+async function fetchCloudPortfolio() {
+  const token = await getAuthAccessToken();
+  if (!token) return null;
+  const r = await fetch("/api/portfolio", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!r.ok) return null;
+  return r.json();
+}
+
+async function saveCloudPortfolio(payload) {
+  const token = await getAuthAccessToken();
+  if (!token) return false;
+  const r = await fetch("/api/portfolio", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(payload)
+  });
+  return r.ok;
+}
+
+function scheduleCloudPortfolioSave(mode) {
+  if (!sessionStorage.getItem("al_user_id")) return;
+  if (portfolioSyncTimers[mode]) clearTimeout(portfolioSyncTimers[mode]);
+  portfolioSyncTimers[mode] = setTimeout(() => {
+    saveCloudPortfolio({ mode, portfolio: getPort(mode) }).catch(() => {});
+  }, 700);
+}
+
+async function syncPortfolioFromCloud() {
+  if (!sessionStorage.getItem("al_user_id")) return;
+  const cloud = await fetchCloudPortfolio();
+  if (!cloud) return;
+
+  const cloudIndividual = Array.isArray(cloud.individual) ? cloud.individual : [];
+  const cloudTeams = Array.isArray(cloud.teams) ? cloud.teams : [];
+  const hasCloudData = cloudIndividual.length > 0 || cloudTeams.length > 0;
+
+  if (hasCloudData) {
+    savePort("individual", cloudIndividual);
+    savePort("teams", cloudTeams);
+  } else {
+    const localIndividual = getPort("individual");
+    const localTeams = getPort("teams");
+    if (localIndividual.length || localTeams.length) {
+      await saveCloudPortfolio({ individual: localIndividual, teams: localTeams }).catch(() => {});
+    }
+  }
+
+  renderPortfolio("individual");
+  renderPortfolio("teams");
+}
+
 function currentPrice(mode, name) {
   if (mode === "teams") {
     const s = teamStandings();
@@ -1804,12 +3162,14 @@ function recordPurchase(mode, name, price, shares) {
   if (ex) ex.shares += shares; else a.push({ name, price, shares });
   savePort(mode, a);
   renderPortfolio(mode);
+  scheduleCloudPortfolioSave(mode);
 }
 
 function clearPortfolio(mode) {
   if (!confirm(`Clear your tracked ${mode === "teams" ? "team " : ""}portfolio?`)) return;
   savePort(mode, []);
   renderPortfolio(mode);
+  scheduleCloudPortfolioSave(mode);
 }
 
 function renderPortfolio(mode) {
@@ -1821,7 +3181,7 @@ function renderPortfolio(mode) {
     return;
   }
   let totCost = 0, totVal = 0, totShares = 0;
-  const rows = a.map(e => {
+  const itemsHtml = a.map(e => {
     const cur  = currentPrice(mode, e.name);
     const cost = e.price * e.shares;
     const val  = cur * e.shares;
@@ -1837,11 +3197,68 @@ function renderPortfolio(mode) {
     </div>`;
   }).join("");
   const tg = totVal - totCost;
-  el.innerHTML = `<div class="port-grid">${rows}</div>
-    <div class="port-total" style="margin-top:10px">
-      <span>${totShares} share${totShares > 1 ? "s" : ""} · cost ${$$(totCost)}</span>
-      <span>${$$(totVal)} <span class="port-gain ${tg >= 0 ? "up" : "down"}">(${tg >= 0 ? "+" : "−"}${$$(Math.abs(tg))})</span></span>
+  const gainPct = totCost > 0 ? Math.round((tg / totCost) * 100) : 0;
+  
+  // Calculate top holding percentage splits for the top holdings list
+  const holdings = a.map(e => {
+    const val = currentPrice(mode, e.name) * e.shares;
+    return { name: e.name, val };
+  }).sort((x,y) => y.val - x.val);
+  const topHoldingsHtml = holdings.slice(0, 3).map(h => {
+    const pct = totVal > 0 ? Math.round((h.val / totVal) * 100) : 0;
+    return `<div class="split-row" style="margin-bottom:8px">
+      <span class="split-label" style="font-size:11px; min-width:100px;">${h.name}</span>
+      <div class="split-bar-bg" style="height:6px"><div class="split-bar" style="width:${pct}%; background:var(--al-green);"></div></div>
+      <span class="split-pct" style="font-size:11px; min-width:30px;">${pct}%</span>
     </div>`;
+  }).join("");
+
+  el.innerHTML = `
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:20px;">
+      <div class="card" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div>
+            <div class="dash-label">PORTFOLIO NET WORTH</div>
+            <div class="dash-val" style="color:var(--al-green); font-size:28px;">${$$(totVal)}</div>
+          </div>
+          <div>
+            <div class="dash-label">TOTAL GAIN / LOSS</div>
+            <div class="dash-val ${tg >= 0 ? 'up' : 'down'}" style="color:${tg >= 0 ? 'var(--al-green)' : 'var(--red)'}; font-size:28px;">
+              ${tg >= 0 ? "+" : "−"}${$$(Math.abs(tg))}
+              <span style="font-size:12px; font-weight:700; margin-left:4px;">(${tg >= 0 ? "+" : ""}${gainPct}%)</span>
+            </div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <div class="m-head" style="margin-bottom:8px">CUMULATIVE PERFORMANCE (SEASON)</div>
+          <div style="height:100px; width:100%; position:relative;">
+            <svg width="100%" height="100%" viewBox="0 0 200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="portGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--al-green)" stop-opacity="0.15" />
+                  <stop offset="100%" stop-color="var(--al-green)" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M 0,80 Q 50,60 100,55 T 200,${80 - Math.min(60, Math.max(-10, gainPct))}" fill="none" stroke="var(--al-green)" stroke-width="2" />
+              <path d="M 0,80 Q 50,60 100,55 T 200,${80 - Math.min(60, Math.max(-10, gainPct))} L 200,100 L 0,100 Z" fill="url(#portGrad)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(255,255,255,0.01); border:1px solid var(--border); border-radius:14px; padding:20px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div class="m-head" style="margin-bottom:12px">TOP HOLDINGS SPLIT</div>
+          ${topHoldingsHtml}
+        </div>
+        <div style="border-top:1px solid var(--border); padding-top:12px; margin-top:12px;">
+          <div class="m-head" style="margin-bottom:8px">HOLDINGS LIST</div>
+          <div style="max-height:120px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+            ${itemsHtml}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 
@@ -1906,36 +3323,63 @@ function sharePriceIdFor(price) {
               75: CONFIG.priceIds.share75, 150: CONFIG.priceIds.share150 };
   return m[price];
 }
+
+// Call the Stripe checkout API with better error handling.
+async function createCheckoutSession(body) {
+  try {
+    const r = await fetch("/api/create-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const ct = (r.headers.get("content-type") || "").toLowerCase();
+    let data = null;
+
+    if (ct.includes("application/json")) {
+      data = await r.json();
+    } else {
+      const text = await r.text();
+      data = { error: text ? text.slice(0, 180) : "Non-JSON response from checkout service" };
+    }
+
+    if (r.ok && data && data.url) return data;
+
+    const msg = (data && data.error) ? data.error : `Checkout failed (${r.status})`;
+    throw new Error(msg);
+  } catch (err) {
+    throw err instanceof Error ? err : new Error(String(err));
+  }
+}
+
 async function goCheckout() {
   const { mode, name, price, qty } = buyState;
   recordPurchase(mode, name, price, qty);
   if (CONFIG.useServerless) {
+    setCheckoutLoading(true, "Redirecting to secure Stripe checkout...");
     try {
       const playerObj = CONFIG.players.find(p => p.name === name) || {};
       const playerId = playerObj.id || "";
       const buyerEmail = sessionStorage.getItem("al_user_email") || "";
-      
-      const r = await fetch("/api/create-checkout", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: price,
-          productName: `${mode === 'teams' ? 'Team ' : ''}Share - ${name}`,
-          quantity: qty,
-          productKey: `${mode}-share`,
-          metadata: {
-            type: "share",
-            playerId: playerId,
-            playerName: name,
-            shareTier: `$${price}`,
-            buyerEmail: buyerEmail,
-            buyerName: buyerEmail || "Supporter",
-            playerRank: String(playerObj.rank || 0),
-            season: String(CONFIG.currentSeason || 1)
-          }
-        }),
+
+      const data = await createCheckoutSession({
+        amount: price,
+        productName: `${mode === 'teams' ? 'Team ' : ''}Share - ${name}`,
+        quantity: qty,
+        productKey: `${mode}-share`,
+        metadata: {
+          type: "share",
+          playerId: playerId,
+          playerName: name,
+          shareTier: `$${price}`,
+          buyerEmail: buyerEmail,
+          buyerName: buyerEmail || "Supporter",
+          playerRank: String(playerObj.rank || 0),
+          season: String(CONFIG.currentSeason || 1)
+        }
       });
-      const data = await r.json();
-      if (r.ok && data.url) {
+
+      if (data && data.url) {
         // Save share info for the post-payment certificate
         sessionStorage.setItem('pendingShare', JSON.stringify({
           type: 'share',
@@ -1950,8 +3394,13 @@ async function goCheckout() {
         }));
         window.location.href = data.url; return;
       }
+      setCheckoutLoading(false);
       alert(data.error || "Checkout failed"); return;
-    } catch (e) { alert("Checkout error: " + e.message); return; }
+    } catch (e) {
+      setCheckoutLoading(false);
+      alert("Checkout error: " + e.message);
+      return;
+    }
   }
   const link = mode === "teams" ? teamStripeUrl(price, qty) : stripeUrl(price, qty);
   if (link) window.open(link, "_blank", "noopener");
@@ -2025,7 +3474,10 @@ function buildTeamGrid() {
         <div class="pout"><div class="pout-val">${$$(p.third)}</div><div class="pout-label">3RD</div></div>
       </div></div>
       <div class="p-roi">+${roi(price, p.champ)}% ROI if they take the title</div>
-      <button class="btn-buy" onclick="openBuy('teams','${t.name}',${price},${rank},'Captain ${t.captain} · ${t.pts} pts')">Back ${t.name} · ${$$(price)}</button>
+      <div style="display:flex; gap:8px; width:100%;">
+        <button class="btn-buy" style="flex:1;" onclick="openBuy('teams','${t.name}',${price},${rank},'Captain ${t.captain} · ${t.pts} pts')">Back ${t.name} · ${$$(price)}</button>
+        <button class="btn-outline" style="width:48px; padding:0; display:flex; align-items:center; justify-content:center; border-radius:12px; border-color:var(--border);" title="Get Supporter Purchase QR Code" onclick="openPurchaseQR('teams','${t.name}')">📱</button>
+      </div>
     </div>`;
   }).join("");
 }
@@ -2096,15 +3548,32 @@ function buildTeamMath() {
 }
 
 
+let currentMarketMode = "individual";
+
+function syncEsportsNavActive(tab) {
+  const mode = tab === "market" ? currentMarketMode : "";
+  document.querySelectorAll(".esports-nav-link[data-tab]").forEach(link => {
+    const linkTab = link.getAttribute("data-tab");
+    const linkMode = link.getAttribute("data-mode");
+    const isActive = linkTab === tab && (!linkMode || linkMode === mode);
+    link.classList.toggle("active", isActive);
+  });
+}
+
+
 // ╔═══════════════════════════════════════════════════════╗
 // ║  MODE SWITCHER                                        ║
 // ╚═══════════════════════════════════════════════════════╝
 function setMode(mode) {
   const ind = mode === "individual";
+  currentMarketMode = ind ? "individual" : "teams";
   $("indivMode").style.display = ind ? "" : "none";
   $("teamMode").style.display  = ind ? "none" : "";
   $("modeBtnIndiv").classList.toggle("active", ind);
   $("modeBtnTeams").classList.toggle("active", !ind);
+  if ($("view-market") && $("view-market").classList.contains("active")) {
+    syncEsportsNavActive("market");
+  }
   $("overlay").classList.remove("open");
   ind ? buildTicker() : buildTeamTicker();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2125,27 +3594,26 @@ async function payFee(kind) {
   }[kind];
   if (!map) return;
   if (CONFIG.useServerless) {
+    setCheckoutLoading(true, "Redirecting to secure Stripe checkout...");
     try {
       const playerId = sessionStorage.getItem("al_user_id") || "";
       const buyerEmail = sessionStorage.getItem("al_user_email") || "";
-      const r = await fetch("/api/create-checkout", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: map.amount,
-          productName: map.label,
-          quantity: 1,
-          productKey: kind,
-          metadata: {
-            type: map.type,
-            playerId: playerId,
-            playerName: sessionStorage.getItem("al_user_email") || "Player",
-            buyerEmail: buyerEmail,
-            season: String(CONFIG.currentSeason || 1)
-          }
-        }),
+
+      const data = await createCheckoutSession({
+        amount: map.amount,
+        productName: map.label,
+        quantity: 1,
+        productKey: kind,
+        metadata: {
+          type: map.type,
+          playerId: playerId,
+          playerName: sessionStorage.getItem("al_user_email") || "Player",
+          buyerEmail: buyerEmail,
+          season: String(CONFIG.currentSeason || 1)
+        }
       });
-      const data = await r.json();
-      if (r.ok && data.url) {
+
+      if (data && data.url) {
         sessionStorage.setItem('pendingShare', JSON.stringify({
           type: 'fee',
           label: map.label,
@@ -2155,8 +3623,13 @@ async function payFee(kind) {
         }));
         window.location.href = data.url; return;
       }
+      setCheckoutLoading(false);
       alert(data.error || "Checkout failed"); return;
-    } catch (e) { alert("Checkout error: " + e.message); return; }
+    } catch (e) {
+      setCheckoutLoading(false);
+      alert("Checkout error: " + e.message);
+      return;
+    }
   }
   // Fallback to static URLs (only if configured)
   const link = kind === 'registration' ? F.registrationLink : kind === 'weeklyDues' ? F.weeklyDuesLink : F.teamRegLink;
@@ -2188,6 +3661,7 @@ function showTab(t) {
   }
   const map = { market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar" };
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === t));
+  syncEsportsNavActive(t);
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   const el = $(map[t]); if (el) el.classList.add("active");
   if (t === "bar") {
@@ -2321,7 +3795,13 @@ function onConfirmPasswordInput() {
 }
 
 function currentRole() { return sessionStorage.getItem("al_role") || "public"; }
-function setRole(role) { sessionStorage.setItem("al_role", role); applyRole(role); }
+function setRole(role) {
+  sessionStorage.setItem("al_role", role);
+  applyRole(role);
+  if (role !== "public") {
+    checkPendingBuy();
+  }
+}
 function applyRole(role) {
   document.body.classList.remove("role-public", "role-helper", "role-owner", "role-bar");
   document.body.classList.add("role-" + role);
@@ -2590,6 +4070,7 @@ function resolveAndSetUserRole(user) {
   sessionStorage.setItem("al_user_email", user.email);
   sessionStorage.setItem("al_display_name", displayName);
   setRole(role);
+  syncPortfolioFromCloud().catch(() => {});
 }
 
 async function doLogout() {
@@ -3338,12 +4819,52 @@ function renderAllViews() {
   buildPredGrid();
   buildDuesManager();
   buildBarsManagement();
+  buildHeatmap();
   if ($("view-bar") && $("view-bar").classList.contains("active")) {
     const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
     let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
     loadBarDashboardData(selected);
   }
 }
+
+function buildHeatmap() {
+  const el = $("heatmapGrid");
+  if (!el) return;
+  const sorted = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
+  el.innerHTML = sorted.map(p => {
+    const price = sharePrice(p.rank);
+    const last5 = (p.streak || "").trim().split(/\s+/).filter(Boolean);
+    const wins = last5.filter(x => x === "W").length;
+    const isUp = wins >= 3;
+    const change = (isUp ? "+" : "−") + (wins * 2.4).toFixed(1) + "%";
+    
+    let color = "rgba(255, 255, 255, 0.05)";
+    if (p.rank <= 2) color = "rgba(251, 191, 36, 0.15)";
+    else if (p.rank <= 4) color = "rgba(196, 112, 245, 0.12)";
+    else if (p.rank <= 8) color = "rgba(56, 189, 248, 0.12)";
+    
+    return `<div class="heatmap-tile" style="background:${color}; border-color:${isUp ? 'rgba(163,230,53,0.3)' : 'rgba(255,69,58,0.2)'}" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">
+      <span class="heatmap-tile-name">${p.name.split(" ")[0]}</span>
+      <span class="heatmap-tile-price">${$$(price)}</span>
+      <span class="heatmap-tile-change" style="color:${isUp ? 'var(--al-green)' : 'var(--red)'}">${change}</span>
+    </div>`;
+  }).join("");
+}
+
+// Live countdown timer animation
+(function() {
+  let h = 2, m = 14, s = 32;
+  setInterval(() => {
+    s--;
+    if (s < 0) { s = 59; m--; }
+    if (m < 0) { m = 59; h--; }
+    if (h < 0) { h = 23; } // loop back
+    const pad = (num) => String(num).padStart(2, '0');
+    if ($("countdownHours"))   $("countdownHours").textContent = pad(h);
+    if ($("countdownMinutes")) $("countdownMinutes").textContent = pad(m);
+    if ($("countdownSeconds")) $("countdownSeconds").textContent = pad(s);
+  }, 1000);
+})();
 
 // ── BARS & LOCATIONS MANAGEMENT FUNCTIONS ──────────────────────
 function buildBarsManagement() {
@@ -3906,7 +5427,7 @@ buildPnl();
 renderMatchups();
 
 // 3. Load real data — replaces skeletons once Supabase responds
-loadDbData();
+loadDbData().finally(() => hideAppBootLoader());
 
 applyRole("public"); // Always start as public — require explicit login each visit
 sessionStorage.removeItem("al_user_id");
@@ -4027,6 +5548,78 @@ async function shareCert() {
   }
 }
 
+function openPurchaseQR(mode, name) {
+  $('pqTitle').textContent = name;
+  $('pqSub').textContent   = `Scan to buy supporter ${mode === 'teams' ? 'team' : 'player'} shares`;
+  
+  const paramName = mode === 'teams' ? 'buyTeam' : 'buyIndividual';
+  const purchaseUrl = new URL(getPurchaseQrBaseUrl());
+  purchaseUrl.searchParams.set(paramName, name);
+  const url = purchaseUrl.toString();
+  
+  $('pqUrlText').textContent = url;
+  
+  const qrBox = $('pqQRBox');
+  qrBox.innerHTML = '';
+  
+  if (window.QRCode) {
+    new QRCode(qrBox, {
+      text: url,
+      width: 148,
+      height: 148,
+      colorDark: '#02060d',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+  
+  const overlay = $('purchaseQrOverlay');
+  overlay.dataset.url = url;
+  overlay.dataset.name = name;
+  
+  overlay.classList.add('open');
+}
+
+function downloadPurchaseQR() {
+  const qrBox = $('pqQRBox');
+  const qrCanvas = qrBox.querySelector('canvas');
+  const name = $('purchaseQrOverlay').dataset.name || 'player';
+  if (qrCanvas) {
+    const a = document.createElement('a');
+    a.download = `BML-Buy-${name.replace(/\s+/g, '-')}-${Date.now()}.png`;
+    a.href = qrCanvas.toDataURL('image/png');
+    a.click();
+  } else {
+    alert('QR code not ready yet — please try again.');
+  }
+}
+
+async function copyPurchaseLink() {
+  const url = $('purchaseQrOverlay').dataset.url || window.location.href;
+  await navigator.clipboard.writeText(url).catch(() => {});
+  alert('Purchase link copied to clipboard!');
+}
+
+function checkPendingBuy() {
+  const mode = sessionStorage.getItem('pendingBuyMode');
+  const name = sessionStorage.getItem('pendingBuyName');
+  const price = sessionStorage.getItem('pendingBuyPrice');
+  const rank = sessionStorage.getItem('pendingBuyRank');
+  const sub = sessionStorage.getItem('pendingBuySub');
+  
+  if (mode && name && price && rank) {
+    sessionStorage.removeItem('pendingBuyMode');
+    sessionStorage.removeItem('pendingBuyName');
+    sessionStorage.removeItem('pendingBuyPrice');
+    sessionStorage.removeItem('pendingBuyRank');
+    sessionStorage.removeItem('pendingBuySub');
+    
+    setTimeout(() => {
+      openBuy(mode, name, Number(price), Number(rank), sub);
+    }, 600);
+  }
+}
+
 // ── Post-payment redirect handler ────────────────────────
 (function() {
   const params = new URLSearchParams(window.location.search);
@@ -4073,6 +5666,47 @@ async function shareCert() {
     history.replaceState({}, '', window.location.pathname);
     sessionStorage.removeItem('pendingShare');
   }
+
+  // Supporter purchase link auto-gating via URL query parameters
+  const buyIndiv = params.get('buyIndividual') || params.get('buyPlayer');
+  const buyTeamName = params.get('buyTeam');
+  
+  if (buyIndiv) {
+    const p = CONFIG.players.find(x => x.name.toLowerCase() === buyIndiv.toLowerCase());
+    if (p) {
+      const price = sharePrice(p.rank);
+      const sub = `${rankLabel(p.rank)} · ${p.bar}`;
+      if (currentRole() === 'public') {
+        sessionStorage.setItem('pendingBuyMode', 'individual');
+        sessionStorage.setItem('pendingBuyName', p.name);
+        sessionStorage.setItem('pendingBuyPrice', price);
+        sessionStorage.setItem('pendingBuyRank', p.rank);
+        sessionStorage.setItem('pendingBuySub', sub);
+        setTimeout(() => openLogin(), 800);
+      } else {
+        setTimeout(() => openBuy('individual', p.name, price, p.rank, sub), 800);
+      }
+    }
+  } else if (buyTeamName) {
+    const s = teamStandings();
+    const idx = s.findIndex(x => x.name.toLowerCase() === buyTeamName.toLowerCase());
+    if (idx !== -1) {
+      const t = s[idx];
+      const rank = idx + 1;
+      const price = teamSharePrice(rank);
+      const sub = `Captain ${t.captain} · ${t.pts} pts`;
+      if (currentRole() === 'public') {
+        sessionStorage.setItem('pendingBuyMode', 'teams');
+        sessionStorage.setItem('pendingBuyName', t.name);
+        sessionStorage.setItem('pendingBuyPrice', price);
+        sessionStorage.setItem('pendingBuyRank', rank);
+        sessionStorage.setItem('pendingBuySub', sub);
+        setTimeout(() => openLogin(), 800);
+      } else {
+        setTimeout(() => openBuy('teams', t.name, price, rank, sub), 800);
+      }
+    }
+  }
 })();
 
 
@@ -4102,3 +5736,4 @@ if (_sb) {
 </script>
 </body>
 </html>
+
