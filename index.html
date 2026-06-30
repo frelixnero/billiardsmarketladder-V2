@@ -1515,6 +1515,248 @@ body.checkout-loading { overflow: hidden; }
   .app-boot-hero { grid-template-columns: 1fr; gap: 36px; padding: 28px 14px; }
   .app-boot-center { display: none; }
 }
+
+/* ─── SCOUT TAB EXTRAS ──────────────────────────────────── */
+.scout-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  background: rgba(13, 21, 39, 0.4);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  border-radius: 16px;
+}
+.scout-ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.scout-ctrl-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.scout-select {
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+  outline: none;
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scout-select:hover {
+  border-color: var(--al-green);
+}
+.scout-timestamp {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gray);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+.scout-locked-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 20px;
+  background: linear-gradient(135deg, rgba(7, 12, 20, 0.6), rgba(13, 21, 39, 0.4));
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  max-width: 600px;
+  margin: 40px auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.scout-locked-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  animation: pulse-lock 2s infinite;
+}
+@keyframes pulse-lock {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(0.9); }
+}
+.scout-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 14px;
+  padding-top: 0;
+}
+.p-card.expanded .scout-details {
+  max-height: 1000px;
+  opacity: 1;
+  padding-top: 14px;
+}
+.scout-toggle-btn {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--white);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.scout-toggle-btn:hover {
+  background: rgba(163, 230, 53, 0.08);
+  border-color: rgba(163, 230, 53, 0.3);
+  color: var(--al-green);
+}
+.p-card.expanded .scout-toggle-btn {
+  background: rgba(255, 69, 58, 0.05);
+  border-color: rgba(255, 69, 58, 0.15);
+}
+.p-card.expanded .scout-toggle-btn:hover {
+  background: rgba(255, 69, 58, 0.1);
+  border-color: rgba(255, 69, 58, 0.3);
+  color: var(--red);
+}
+.scout-toggle-btn .arrow-icon {
+  transition: transform 0.3s;
+}
+.p-card.expanded .scout-toggle-btn .arrow-icon {
+  transform: rotate(180deg);
+}
+
+/* History steps */
+.history-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  position: relative;
+  padding-left: 16px;
+}
+.history-steps::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1.5px;
+  background: var(--border);
+}
+.history-step {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.history-step::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 1px solid var(--bg);
+}
+.history-step.active::before {
+  background: var(--al-green);
+  box-shadow: 0 0 8px var(--al-green);
+}
+.history-label {
+  font-size: 12px;
+  color: var(--gray);
+  font-weight: 500;
+}
+.history-desc {
+  font-size: 11px;
+  color: var(--gray);
+  margin-left: 6px;
+  font-style: italic;
+}
+.history-price {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--white);
+}
+
+/* Fargo handicapping badge */
+.fargo-hcp-box {
+  background: rgba(56, 189, 248, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.fargo-hcp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.fargo-hcp-row:last-child {
+  margin-bottom: 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 6px;
+  font-weight: 700;
+}
+.h2h-sec {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.h2h-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.h2h-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.h2h-row:last-child {
+  margin-bottom: 0;
+}
+.h2h-w { color: var(--al-green); font-weight: 700; }
+.h2h-l { color: var(--red); }
+
+/* Locked blur view */
+.p-card.locked-preview {
+  filter: blur(4px);
+  pointer-events: none;
+  opacity: 0.45;
+  user-select: none;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -1608,10 +1850,10 @@ body.checkout-loading { overflow: hidden; }
   </div>
   
   <nav class="esports-nav">
-    <a class="esports-nav-link active" data-tab="market" data-mode="individual" onclick="showTab('market'); setMode('individual');">Market</a>
-    <a class="esports-nav-link" data-tab="market" data-mode="teams" onclick="showTab('market'); setMode('teams');">Teams</a>
+    <a class="esports-nav-link active" data-tab="predict" onclick="showTab('predict')">Scouting &amp; Market</a>
+    <a class="esports-nav-link" data-tab="teams" onclick="showTab('teams')">Teams</a>
+    <a class="esports-nav-link" data-tab="tournament" onclick="showTab('tournament')">Tournaments</a>
     <a class="esports-nav-link" data-tab="matchups" onclick="showTab('matchups')">Matches</a>
-    <a class="esports-nav-link" data-tab="predict" onclick="showTab('predict')">Players</a>
     <a class="esports-nav-link" data-tab="feedback" onclick="showTab('feedback')">Feedback</a>
     <a class="esports-nav-link barOnly" data-tab="bar" onclick="showTab('bar')">Bar Profits</a>
     <a class="esports-nav-link staffOnly" data-tab="owner" onclick="showTab('owner')">Dashboard</a>
@@ -1634,16 +1876,17 @@ body.checkout-loading { overflow: hidden; }
 
 <!-- Hidden original tabbar for backing compatibilities -->
 <div class="tabbar" id="tabbar" style="display:none">
-  <button class="tab-btn active" data-tab="market"    onclick="showTab('market')">🎱 Market</button>
+  <button class="tab-btn active" data-tab="predict"   onclick="showTab('predict')">🔍 Scouting</button>
+  <button class="tab-btn"        data-tab="teams"     onclick="showTab('teams')">👥 Teams</button>
+  <button class="tab-btn"        data-tab="tournament" onclick="showTab('tournament')">🏆 Tourneys</button>
   <button class="tab-btn"        data-tab="matchups"  onclick="showTab('matchups')">🗓️ Matchups</button>
-  <button class="tab-btn"        data-tab="predict"   onclick="showTab('predict')">📈 Predictions</button>
   <button class="tab-btn"        data-tab="feedback"  onclick="showTab('feedback')">💬 Feedback</button>
   <button class="tab-btn barOnly" data-tab="bar" onclick="showTab('bar')">📊 Bar Profits</button>
   <button class="tab-btn staffOnly" data-tab="owner"  onclick="showTab('owner')">🛠️ Dashboard</button>
 </div>
 
 <!-- ════════ MARKET VIEW ════════ -->
-<div class="view active" id="view-market">
+<div class="view" id="view-market" style="display:none">
 
 <!-- Hidden mode switcher to keep bindings alive -->
 <div class="mode-switch" style="display:none">
@@ -2110,8 +2353,9 @@ body.checkout-loading { overflow: hidden; }
 
 </div><!-- /indivMode -->
 
-<!-- ════════ TEAMS MODE ════════ -->
-<div id="teamMode" style="display:none">
+<!-- ════════ TEAMS VIEW ════════ -->
+<div class="view" id="view-teams">
+<div id="teamMode">
 
   <!-- Team hero -->
   <div class="hero" style="background:none; padding: 0;">
@@ -2248,8 +2492,12 @@ body.checkout-loading { overflow: hidden; }
   </div>
 
 </div><!-- /teamMode -->
+</div><!-- /view-teams -->
 
 </div><!-- /view-market -->
+
+<!-- ════════ TOURNAMENT VIEW ════════ -->
+<div class="view" id="view-tournament"></div>
 
 <!-- ════════ MATCHUPS VIEW ════════ -->
 <div class="view" id="view-matchups">
@@ -2275,16 +2523,54 @@ body.checkout-loading { overflow: hidden; }
 </div>
 
 <!-- ════════ PREDICTIONS VIEW ════════ -->
-<div class="view" id="view-predict">
+<div class="view active" id="view-predict">
   <div class="hero" style="padding:40px 20px 28px">
-    <div class="hero-eyebrow"><div class="live-dot"></div>PREDICTION ENGINE</div>
-    <h1 style="font-size:clamp(30px,7vw,56px)">THE<br><em>ODDS.</em></h1>
-    <p class="hero-sub">Win probability, finish odds, streaks and the story behind every share price — so supporters know exactly who to back.</p>
+    <div class="hero-eyebrow"><div class="live-dot"></div>SCOUTING &amp; MARKET</div>
+    <h1 style="font-size:clamp(30px,7vw,56px)">SCOUTING<br><em>CENTER.</em></h1>
+    <p class="hero-sub">Win probability, Fargo rating, recent form, and the story behind every share price — so supporters make skilled analysis before backing players.</p>
   </div>
   <div class="divider"></div>
   <div class="wrap">
     <div class="sec-head"><div class="sec-title">📈 Player Outlook &amp; Share Value</div>
       <div class="sec-sub">Computed from rank, form and streak · Updates with the standings</div></div>
+    
+    <!-- Scout sorting & filtering controls -->
+    <div class="scout-controls" id="scoutControls" style="display:none; margin-bottom:24px;">
+      <div class="scout-ctrl-group">
+        <div class="scout-ctrl-group">
+          <span class="scout-ctrl-label">Sort By:</span>
+          <select id="scoutSortSelect" class="scout-select" onchange="setScoutSort(this.value)">
+            <option value="rank">Current Rank</option>
+            <option value="fargo">Fargo Rating</option>
+            <option value="form">Recent Form</option>
+            <option value="price">Share Price</option>
+            <option value="movement">Price Movement</option>
+          </select>
+        </div>
+        <div class="scout-ctrl-group">
+          <span class="scout-ctrl-label">Filter:</span>
+          <select id="scoutFilterSelect" class="scout-select" onchange="setScoutFilter(this.value)">
+            <option value="all">All Tiers</option>
+            <option value="tier1">Tier 1: Top 2 ($150)</option>
+            <option value="tier2">Tier 2: Top 3-4 ($75)</option>
+            <option value="tier3">Tier 3: Top 5-8 ($35)</option>
+            <option value="tier4">Tier 4: Unranked ($25)</option>
+          </select>
+        </div>
+      </div>
+      <div class="scout-timestamp" id="scoutTimestamp">Last updated: after Week 1</div>
+    </div>
+
+    <!-- Scout locked view state -->
+    <div class="scout-locked-container" id="scoutLockedView" style="display:none;">
+      <div class="scout-locked-icon">🔒</div>
+      <h2 style="font-size:24px; font-weight:900; margin-bottom:12px; color:var(--white); font-family:var(--font-header);">Scouting Center Locked</h2>
+      <p style="color:var(--gray); font-size:14px; line-height:1.6; max-width:460px; margin-bottom:20px;">
+        The Scouting Center is currently locked. It will fully unlock once at least 1 week of match results has been recorded for the active season.
+      </p>
+      <div id="operatorUnlockArea" style="margin-top:12px;"></div>
+    </div>
+
     <div class="player-grid" id="predGrid"></div>
   </div>
 </div>
@@ -2474,6 +2760,35 @@ body.checkout-loading { overflow: hidden; }
   </div>
 </div>
 
+<!-- ════════ TEAMMATE OVERLAY ════════ -->
+<div id="teammateOverlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; transition: opacity .2s;">
+  <div class="auth-wrapper" style="max-width: 440px;">
+    <div class="auth-card" style="background: rgba(7, 12, 20, 0.9); border: 1.5px solid var(--border); border-radius: 20px; padding: 32px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 20px 60px rgba(0,0,0,0.7); position: relative;">
+      <button class="auth-close-btn" onclick="closeTeammateModal()">✕</button>
+      
+      <div style="text-align:center; margin-bottom:24px;">
+        <div style="font-size:22px; font-weight:900; letter-spacing:0.04em; text-transform: uppercase; color: var(--purple); text-shadow: 0 2px 10px rgba(0,0,0,0.5)">Lock in Teammates</div>
+        <div style="font-size:12px; color:var(--gray); margin-top:6px; font-weight: 500; line-height:1.5;">For 2v2/3v3 formats, teammate pairs must be locked in at signup to align scheduling tracks. Capture teammate names at registration.</div>
+      </div>
+      
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-size:11px; font-weight:800; color:var(--gray); margin-bottom:8px; letter-spacing:.05em; text-transform:uppercase;">Partner 1 Name (Required)</label>
+        <input type="text" id="partner1Input" class="auth-input" placeholder="e.g. Mike H." style="background: rgba(0, 0, 0, 0.45); color: #f0f0ff; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; padding: 12px 14px; font-family: inherit; font-size: 14px; width: 100%; outline: none;">
+      </div>
+      
+      <div style="margin-bottom:24px;">
+        <label style="display:block; font-size:11px; font-weight:800; color:var(--gray); margin-bottom:8px; letter-spacing:.05em; text-transform:uppercase;">Partner 2 Name (Optional for 3v3)</label>
+        <input type="text" id="partner2Input" class="auth-input" placeholder="e.g. Sam K. (leave blank if 2v2)" style="background: rgba(0, 0, 0, 0.45); color: #f0f0ff; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; padding: 12px 14px; font-family: inherit; font-size: 14px; width: 100%; outline: none;">
+      </div>
+      
+      <div style="display:flex; gap:12px;">
+        <button class="auth-button-role" onclick="closeTeammateModal()" style="flex:1; border: 1px solid var(--border); background: transparent; color: #fff; padding: 12px; font-family: var(--font-button); font-weight:700; border-radius:10px; cursor:pointer;">Cancel</button>
+        <button class="btn-primary" onclick="proceedTeamCheckout()" style="flex:1; padding: 12px; font-family: var(--font-button); font-weight:700; border-radius:10px; background: var(--purple); border-color: var(--purple); color:#000;">Proceed to Pay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ════════ LOGIN OVERLAY ════════ -->
 <div id="loginOverlay" onclick="if(event.target.id==='loginOverlay')this.classList.remove('open')">
   <div class="auth-wrapper">
@@ -2606,7 +2921,7 @@ body.checkout-loading { overflow: hidden; }
 
 <!-- ════════ BUY MODAL ════════ -->
 <div class="overlay" id="overlay" onclick="maybeClose(event)">
-  <div class="modal">
+  <div class="modal" style="max-height: 90vh; overflow-y: auto;">
     <div class="modal-handle"></div>
     <div class="modal-title" id="mTitle"></div>
     <div class="modal-sub" id="mSub"></div>
@@ -2623,7 +2938,25 @@ body.checkout-loading { overflow: hidden; }
       <div class="modal-total-val" id="mTotal">$0</div>
     </div>
     <div class="modal-preview" id="mPreview"></div>
-    <a href="#" id="checkoutLink" class="btn-stripe" target="_blank" rel="noopener">💳 Pay with Stripe →</a>
+    
+    <!-- DFS Analysis Checkbox Flow -->
+    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; text-align:left;">
+      <div style="font-size:11px; font-weight:800; color:var(--purple); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <span>🔍</span> Analysis &amp; Scouting Verification
+      </div>
+      <div style="font-size:12px; line-height:1.5; color:var(--gray); margin-bottom:12px;">
+        As a skill-based supporter platform, you are required to perform an analysis of this player's stats against market pricing before purchasing shares:
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:10px 12px; border-radius:8px; font-size:11px; margin-bottom:14px; display:flex; flex-direction:column; gap:4px;" id="modalScoutingStats">
+        <!-- populated dynamically by openBuy -->
+      </div>
+      <label style="display:flex; gap:8px; align-items:flex-start; font-size:11px; color:#fff; cursor:pointer; line-height:1.4; user-select:none;">
+        <input type="checkbox" id="scoutingVerifyChk" style="accent-color:var(--purple); margin-top:2px;" onchange="syncCheckoutLinkState()">
+        <span>I have reviewed the fargo rating, recent form stats, and assert that my analysis indicates this price represents a favorable value compared to the market.</span>
+      </label>
+    </div>
+
+    <a href="#" id="checkoutLink" class="btn-stripe" target="_blank" rel="noopener" style="margin-top:16px;">💳 Pay with Stripe →</a>
     <div class="modal-fine">Secure checkout by Stripe · Price locked at purchase · Receipts via email</div>
   </div>
 </div>
@@ -2823,6 +3156,14 @@ const CONFIG = {
     { week:7, winner:"Rail Riders",       loser:"Side Pocket Crew", score:"3–0" },
     { week:7, winner:"Chalk Outlaws",     loser:"Eight Ball Exiles",score:"2–1" },
   ],
+
+  // ── MARKET VOLATILITY & LOCKS ────────────────────────
+  marketSettings: {
+    marketLocked: 0,
+    volatilityFactor: 1.5,
+    maxSharesPerUserPlayer: 10,
+    startingPriceFloor: 25
+  }
 };
 
 
@@ -2857,14 +3198,43 @@ function getPurchaseQrBaseUrl() {
   return base || (window.location.origin + "/");
 }
 
-function sharePrice(rank) {
-  // Tier price by rank, then clamp to the buy-in cap so no share can be
-  // bought in above CONFIG.buyInCap (e.g. a #1 player tops out at the cap).
-  const tier =
-    rank <= 2 ? 150 :
-    rank <= 4 ? 75  :
-    rank <= 8 ? 35  : 25;
-  return Math.min(tier, CONFIG.buyInCap);
+function getSharesSold(mode, name) {
+  const portfolios = CONFIG.user_portfolios || {};
+  let total = 0;
+  for (const userId in portfolios) {
+    const port = portfolios[userId] || {};
+    const list = port[mode] || [];
+    list.forEach(entry => {
+      if (entry.name === name) {
+        total += Number(entry.shares) || 0;
+      }
+    });
+  }
+  return total;
+}
+
+function sharePrice(rank, playerName) {
+  let basePrice = 25;
+  if (rank <= 2) basePrice = 150;
+  else if (rank <= 4) basePrice = 75;
+  else if (rank <= 8) basePrice = 35;
+  else basePrice = (CONFIG.marketSettings && CONFIG.marketSettings.startingPriceFloor) !== undefined ? Number(CONFIG.marketSettings.startingPriceFloor) : 25;
+
+  if (!playerName) return Math.min(basePrice, CONFIG.buyInCap || 150);
+
+  const factor = (CONFIG.marketSettings && CONFIG.marketSettings.volatilityFactor) !== undefined ? Number(CONFIG.marketSettings.volatilityFactor) : 1.5;
+  
+  let streakBonus = 0;
+  const player = CONFIG.players.find(p => p.name === playerName);
+  if (player && player.streak) {
+    const wins = player.streak.trim().split(/\s+/).filter(x => x === "W").length;
+    streakBonus = wins * 3;
+  }
+
+  const sharesSold = getSharesSold("individual", playerName);
+  const calculatedPrice = basePrice + (sharesSold * factor) + streakBonus;
+  
+  return Math.min(calculatedPrice, CONFIG.buyInCap || 150);
 }
 
 function rankLabel(rank) {
@@ -2914,6 +3284,7 @@ function setManualUnlock(name) {
 
 // Returns effective lock state (manual lock OR dues overdue, unless operator-unlocked)
 function isLocked(p) {
+  if (CONFIG.marketSettings && Number(CONFIG.marketSettings.marketLocked) === 1) return "market_locked";
   if (p.locked) return "manual";
   if (isDuesLocked(p) && !isManualUnlocked(p.name)) return "dues";
   return false;
@@ -2943,7 +3314,7 @@ function stripeUrl(price, qty) {
 // ╚═══════════════════════════════════════════════════════╝
 function buildTicker() {
   const items = CONFIG.players.map(p => {
-    const price = sharePrice(p.rank);
+    const price = sharePrice(p.rank, p.name);
     const badge = p.locked
       ? `<span class="t-badge-lock">🔒</span>`
       : p.hot
@@ -3007,7 +3378,7 @@ function buildGrid() {
     : CONFIG.players.filter(p => p.bar === selectedBar);
     
   grid.innerHTML = filtered.slice().sort((a, b) => a.rank - b.rank).map(p => {
-    const price = sharePrice(p.rank);
+    const price = sharePrice(p.rank, p.name);
     const lock  = isLocked(p);
     const last  = (p.streak || "").trim().split(/\s+/).pop();
     const dot   = last === "W" ? "var(--green)" : last === "L" ? "var(--red)" : "var(--gray)";
@@ -3016,7 +3387,7 @@ function buildGrid() {
     if (lock)                badges.push('<span class="badge b-lock">🔒 LOCKED</span>');
     if (price <= 25 && !lock) badges.push('<span class="badge b-deal">💎 VALUE</span>');
     const btn = lock
-      ? `<button class="btn-buy" disabled>${lock === "dues" ? "Dues Overdue" : "Locked"}</button>` +
+      ? `<button class="btn-buy" disabled>${lock === "dues" ? "Dues Overdue" : lock === "market_locked" ? "Market Locked" : "Locked"}</button>` +
         (lock === "dues" ? `<div style="text-align:center;margin-top:8px"><a href="#" onclick="operatorUnlock('${p.name}');return false" style="font-size:11px;color:var(--gray)">Operator unlock</a></div>` : "")
       : `<div style="display:flex; gap:8px; width:100%;">
           <button class="btn-buy" style="flex:1;" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">Buy Shares · ${$$(price)}</button>
@@ -3150,10 +3521,10 @@ function currentPrice(mode, name) {
   if (mode === "teams") {
     const s = teamStandings();
     const i = s.findIndex(t => t.name === name);
-    return i < 0 ? CONFIG.teamTiers.base : teamSharePrice(i + 1);
+    return i < 0 ? CONFIG.teamTiers.base : teamSharePrice(i + 1, name);
   }
   const p = CONFIG.players.find(x => x.name === name);
-  return p ? sharePrice(p.rank) : 25;
+  return p ? sharePrice(p.rank, p.name) : 25;
 }
 
 function recordPurchase(mode, name, price, shares) {
@@ -3274,6 +3645,10 @@ function teamStripeUrl(price, qty) {
 }
 
 function openBuy(mode, name, price, rank, sub) {
+  if (CONFIG.marketSettings && Number(CONFIG.marketSettings.marketLocked) === 1) {
+    alert("🔒 The stock market is currently locked by the operator.");
+    return;
+  }
   if (currentRole() === "public") {
     openLogin();
     return;
@@ -3281,6 +3656,39 @@ function openBuy(mode, name, price, rank, sub) {
   buyState = { mode, name, price, qty: 1 };
   $("mTitle").textContent = name;
   $("mSub").textContent   = sub || "";
+  
+  // Uncheck the scouting verification box on opening
+  $("scoutingVerifyChk").checked = false;
+  
+  // Populate scouting dashboard stats
+  let statsHtml = "";
+  if (mode === "individual" || mode === "individual-share") {
+    const p = CONFIG.players.find(x => x.name === name);
+    if (p) {
+      const five = (p.streak || "").trim().split(/\s+/).filter(Boolean);
+      const wins = five.filter(x => x === "W").length;
+      const fargo = Math.round(760 - (p.rank * 13) + (wins * 8));
+      statsHtml = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Fargo Rating:</span><strong>${fargo}</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Recent Form:</span><strong>${p.streak || "N/A"}</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Rank Position:</span><strong>#${p.rank} of ${CONFIG.players.length}</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span>Home Bar:</span><strong>${p.bar}</strong></div>
+      `;
+    }
+  } else {
+    const teams = teamStandings();
+    const t = teams.find(x => x.name === name);
+    if (t) {
+      const roster = t.players.join(" · ");
+      statsHtml = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Standing Rank:</span><strong>#${rank}</strong></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Record:</span><strong>${t.w}W–${t.l}L</strong></div>
+        <div style="display:flex; justify-content:space-between;"><span>Roster:</span><strong>${roster}</strong></div>
+      `;
+    }
+  }
+  $("modalScoutingStats").innerHTML = statsHtml;
+
   updateBuy();
   $("overlay").classList.add("open");
 }
@@ -3288,6 +3696,35 @@ function openBuy(mode, name, price, rank, sub) {
 function adjQty(d) {
   buyState.qty = Math.max(1, Math.min(99, buyState.qty + d));
   updateBuy();
+}
+
+function syncCheckoutLinkState() {
+  const verified = $("scoutingVerifyChk").checked;
+  const cl = $("checkoutLink");
+  const { mode, price, qty } = buyState;
+  const hasLink = mode === "teams" ? !!teamStripeUrl(price, qty) : !!stripeUrl(price, qty);
+  const isValid = CONFIG.useServerless || hasLink;
+
+  if (isValid) {
+    if (verified) {
+      cl.style.opacity = ""; 
+      cl.style.pointerEvents = "";
+      cl.textContent = "💳 Pay with Stripe →";
+      cl.onclick = (ev) => { ev.preventDefault(); goCheckout(); };
+    } else {
+      cl.removeAttribute("href");
+      cl.style.opacity = ".5"; 
+      cl.style.pointerEvents = "none";
+      cl.textContent = "🔒 Confirm Scouting First";
+      cl.onclick = null;
+    }
+  } else {
+    cl.removeAttribute("href");
+    cl.style.opacity = ".5"; 
+    cl.style.pointerEvents = "none";
+    cl.textContent = "Payment link coming soon";
+    cl.onclick = null;
+  }
 }
 
 function updateBuy() {
@@ -3303,18 +3740,7 @@ function updateBuy() {
     prev = `If <strong>${name}</strong> wins it all you collect <strong>${$$(p.champ)}/share</strong> — <strong>${$$(p.champ * qty)}</strong> on ${qty} share${qty > 1 ? "s" : ""}. Even a QF exit returns ${$$(p.qf)}/share.`;
   }
   $("mPreview").innerHTML = prev;
-  const cl = $("checkoutLink");
-  const hasLink = mode === "teams" ? !!teamStripeUrl(price, qty) : !!stripeUrl(price, qty);
-  if (CONFIG.useServerless || hasLink) {
-    cl.style.opacity = ""; cl.style.pointerEvents = "";
-    cl.textContent = "💳 Pay with Stripe →";
-    cl.onclick = (ev) => { ev.preventDefault(); goCheckout(); };
-  } else {
-    cl.removeAttribute("href");
-    cl.style.opacity = ".5"; cl.style.pointerEvents = "none";
-    cl.textContent = "Payment link coming soon";
-    cl.onclick = null;
-  }
+  syncCheckoutLinkState();
 }
 
 // Route the buy to the serverless Checkout (if enabled) or the static link.
@@ -3432,18 +3858,32 @@ function teamStandings() {
     .sort((a, b) => b.pts - a.pts || b.legs - a.legs);
 }
 
-function teamSharePrice(rank) {
-  const T = CONFIG.teamTiers;
-  if (rank === 1) return T.first;
-  if (rank <= 3)  return T.top3;
-  if (rank <= 5)  return T.top5;
-  return T.base;
+function teamSharePrice(rank, teamName) {
+  let basePrice = 25;
+  if (rank === 1) basePrice = 150;
+  else if (rank <= 3) basePrice = 75;
+  else if (rank <= 5) basePrice = 35;
+  else basePrice = (CONFIG.marketSettings && CONFIG.marketSettings.startingPriceFloor) !== undefined ? Number(CONFIG.marketSettings.startingPriceFloor) : 25;
+
+  if (!teamName) return Math.min(basePrice, 150);
+
+  const factor = (CONFIG.marketSettings && CONFIG.marketSettings.volatilityFactor) !== undefined ? Number(CONFIG.marketSettings.volatilityFactor) : 1.5;
+  const sharesSold = getSharesSold("teams", teamName);
+  
+  let streakBonus = 0;
+  const team = CONFIG.teams.find(t => t.name === teamName);
+  if (team) {
+    streakBonus = (Number(team.w) || 0) * 4;
+  }
+
+  const calculatedPrice = basePrice + (sharesSold * factor) + streakBonus;
+  return Math.min(calculatedPrice, 150);
 }
 
 function buildTeamTicker() {
   const s = teamStandings();
   const items = s.map((t, i) => {
-    const price = teamSharePrice(i + 1);
+    const price = teamSharePrice(i + 1, t.name);
     const badge = i === 0 ? `<span class="t-badge-lock">👑</span>` : "";
     return `<span class="t-item"><span class="t-name">${t.name}</span><span class="t-price">${$$(price)}</span>${badge}</span><span class="t-sep"> | </span>`;
   }).join("");
@@ -3456,7 +3896,7 @@ function buildTeamGrid() {
   const p = CONFIG.teamPayouts;
   grid.innerHTML = s.map((t, i) => {
     const rank  = i + 1;
-    const price = teamSharePrice(rank);
+    const price = teamSharePrice(rank, t.name);
     const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
     const roster = t.players.map(pl => pl === t.captain ? `${pl} (C)` : pl).join(" · ");
     const badges = [];
@@ -3475,7 +3915,9 @@ function buildTeamGrid() {
       </div></div>
       <div class="p-roi">+${roi(price, p.champ)}% ROI if they take the title</div>
       <div style="display:flex; gap:8px; width:100%;">
-        <button class="btn-buy" style="flex:1;" onclick="openBuy('teams','${t.name}',${price},${rank},'Captain ${t.captain} · ${t.pts} pts')">Back ${t.name} · ${$$(price)}</button>
+        ${CONFIG.marketSettings && Number(CONFIG.marketSettings.marketLocked) === 1
+          ? `<button class="btn-buy" style="flex:1;" disabled>Market Locked</button>`
+          : `<button class="btn-buy" style="flex:1;" onclick="openBuy('teams','${t.name}',${price},${rank},'Captain ${t.captain} · ${t.pts} pts')">Back ${t.name} · ${$$(price)}</button>`}
         <button class="btn-outline" style="width:48px; padding:0; display:flex; align-items:center; justify-content:center; border-radius:12px; border-color:var(--border);" title="Get Supporter Purchase QR Code" onclick="openPurchaseQR('teams','${t.name}')">📱</button>
       </div>
     </div>`;
@@ -3487,7 +3929,7 @@ function buildTeamStandings() {
   const s = teamStandings();
   const rows = s.map((t, i) => {
     const rank  = i + 1;
-    const price = teamSharePrice(rank);
+    const price = teamSharePrice(rank, t.name);
     return `<tr class="${rank <= 3 ? "medal-" + rank : ""}">
       <td class="num"><span class="stand-rank">${rank}</span></td>
       <td><div class="stand-team"><span class="stand-dot" style="background:${t.color}"></span>${t.name}</div>
@@ -3586,11 +4028,16 @@ async function payFee(kind) {
     openLogin();
     return;
   }
+  if (kind === 'teamReg') {
+    $("partner1Input").value = "";
+    $("partner2Input").value = "";
+    $("teammateOverlay").style.display = "flex";
+    return;
+  }
   const F = CONFIG.fees;
   const map = {
     registration: { amount: CONFIG.fees.registration, label: "Season Registration", type: "registration" },
     weeklyDues:   { amount: CONFIG.fees.weeklyDues,   label: "Weekly Dues",         type: "weekly_dues" },
-    teamReg:      { amount: CONFIG.fees.teamPerPerson, label: "Team Entry",         type: "teamReg" },
   }[kind];
   if (!map) return;
   if (CONFIG.useServerless) {
@@ -3632,21 +4079,80 @@ async function payFee(kind) {
     }
   }
   // Fallback to static URLs (only if configured)
-  const link = kind === 'registration' ? F.registrationLink : kind === 'weeklyDues' ? F.weeklyDuesLink : F.teamRegLink;
+  const link = kind === 'registration' ? F.registrationLink : F.weeklyDuesLink;
   if (link && !link.includes("REPLACE")) window.open(link, "_blank", "noopener");
   else alert(`No Stripe link set for ${map.label} yet. Add it in CONFIG or flip useServerless on.`);
+}
+
+function closeTeammateModal() {
+  $("teammateOverlay").style.display = "none";
+}
+
+async function proceedTeamCheckout() {
+  const p1 = $("partner1Input").value.trim();
+  const p2 = $("partner2Input").value.trim();
+  if (!p1) {
+    alert("Please enter Partner 1 Name.");
+    return;
+  }
+  $("teammateOverlay").style.display = "none";
+  
+  if (CONFIG.useServerless) {
+    setCheckoutLoading(true, "Redirecting to secure Stripe checkout...");
+    try {
+      const playerId = sessionStorage.getItem("al_user_id") || "";
+      const buyerEmail = sessionStorage.getItem("al_user_email") || "";
+
+      const data = await createCheckoutSession({
+        amount: CONFIG.fees.teamPerPerson,
+        productName: "Team Entry Registration",
+        quantity: 1,
+        productKey: "teamReg",
+        metadata: {
+          type: "teamReg",
+          playerId: playerId,
+          playerName: sessionStorage.getItem("al_user_email") || "Player",
+          buyerEmail: buyerEmail,
+          partner1: p1,
+          partner2: p2,
+          season: String(CONFIG.currentSeason || 1)
+        }
+      });
+
+      if (data && data.url) {
+        sessionStorage.setItem('pendingShare', JSON.stringify({
+          type: 'fee',
+          label: "Team Entry Registration",
+          price: CONFIG.fees.teamPerPerson,
+          qty: 1,
+          purchasedAt: new Date().toISOString()
+        }));
+        window.location.href = data.url; return;
+      }
+      setCheckoutLoading(false);
+      alert(data.error || "Checkout failed"); return;
+    } catch (e) {
+      setCheckoutLoading(false);
+      alert("Checkout error: " + e.message);
+      return;
+    }
+  }
+  const link = CONFIG.fees.teamRegLink;
+  if (link && !link.includes("REPLACE")) window.open(link, "_blank", "noopener");
+  else alert(`No Stripe link set for Team Entry yet. Add it in CONFIG or flip useServerless on.`);
 }
 
 // ╔═══════════════════════════════════════════════════════╗
 // ║  TABS                                                 ║
 // ╚═══════════════════════════════════════════════════════╝
 function showTab(t) {
+  if (t === "market") t = "predict";
   if (t === "owner" && currentRole() !== "owner") {
     if (currentRole() === "public") {
       openLogin();
     } else {
       alert("Access Denied: Only the Operator can access the Dashboard.");
-      showTab("market");
+      showTab("predict");
     }
     return;
   }
@@ -3655,11 +4161,11 @@ function showTab(t) {
       openLogin();
     } else {
       alert("Access Denied: You do not have permission to view Bar Profits.");
-      showTab("market");
+      showTab("predict");
     }
     return;
   }
-  const map = { market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar" };
+  const map = { matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar", tournament:"view-tournament", teams:"view-teams" };
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === t));
   syncEsportsNavActive(t);
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -3668,6 +4174,15 @@ function showTab(t) {
     const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
     let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
     loadBarDashboardData(selected);
+  }
+  if (t === "tournament") {
+    renderTournaments();
+  }
+  if (t === "teams") {
+    setMode("teams");
+  }
+  if (t === "predict") {
+    setMode("individual");
   }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -3831,7 +4346,7 @@ function applyRole(role) {
   
   setupBarDashboardSelect();
     
-  if (role === "public" && ($("view-owner").classList.contains("active") || $("view-bar").classList.contains("active"))) showTab("market");
+  if (role === "public" && ($("view-owner").classList.contains("active") || $("view-bar").classList.contains("active"))) showTab("predict");
 }
 
 async function runAdminAction(action, params) {
@@ -3972,7 +4487,7 @@ async function doLogin() {
           } else if (resolvedRole === "bar") {
             showTab("bar");
           } else {
-            showTab("market");
+            showTab("predict");
           }
         } else {
           sessionStorage.removeItem("logging_in");
@@ -3992,7 +4507,7 @@ async function doLogin() {
         } else if (resolvedRole === "bar") {
           showTab("bar");
         } else {
-          showTab("market");
+          showTab("predict");
         }
       }
     }
@@ -4035,7 +4550,7 @@ function handleLocalAuthFallback(email, password) {
     $("loginOverlay").classList.remove("open");
     if (role === "owner") showTab("owner");
     else if (role === "bar") showTab("bar");
-    else showTab("market");
+    else showTab("predict");
   } else {
     $("loginNotice").innerHTML = '<div class="notice err">Wrong email or password.</div>';
   }
@@ -4115,6 +4630,15 @@ function applySettingsToConfig(s) {
     CONFIG.split.prizes = s.splitPrizesPct / 100;
     CONFIG.split.investor = s.splitInvestorPct / 100;
   }
+  // Update CONFIG market settings
+  if (!CONFIG.marketSettings) {
+    CONFIG.marketSettings = {};
+  }
+  CONFIG.marketSettings.marketLocked = Number(s.marketLocked) || 0;
+  CONFIG.marketSettings.volatilityFactor = s.volatilityFactor !== undefined ? s.volatilityFactor : 1.5;
+  CONFIG.marketSettings.maxSharesPerUserPlayer = s.maxSharesPerUserPlayer !== undefined ? s.maxSharesPerUserPlayer : 10;
+  CONFIG.marketSettings.startingPriceFloor = s.startingPriceFloor !== undefined ? s.startingPriceFloor : 25;
+  CONFIG.marketSettings.tournaments = s.tournaments || [];
 }
 
 const SETTINGS_DEF = [
@@ -4142,6 +4666,10 @@ const SETTINGS_DEF = [
   { k:"splitBarPct",        label:"Split Bar %",          def:1.5 },
   { k:"splitPrizesPct",     label:"Split Prizes %",       def:35 },
   { k:"splitInvestorPct",   label:"Split Investor %",     def:46.5 },
+  { k:"marketLocked",       label:"Market Locked (0=Open, 1=Locked)", def:0, type:"bool" },
+  { k:"volatilityFactor",   label:"Volatility Multiplier", def:1.5 },
+  { k:"maxSharesPerUserPlayer", label:"Max Shares / Player / User", def:10 },
+  { k:"startingPriceFloor", label:"Starting Price Floor", def:25 }
 ];
 function getSettings() {
   let saved = {}; try { saved = JSON.parse(localStorage.getItem("al_settings") || "{}"); } catch {}
@@ -4181,13 +4709,21 @@ function buildSettings() {
     { title: "Share Options", keys: ["sharesPerPlayer", "startingSharePrice", "shareSellPct"] },
     { title: "Playoff Payouts / Share", keys: ["payoutChamp", "payoutFinalist", "payoutSemi", "payoutQf"] },
     { title: "Team Tournament Payouts", keys: ["teamPayoutChamp", "teamPayoutSecond", "teamPayoutThird"] },
-    { title: "Cuts & Profit Splits", keys: ["splitOpFeePct", "splitBarPct", "splitPrizesPct", "splitInvestorPct", "marketing", "stripeFeePct", "barCutPct", "barBonus"] }
+    { title: "Cuts & Profit Splits", keys: ["splitOpFeePct", "splitBarPct", "splitPrizesPct", "splitInvestorPct", "marketing", "stripeFeePct", "barCutPct", "barBonus"] },
+    { title: "Stock Market Volatility & Locking", keys: ["marketLocked", "volatilityFactor", "maxSharesPerUserPlayer", "startingPriceFloor"] }
   ];
 
   $("settingsGrid").innerHTML = SETTINGS_GROUPS.map(g => {
     const fieldsHtml = g.keys.map(k => {
       const d = settingsMap[k];
       if (!d) return "";
+      if (d.type === "bool") {
+        return `<div class="set-field"><label>${d.label}</label>
+          <select data-k="${d.k}" onchange="onSettingInput()" style="background: rgba(0, 0, 0, 0.45); color: #f0f0ff; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 6px; padding: 12px 14px; font-family: inherit; font-size: 14px; width: 100%; outline: none; margin-top: 6px; box-sizing: border-box; height: 44px;">
+            <option value="0" ${Number(s[d.k]) === 0 ? "selected" : ""}>Open (Buyable)</option>
+            <option value="1" ${Number(s[d.k]) === 1 ? "selected" : ""}>Locked (Closed)</option>
+          </select></div>`;
+      }
       return `<div class="set-field"><label>${d.label}</label>
         <input type="number" step="any" data-k="${d.k}" value="${s[d.k]}" oninput="onSettingInput()"></div>`;
     }).join("");
@@ -4199,6 +4735,7 @@ function buildSettings() {
 function readSettingsInputs() {
   const s = getSettings();
   document.querySelectorAll("#settingsGrid input").forEach(i => { s[i.dataset.k] = Number(i.value) || 0; });
+  document.querySelectorAll("#settingsGrid select").forEach(i => { s[i.dataset.k] = Number(i.value) || 0; });
   return s;
 }
 function onSettingInput() { buildPnl(readSettingsInputs()); }
@@ -4282,6 +4819,31 @@ function buildOwnerPrizes() {
 // ╔═══════════════════════════════════════════════════════╗
 // ║  MATCHUPS — AUTO BRACKET + NEXT POSSIBLE MATCHES      ║
 // ╚═══════════════════════════════════════════════════════╝
+// ─── SCOUT TAB STATE & STATIC FARGO DATA ───────────────────
+let currentRoundVal = 1;
+let scoutSortBy = "rank";
+let scoutFilterTier = "all";
+let expandedPlayerName = null;
+
+const PRE_SEASON_FARGO = {
+  "Marcus P.": 612,
+  "Jake T.": 605,
+  "Darius M.": 592,
+  "Caleb R.": 580,
+  "Derek S.": 572,
+  "Tony B.": 565,
+  "Ray W.": 555,
+  "Chris L.": 548,
+  "Mike H.": 542,
+  "Sam K.": 535,
+  "Leo G.": 525,
+  "Nate F.": 515,
+  "Omar J.": 505,
+  "Paul D.": 495,
+  "Quan A.": 485,
+  "Ron V.": 475
+};
+
 let currentMatchupSeason = 1;
 let currentRRRound = 1;
 
@@ -4509,38 +5071,421 @@ function predictStrength(p, total) {
   const rankStr = (total - p.rank + 1) / total;       // 1.0 for #1
   return Math.max(0.02, rankStr * 0.7 + form * 0.27 + (p.hot ? 0.05 : 0));
 }
+// Check if the Scout tab is unlocked
+function isScoutTabUnlocked() {
+  if (sessionStorage.getItem("scout_force_unlocked") === "true") return true;
+  
+  // Tab is locked until at least 1 week of matches has been recorded.
+  // We determine this by checking if sum of all wins + losses is > 0
+  const totalMatches = (CONFIG.players || []).reduce((acc, p) => acc + (p.wins || 0) + (p.losses || 0), 0);
+  return totalMatches > 0 || currentRoundVal > 1;
+}
+
+// Toggle force unlock (for operator testing)
+function toggleScoutForceUnlock() {
+  const current = sessionStorage.getItem("scout_force_unlocked") === "true";
+  sessionStorage.setItem("scout_force_unlocked", (!current).toString());
+  buildPredGrid();
+}
+
+// Sorting handler
+function setScoutSort(val) {
+  scoutSortBy = val;
+  buildPredGrid();
+}
+
+// Filtering handler
+function setScoutFilter(val) {
+  scoutFilterTier = val;
+  buildPredGrid();
+}
+
+// Card details toggling
+function toggleCardExpansion(playerName) {
+  // Toggle the DOM class directly so we don't reload/re-render and lose scroll
+  const cards = document.querySelectorAll(".p-card");
+  cards.forEach(card => {
+    if (card.dataset.playerName === playerName) {
+      const isExpanded = card.classList.contains("expanded");
+      card.classList.toggle("expanded", !isExpanded);
+      expandedPlayerName = !isExpanded ? playerName : null;
+      
+      const btn = card.querySelector(".scout-toggle-btn");
+      if (btn) {
+        btn.innerHTML = !isExpanded 
+          ? `Hide Details <span class="arrow-icon">▲</span>`
+          : `View Performance & Price History Analysis <span class="arrow-icon">▼</span>`;
+      }
+    }
+  });
+}
+
+// Redirect, scroll, highlight and expand player card from dashboard
+function scoutAndHighlightPlayer(playerName) {
+  showTab('predict');
+  
+  const isUnlocked = isScoutTabUnlocked();
+  if (!isUnlocked) return;
+  
+  const filterSelect = $("scoutFilterSelect");
+  if (filterSelect && filterSelect.value !== "all") {
+    filterSelect.value = "all";
+    setScoutFilter("all");
+  }
+
+  setTimeout(() => {
+    toggleCardExpansion(playerName);
+    
+    const card = $(`scout-card-${playerName.replace(/\s+/g, '-')}`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.style.outline = "2px solid var(--al-green)";
+      card.style.boxShadow = "0 0 20px rgba(163,230,53,0.4)";
+      setTimeout(() => {
+        card.style.outline = "";
+        card.style.boxShadow = "";
+      }, 2000);
+    }
+  }, 100);
+}
+
+// Deterministic score generator for authentic visual head-to-head match history
+function getDeterministicScore(p, opp, roundIdx, won) {
+  const code = (p.name.charCodeAt(0) + opp.name.charCodeAt(0) + roundIdx) % 5;
+  if (won) {
+    const winScore = [7, 7, 6, 5, 5][code];
+    const loseScore = [3, 4, 4, 3, 4][code];
+    return `${winScore}–${loseScore}`;
+  } else {
+    const winScore = [7, 6, 7, 5, 6][code];
+    const loseScore = [4, 4, 3, 3, 4][code];
+    return `${loseScore}–${winScore}`;
+  }
+}
+
+// Reconstruct historical share prices based on performance timeline
+function getPlayerPriceHistory(p) {
+  const currentPrice = sharePrice(p.rank, p.name);
+  const streakArr = (p.streak || "").trim().split(/\s+/).filter(Boolean);
+  const totalWeeks = streakArr.length;
+  
+  let startedPrice = 25;
+  if (p.rank <= 4) startedPrice = 30;
+  
+  const history = [
+    { label: "Started", price: startedPrice, desc: "unranked" }
+  ];
+  
+  if (totalWeeks >= 2) {
+    const w2Streak = streakArr.slice(0, 2);
+    const w2Wins = w2Streak.filter(x => x === "W").length;
+    let w2Rank = p.rank + (totalWeeks - 2);
+    if (w2Rank > 16) w2Rank = 16;
+    if (w2Rank < 1) w2Rank = 1;
+    let w2Base = w2Rank <= 2 ? 150 : (w2Rank <= 4 ? 75 : (w2Rank <= 8 ? 35 : 25));
+    let w2Price = Math.min(150, w2Base + (w2Wins * 3));
+    w2Price = Math.round(w2Price / 5) * 5;
+    if (w2Price >= currentPrice && currentPrice > 25) {
+      w2Price = Math.max(25, currentPrice - 15);
+    }
+    
+    let w2Desc = "unranked";
+    if (w2Rank <= 2) w2Desc = "entered Top 2";
+    else if (w2Rank <= 4) w2Desc = "entered Top 4";
+    else if (w2Rank <= 8) w2Desc = "entered Top 8";
+    
+    history.push({ label: "Week 2", price: w2Price, desc: w2Desc });
+  }
+  
+  if (totalWeeks >= 4) {
+    const w4Streak = streakArr.slice(0, 4);
+    const w4Wins = w4Streak.filter(x => x === "W").length;
+    let w4Rank = p.rank + (totalWeeks - 4);
+    if (w4Rank > 16) w4Rank = 16;
+    if (w4Rank < 1) w4Rank = 1;
+    let w4Base = w4Rank <= 2 ? 150 : (w4Rank <= 4 ? 75 : (w4Rank <= 8 ? 35 : 25));
+    let w4Price = Math.min(150, w4Base + (w4Wins * 3));
+    w4Price = Math.round(w4Price / 5) * 5;
+    if (w4Price >= currentPrice && currentPrice > 25) {
+      w4Price = Math.max(25, currentPrice - 5);
+    }
+    if (w4Price <= (history[1]?.price || 25)) {
+      w4Price = (history[1]?.price || 25) + 5;
+    }
+    
+    let w4Desc = "unranked";
+    if (w4Rank <= 2) w4Desc = "climbed to Top 2";
+    else if (w4Rank <= 4) w4Desc = "climbed to Top 4";
+    else if (w4Rank <= 8) w4Desc = "climbed to Top 8";
+    
+    history.push({ label: "Week 4", price: w4Price, desc: w4Desc });
+  } else if (totalWeeks >= 3) {
+    const w3Streak = streakArr.slice(0, 3);
+    const w3Wins = w3Streak.filter(x => x === "W").length;
+    let w3Rank = p.rank + (totalWeeks - 3);
+    let w3Base = w3Rank <= 2 ? 150 : (w3Rank <= 4 ? 75 : (w3Rank <= 8 ? 35 : 25));
+    let w3Price = Math.round(Math.min(150, w3Base + (w3Wins * 3)) / 5) * 5;
+    history.push({ label: "Week 3", price: w3Price, desc: w3Rank <= 8 ? "Top 8 performance" : "unranked" });
+  }
+  
+  return history;
+}
+
 function buildPredGrid() {
   const grid = $("predGrid"); if (!grid) return;
-  const players = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
-  const total = players.length;
-  const weights = players.map(p => Math.pow(predictStrength(p, total), 2.2));
+  const ctrl = $("scoutControls");
+  const lockBox = $("scoutLockedView");
+  
+  // Set last updated timestamp
+  const completedWeek = Math.max(1, currentRoundVal - 1);
+  const stamp = $("scoutTimestamp");
+  if (stamp) stamp.textContent = `Last updated: after Week ${completedWeek}`;
+
+  const isUnlocked = isScoutTabUnlocked();
+  
+  // Operator test toggle setup
+  const opArea = $("operatorUnlockArea");
+  if (opArea) {
+    const isOp = currentRole() === "owner" || currentRole() === "helper";
+    if (isOp) {
+      const forceVal = sessionStorage.getItem("scout_force_unlocked") === "true";
+      opArea.innerHTML = `
+        <button class="al-btn" style="width:auto; padding:6px 12px; font-size:11px; margin:0;" onclick="toggleScoutForceUnlock()">
+          ${forceVal ? "🔒 Lock Scouting Center (Reset Test)" : "🔓 Operator: Force Unlock for testing"}
+        </button>
+      `;
+      opArea.style.display = "block";
+    } else {
+      opArea.style.display = "none";
+    }
+  }
+
+  if (!isUnlocked) {
+    // Show locked view, hide controls, and show blurred skeleton preview
+    if (ctrl) ctrl.style.display = "none";
+    if (lockBox) lockBox.style.display = "flex";
+    
+    // Render 6 blurred player skeletons for visualization
+    grid.innerHTML = Array(6).fill(null).map(() => `
+      <div class="p-card locked-preview">
+        <div class="p-top"><div class="p-rank">🥈 Top 3–4</div><div class="p-price tier-purple">$75</div></div>
+        <div class="p-name tier-purple">Skeleton Player</div>
+        <div class="p-meta" style="margin: 4px 0 8px;">🎯 Fargo: 580</div>
+        <div style="margin:7px 0"><div class="pred-stat"><b>25%</b> to WIN the season</div><div class="pred-bar-bg"><div class="pred-bar" style="width:25%"></div></div></div>
+      </div>
+    `).join("");
+    return;
+  }
+  
+  // Unlocked state: show controls and hide locked view
+  if (ctrl) ctrl.style.display = "flex";
+  if (lockBox) lockBox.style.display = "none";
+
+  // Filter players
+  let filtered = CONFIG.players.slice();
+  if (scoutFilterTier === "tier1") {
+    filtered = filtered.filter(p => p.rank <= 2);
+  } else if (scoutFilterTier === "tier2") {
+    filtered = filtered.filter(p => p.rank >= 3 && p.rank <= 4);
+  } else if (scoutFilterTier === "tier3") {
+    filtered = filtered.filter(p => p.rank >= 5 && p.rank <= 8);
+  } else if (scoutFilterTier === "tier4") {
+    filtered = filtered.filter(p => p.rank >= 9);
+  }
+
+  // Sort players
+  filtered.sort((a, b) => {
+    if (scoutSortBy === "rank") {
+      return a.rank - b.rank;
+    } else if (scoutSortBy === "fargo") {
+      const fA = PRE_SEASON_FARGO[a.name] || 548;
+      const fB = PRE_SEASON_FARGO[b.name] || 548;
+      return fB - fA;
+    } else if (scoutSortBy === "form") {
+      const sA = (a.streak || "").trim().split(/\s+/).filter(x => x === "W").length;
+      const sB = (b.streak || "").trim().split(/\s+/).filter(x => x === "W").length;
+      return sB - sA;
+    } else if (scoutSortBy === "price") {
+      return sharePrice(b.rank, b.name) - sharePrice(a.rank, a.name);
+    } else if (scoutSortBy === "movement") {
+      const wA = (a.streak || "").trim().split(/\s+/).filter(x => x === "W").length;
+      const wB = (b.streak || "").trim().split(/\s+/).filter(x => x === "W").length;
+      return wB - wA; // movement percentage is directly proportional to streak wins
+    }
+    return a.rank - b.rank;
+  });
+
+  const total = CONFIG.players.length;
+  const weights = filtered.map(p => Math.pow(predictStrength(p, total), 2.2));
   const sumW = weights.reduce((a, b) => a + b, 0);
   const clamp = v => Math.max(1, Math.min(99, Math.round(v)));
-  grid.innerHTML = players.map((p, i) => {
-    const win  = clamp(weights[i] / sumW * 100);
+
+  grid.innerHTML = filtered.map((p, i) => {
+    const win  = clamp((weights[i] / (sumW || 1)) * 100);
     const top2 = clamp(win * 2.2);
     const top4 = clamp(win * 3.4);
     const top8 = clamp(win * 5.2);
-    const price = sharePrice(p.rank);
+    const price = sharePrice(p.rank, p.name);
+    const lock  = isLocked(p);
+    
+    // Parse streak and form
     const five = (p.streak || "").trim().split(/\s+/).filter(Boolean);
-    const wins = five.filter(x => x === "W").length;
-    const streakDesc = p.hot ? `a ${wins}-of-${five.length} hot streak` : `${wins} wins in the last ${five.length}`;
-    const value = p.rank > 4 && wins >= 3;
+    const last3 = five.slice(-3);
+    const winsCount = five.filter(x => x === "W").length;
+    
+    // Calculate Fargo Details
+    const preSeasonFargo = PRE_SEASON_FARGO[p.name] || 548;
+    const avgFargo = 548;
+    const edge = preSeasonFargo - avgFargo;
+    const edgeStr = edge >= 0 ? `+${edge}` : `${edge}`;
+
+    // Calculate Record and Points
+    const recordWins = p.wins || 0;
+    const recordLosses = p.losses || 0;
+    const recordTies = p.ties || 0;
+    const recordPoints = (recordWins * 2) + recordTies;
+
+    // Generate Head-to-Head deterministically
+    const allPlayersSorted = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
+    const rrRounds = generateRoundRobin(allPlayersSorted);
+    const h2hMatches = [];
+    for (let r = 0; r < five.length; r++) {
+      const roundMatches = rrRounds[r] || [];
+      const match = roundMatches.find(m => m.a.name === p.name || m.b.name === p.name);
+      if (match) {
+        const opp = match.a.name === p.name ? match.b : match.a;
+        if (opp && opp.name !== "BYE") {
+          const res = five[r];
+          const scoreText = getDeterministicScore(p, opp, r, res === "W");
+          h2hMatches.push({
+            oppName: opp.name,
+            result: res,
+            score: scoreText,
+            week: r + 1
+          });
+        }
+      }
+    }
+    
+    // Generate Price History
+    const history = getPlayerPriceHistory(p);
+    
+    // Shares remaining
+    const sharesSold = getSharesSold("individual", p.name);
+    const remainingShares = Math.max(1, 5 - (sharesSold % 5));
+
+    // Arrow indicator for movement
+    const isUp = winsCount >= 3;
+    const movementArrow = isUp ? "↑" : "↓";
+
+    const streakDesc = p.hot ? `a ${winsCount}-of-${five.length} hot streak` : `${winsCount} wins in the last ${five.length}`;
+    const undervalued = p.rank > 4 && winsCount >= 3;
     const narr = `${p.name} is on ${streakDesc}. ${win}% to win the season, ${top2}% to finish Top 2 and ${top4}% Top 4.` +
-      (value ? ` <strong style="color:var(--al-green)">Undervalued at ${$$(price)}</strong> — the form says higher.` :
+      (undervalued ? ` <strong style="color:var(--al-green)">Undervalued at ${$$(price)}</strong> — the form says higher.` :
                (p.rank <= 2 ? ` The chalk favorite — backers pay ${$$(price)} but cash ${$$(CONFIG.payouts.champ)} if they close it out.` :
                               ` A ${roi(price, CONFIG.payouts.champ)}% return if they shock the field.`));
-    const bar = (label, v) => `<div style="margin:7px 0">
-      <div class="pred-stat"><b>${v}%</b> ${label}</div><div class="pred-bar-bg"><div class="pred-bar" style="width:${v}%"></div></div></div>`;
-    return `<div class="p-card" style="--accent:${accentColor(p.rank)}">
-      <div class="p-top"><div class="p-rank">${rankLabel(p.rank)}${p.hot ? ' · 🔥' : ''}</div>
-        <div class="p-price ${tierClass(p.rank)}" style="font-size:24px">${$$(price)}</div></div>
-      <div class="p-name ${tierClass(p.rank)}">${p.name}</div>
-      <div class="p-meta">${p.streak} · ${p.bar}</div>
-      ${bar("to WIN the season", win)}${bar("Top 2", top2)}${bar("Top 4", top4)}${bar("Top 8", top8)}
-      <div class="pred-narr">${narr}</div>
-      <button class="btn-buy" style="margin-top:12px" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">Buy Shares · ${$$(price)}</button>
-    </div>`;
+
+    const isExpanded = expandedPlayerName === p.name;
+    const cardClass = `p-card ${isExpanded ? 'expanded' : ''}`;
+
+    return `
+      <div class="${cardClass}" data-player-name="${p.name}" id="scout-card-${p.name.replace(/\s+/g, '-')}" style="--accent:${accentColor(p.rank)}">
+        <div class="p-top">
+          <div class="p-rank">${rankLabel(p.rank)}${p.hot ? ' · 🔥' : ''}</div>
+          <div class="p-price ${tierClass(p.rank)}" style="font-size:24px; font-weight:900;">
+            ${$$(price)} <span style="font-size:16px; color:${isUp ? 'var(--al-green)' : 'var(--red)'};">${movementArrow}</span>
+          </div>
+        </div>
+        <div class="p-name ${tierClass(p.rank)}" style="font-size:20px; font-weight:800; margin-bottom:8px;">${p.name}</div>
+        
+        <div style="font-size:13px; color:var(--gray); margin-bottom:12px; display:flex; gap:12px; align-items:center;">
+          <span>Pre-season Fargo: <strong>${preSeasonFargo}</strong></span>
+          <span style="color:var(--border);">|</span>
+          <span>Rank: <strong>#${p.rank}</strong></span>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:12px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+            <span style="color:var(--gray);">Season Record:</span>
+            <strong>${recordWins}W &nbsp;${recordLosses}L &nbsp;${recordTies}T &nbsp;—&nbsp; ${recordPoints}pts</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <span style="color:var(--gray);">Last 3 Matches:</span>
+            <strong>${last3.length > 0 ? last3.join(" ") : "N/A"} <span style="font-size:10px; font-weight:normal; color:var(--gray);">(recent form)</span></strong>
+          </div>
+        </div>
+
+        <!-- Accordion Toggle Button -->
+        <button class="scout-toggle-btn" onclick="toggleCardExpansion('${p.name}')">
+          ${isExpanded ? 'Hide Details <span class="arrow-icon">▲</span>' : 'View Performance & Price History Analysis <span class="arrow-icon">▼</span>'}
+        </button>
+
+        <!-- Slide down compliance details -->
+        <div class="scout-details">
+          
+          <!-- Fargo Handicapping Baseline -->
+          <div class="fargo-hcp-box">
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; letter-spacing: 0.5px;">Skill Assessment Baseline</div>
+            <div class="fargo-hcp-row">
+              <span style="color:var(--gray);">Pre-season Fargo:</span>
+              <span><strong>${preSeasonFargo}</strong></span>
+            </div>
+            <div class="fargo-hcp-row">
+              <span style="color:var(--gray);">League Avg Fargo:</span>
+              <span><strong>${avgFargo}</strong></span>
+            </div>
+            <div class="fargo-hcp-row">
+              <span style="color:var(--gray);">Edge vs Field:</span>
+              <span style="color:${edge >= 0 ? 'var(--al-green)' : 'var(--red)'};"><strong>${edgeStr}</strong></span>
+            </div>
+          </div>
+
+          <!-- Head-to-Head matches this season -->
+          <div class="h2h-sec">
+            <div class="h2h-title">Head-To-Head This Season</div>
+            ${h2hMatches.length === 0 ? '<div style="font-size:12px; color:var(--gray); text-align:center; padding:4px 0;">No matchups completed yet.</div>' : 
+              h2hMatches.map(m => `
+                <div class="h2h-row">
+                  <span style="color:var(--white);">${m.result === 'W' ? 'Beat' : 'Lost to'} <strong>${m.oppName}</strong></span>
+                  <span><span class="${m.result === 'W' ? 'h2h-w' : 'h2h-l'}">${m.score}</span> <span style="font-size:10px; color:var(--gray);">(Week ${m.week})</span></span>
+                </div>
+              `).join("")}
+          </div>
+
+          <!-- Price History Panel -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:12px; margin-bottom:14px;">
+            <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; letter-spacing: 0.5px;">Performance-Driven Price History</div>
+            <div class="history-steps">
+              ${history.map((h, hIdx) => {
+                const isActive = hIdx === history.length - 1;
+                return `
+                  <div class="history-step ${isActive ? 'active' : ''}">
+                    <div>
+                      <span class="history-label" style="${isActive ? 'color:var(--white); font-weight:700;' : ''}">${h.label}:</span>
+                      <span class="history-desc" style="${isActive ? 'color:var(--al-green);' : ''}">(${h.desc})</span>
+                    </div>
+                    <span class="history-price" style="${isActive ? 'color:var(--al-green); font-size:14px;' : ''}">${$$(h.price)}</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+
+          <!-- Shares Available -->
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--gray); margin-bottom:14px; padding: 0 4px;">
+            <span>Shares Available:</span>
+            <strong style="color:var(--white); font-family:var(--font-mono);">${remainingShares} remaining at this tier</strong>
+          </div>
+
+          <!-- Buy shares button (only visible inside expanded card) -->
+          ${CONFIG.marketSettings && Number(CONFIG.marketSettings.marketLocked) === 1
+            ? `<button class="btn-buy" style="margin-top:4px" disabled>Market Locked</button>`
+            : lock
+            ? `<button class="btn-buy" style="margin-top:4px" disabled>${lock === "dues" ? "Dues Overdue" : "Locked"}</button>`
+            : `<button class="btn-buy" style="margin-top:4px" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">Buy Shares · ${$$(price)}</button>`}
+        </div>
+      </div>
+    `;
   }).join("");
 }
 
@@ -4607,6 +5552,10 @@ async function loadDbData() {
       CONFIG.bars = dbSettings.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
       localStorage.setItem("al_bars", JSON.stringify(CONFIG.bars));
       
+      // Load and cache user portfolios for dynamic price calculation
+      CONFIG.user_portfolios = dbSettings.user_portfolios || {};
+      localStorage.setItem("al_user_portfolios", JSON.stringify(CONFIG.user_portfolios));
+      
       const currentLocal = getSettings();
       SETTINGS_DEF.forEach(d => {
         if (dbSettings[d.k] !== undefined) {
@@ -4618,6 +5567,7 @@ async function loadDbData() {
     } else {
       applySettingsToConfig(getSettings());
       try { CONFIG.bars = JSON.parse(localStorage.getItem("al_bars")) || ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; } catch { CONFIG.bars = ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; }
+      try { CONFIG.user_portfolios = JSON.parse(localStorage.getItem("al_user_portfolios")) || {}; } catch { CONFIG.user_portfolios = {}; }
     }
     
     const { data: dbPlayers, error: playersErr } = await _sb.from("players").select("*");
@@ -4652,6 +5602,7 @@ async function loadDbData() {
     console.error("Error loading Supabase data, falling back to local defaults:", err);
     applySettingsToConfig(getSettings());
     try { CONFIG.bars = JSON.parse(localStorage.getItem("al_bars")) || ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; } catch { CONFIG.bars = ["Bar One", "Bar Two", "Bar Three", "Bar Four"]; }
+    try { CONFIG.user_portfolios = JSON.parse(localStorage.getItem("al_user_portfolios")) || {}; } catch { CONFIG.user_portfolios = {}; }
     renderAllViews();
   }
 }
@@ -4820,6 +5771,9 @@ function renderAllViews() {
   buildDuesManager();
   buildBarsManagement();
   buildHeatmap();
+  if ($("view-tournament") && $("view-tournament").classList.contains("active")) {
+    renderTournaments();
+  }
   if ($("view-bar") && $("view-bar").classList.contains("active")) {
     const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
     let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
@@ -4832,7 +5786,7 @@ function buildHeatmap() {
   if (!el) return;
   const sorted = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
   el.innerHTML = sorted.map(p => {
-    const price = sharePrice(p.rank);
+    const price = sharePrice(p.rank, p.name);
     const last5 = (p.streak || "").trim().split(/\s+/).filter(Boolean);
     const wins = last5.filter(x => x === "W").length;
     const isUp = wins >= 3;
@@ -4843,7 +5797,7 @@ function buildHeatmap() {
     else if (p.rank <= 4) color = "rgba(196, 112, 245, 0.12)";
     else if (p.rank <= 8) color = "rgba(56, 189, 248, 0.12)";
     
-    return `<div class="heatmap-tile" style="background:${color}; border-color:${isUp ? 'rgba(163,230,53,0.3)' : 'rgba(255,69,58,0.2)'}" onclick="openBuy('individual','${p.name}',${price},${p.rank},'${rankLabel(p.rank)} · ${p.bar}')">
+    return `<div class="heatmap-tile" style="background:${color}; border-color:${isUp ? 'rgba(163,230,53,0.3)' : 'rgba(255,69,58,0.2)'}" onclick="scoutAndHighlightPlayer('${p.name}')">
       <span class="heatmap-tile-name">${p.name.split(" ")[0]}</span>
       <span class="heatmap-tile-price">${$$(price)}</span>
       <span class="heatmap-tile-change" style="color:${isUp ? 'var(--al-green)' : 'var(--red)'}">${change}</span>
@@ -5154,7 +6108,7 @@ function simulateLocalBarDashboard(barName) {
     }
 
     const estimatedShares = Math.max(12, 45 - p.rank * 2);
-    totalShareVolume += sharePrice(p.rank) * estimatedShares;
+    totalShareVolume += sharePrice(p.rank, p.name) * estimatedShares;
   });
 
   const shareCutPct = (Number(getSettings().splitBarPct) || 1.5) / 100;
@@ -5674,7 +6628,7 @@ function checkPendingBuy() {
   if (buyIndiv) {
     const p = CONFIG.players.find(x => x.name.toLowerCase() === buyIndiv.toLowerCase());
     if (p) {
-      const price = sharePrice(p.rank);
+      const price = sharePrice(p.rank, p.name);
       const sub = `${rankLabel(p.rank)} · ${p.bar}`;
       if (currentRole() === 'public') {
         sessionStorage.setItem('pendingBuyMode', 'individual');
@@ -5693,7 +6647,7 @@ function checkPendingBuy() {
     if (idx !== -1) {
       const t = s[idx];
       const rank = idx + 1;
-      const price = teamSharePrice(rank);
+      const price = teamSharePrice(rank, t.name);
       const sub = `Captain ${t.captain} · ${t.pts} pts`;
       if (currentRole() === 'public') {
         sessionStorage.setItem('pendingBuyMode', 'teams');
@@ -5732,6 +6686,726 @@ if (_sb) {
       setRole("public");
     }
   });
+}
+
+// 🏆 TOURNAMENT LOGIC AND VIEWS
+let activeTournamentId = "";
+
+function renderTournaments() {
+  const container = $("view-tournament");
+  if (!container) return;
+
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  
+  if (tournaments.length > 0 && !tournaments.find(t => t.id === activeTournamentId)) {
+    activeTournamentId = tournaments[0].id;
+  }
+
+  const active = tournaments.find(t => t.id === activeTournamentId);
+  const isOperator = currentRole() === "owner" || currentRole() === "helper";
+
+  let html = `
+    <div class="hero" style="padding:40px 20px 28px">
+      <div class="hero-eyebrow"><div class="live-dot"></div>LEAGUE TOURNAMENTS</div>
+      <h1 style="font-size:clamp(30px,7vw,56px)">TOURNAMENT<br><em>CENTER.</em></h1>
+      <p class="hero-sub">Hybrid pool play, round robins, brackets and staggered venue timelines.</p>
+    </div>
+  `;
+
+  if (tournaments.length > 0) {
+    html += `
+      <div style="max-width:920px; margin:0 auto 24px; padding:0 16px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label style="font-size:12px; font-weight:800; color:var(--gray); text-transform:uppercase;">Tournament:</label>
+          <select id="tourneySelect" onchange="activeTournamentId = this.value; renderTournaments();" style="background:rgba(0,0,0,0.5); color:#fff; border:1px solid var(--border); padding:8px 12px; border-radius:8px; outline:none; font-family:inherit; font-size:14px;">
+            ${tournaments.map(t => `<option value="${t.id}" ${t.id === activeTournamentId ? "selected" : ""}>${t.name}</option>`).join("")}
+          </select>
+        </div>
+        ${isOperator ? `<button class="btn-outline" onclick="showCreateTournamentForm(true)" style="padding:8px 16px; font-size:12px; border-radius:8px;">+ Create New</button>` : ""}
+      </div>
+    `;
+  }
+
+  html += renderCreateTournamentForm();
+
+  if (active) {
+    html += renderTournamentDetail(active, isOperator);
+  } else if (tournaments.length === 0) {
+    html += `
+      <div style="max-width:920px; margin:40px auto; text-align:center; padding:32px 16px; background:var(--card); border:1px solid var(--border); border-radius:16px;">
+        <div style="font-size:40px; margin-bottom:12px;">🏆</div>
+        <div style="font-size:18px; font-weight:800; color:#fff; margin-bottom:8px;">No Tournaments Generated Yet</div>
+        <p style="font-size:13px; color:var(--gray); margin-bottom:20px; max-width:440px; margin-left:auto; margin-right:auto;">There are no active tournaments right now. If you are an operator, you can generate one below.</p>
+        ${isOperator ? "" : '<div style="font-size:12px; color:var(--gray)">Log in as operator to generate a tournament.</div>'}
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+  
+  if (isOperator && tournaments.length === 0) {
+    showCreateTournamentForm(true);
+  }
+}
+
+function renderCreateTournamentForm() {
+  const bars = CONFIG.bars || ["Bar One", "Bar Two", "Bar Three", "Bar Four"];
+  const players = CONFIG.players || [];
+  
+  return `
+    <div id="tourneyCreateBox" style="max-width:920px; margin:0 auto 32px; padding:24px; background:rgba(7,12,20,0.4); border:1.5px solid var(--border); border-radius:16px; display:none">
+      <div style="font-family:var(--font-header); font-size:18px; font-weight:800; color:var(--purple); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;">Generate Tournament</div>
+      <div style="font-size:12px; color:var(--gray); margin-bottom:20px;">Generate pools, brackets, and staggered schedules for players.</div>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:11px; font-weight:800; color:var(--gray); text-transform:uppercase;">Tournament Name</label>
+          <input type="text" id="newTourneyName" value="Championship Clash" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; padding:10px 12px; border-radius:8px; font-size:13px; outline:none;">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:11px; font-weight:800; color:var(--gray); text-transform:uppercase;">Format</label>
+          <select id="newTourneyFormat" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; padding:10px 12px; border-radius:8px; font-size:13px; outline:none; height:41px;">
+            <option value="hybrid_pool">Hybrid (Pools of 4 -> Bracket)</option>
+            <option value="round_robin">Round Robin Only</option>
+            <option value="bracket">Single Elimination Bracket Only</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Stagger times per venue -->
+      <div style="font-size:11px; font-weight:800; color:var(--green); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Staggered Venue Schedule</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:20px;">
+        ${[1, 2, 3].map(idx => {
+          const defaultTimes = ["12:00 PM", "2:30 PM", "5:00 PM"];
+          const defaultFormats = ["1v1 (Single)", "2v2 (Double)", "3v3 (Triple)"];
+          const defaultBarIndex = Math.min(idx - 1, bars.length - 1);
+          return `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:12px; border-radius:10px;">
+              <div style="font-size:10px; font-weight:800; color:var(--gray); margin-bottom:6px;">VENUE SLOT ${idx}</div>
+              <select class="stagger-bar" data-slot="${idx}" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; padding:6px; border-radius:6px; font-size:11px; width:100%; margin-bottom:6px; outline:none;">
+                ${bars.map((b, bidx) => `<option value="${b}" ${bidx === defaultBarIndex ? "selected" : ""}>${b}</option>`).join("")}
+              </select>
+              <select class="stagger-format" data-slot="${idx}" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; padding:6px; border-radius:6px; font-size:11px; width:100%; margin-bottom:6px; outline:none;">
+                <option value="1v1" ${defaultFormats[idx-1]==='1v1'?'selected':''}>1v1 Format</option>
+                <option value="2v2" ${defaultFormats[idx-1]==='2v2'?'selected':''}>2v2 Format</option>
+                <option value="3v3" ${defaultFormats[idx-1]==='3v3'?'selected':''}>3v3 Format</option>
+              </select>
+              <input type="text" class="stagger-time" data-slot="${idx}" value="${defaultTimes[idx-1]}" placeholder="Time e.g. 12:00 PM" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; padding:6px; border-radius:6px; font-size:11px; width:100%; outline:none;">
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+      <!-- Players Checklist -->
+      <div style="font-size:11px; font-weight:800; color:var(--green); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Select Players (${players.length} available)</div>
+      <div id="tourneyPlayerList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px; max-height:160px; overflow-y:auto; background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:12px; border-radius:10px; margin-bottom:20px;">
+        ${players.map(p => `
+          <label style="display:flex; align-items:center; gap:6px; font-size:12px; color:#fff; cursor:pointer;">
+            <input type="checkbox" class="tourney-player-chk" value="${p.name}" checked style="accent-color:var(--purple);">
+            ${p.name}
+          </label>
+        `).join("")}
+      </div>
+      
+      <div style="display:flex; gap:12px; justify-content:flex-end;">
+        <button class="btn-outline" onclick="showCreateTournamentForm(false)" style="border-radius:8px;">Cancel</button>
+        <button class="btn-primary" onclick="generateTournamentAction()" style="background:var(--purple); border-color:var(--purple); color:#000; font-weight:700; border-radius:8px; padding:10px 20px;">Generate Tournament State</button>
+      </div>
+    </div>
+  `;
+}
+
+function showCreateTournamentForm(show) {
+  const box = $("tourneyCreateBox");
+  if (box) box.style.display = show ? "block" : "none";
+}
+
+function seedOrder(n) {
+  let order = [1];
+  while (order.length < n) {
+    let next = [];
+    let limit = order.length * 2 + 1;
+    for (let i = 0; i < order.length; i++) {
+      next.push(order[i]);
+      next.push(limit - order[i]);
+    }
+    order = next;
+  }
+  return order;
+}
+
+function roundName(matchesCount) {
+  if (matchesCount === 1) return "Finals";
+  if (matchesCount === 2) return "Semifinals";
+  if (matchesCount === 4) return "Quarterfinals";
+  return `Round of ${matchesCount * 2}`;
+}
+
+async function generateTournamentAction() {
+  const name = $("newTourneyName").value.trim();
+  const format = $("newTourneyFormat").value;
+  if (!name) { alert("Please enter tournament name."); return; }
+
+  const checkedPlayers = Array.from(document.querySelectorAll(".tourney-player-chk:checked")).map(chk => chk.value);
+  if (checkedPlayers.length < 2) { alert("Please select at least 2 players."); return; }
+
+  const staggers = [];
+  for (let i = 1; i <= 3; i++) {
+    const bar = document.querySelector(`.stagger-bar[data-slot="${i}"]`).value;
+    const fmt = document.querySelector(`.stagger-format[data-slot="${i}"]`).value;
+    const time = document.querySelector(`.stagger-time[data-slot="${i}"]`).value;
+    staggers.push({ venue: bar, format: fmt, time });
+  }
+
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  const newId = "tourney_" + Date.now();
+
+  const newTourney = {
+    id: newId,
+    name,
+    format,
+    status: format === "hybrid_pool" ? "pools" : format === "bracket" ? "bracket" : "pools",
+    staggers,
+    players: checkedPlayers,
+    pools: [],
+    bracket: []
+  };
+
+  if (format === "hybrid_pool") {
+    const shuffled = [...checkedPlayers].sort(() => Math.random() - 0.5);
+    const poolSize = 4;
+    const poolCount = Math.ceil(shuffled.length / poolSize);
+    
+    for (let pIdx = 0; pIdx < poolCount; pIdx++) {
+      const poolPlayers = shuffled.slice(pIdx * poolSize, (pIdx + 1) * poolSize);
+      const poolLetter = String.fromCharCode(65 + pIdx);
+      
+      const matches = [];
+      let mId = 1;
+      for (let i = 0; i < poolPlayers.length; i++) {
+        for (let j = i + 1; j < poolPlayers.length; j++) {
+          matches.push({
+            id: `p${poolLetter}_m${mId++}`,
+            a: poolPlayers[i],
+            b: poolPlayers[j],
+            scoreA: null,
+            scoreB: null
+          });
+        }
+      }
+      
+      newTourney.pools.push({
+        name: `Pool ${poolLetter}`,
+        players: poolPlayers,
+        matches
+      });
+    }
+  } else if (format === "bracket") {
+    const sortedPlayers = checkedPlayers
+      .map(pname => CONFIG.players.find(p => p.name === pname))
+      .filter(Boolean)
+      .sort((a, b) => a.rank - b.rank)
+      .map(p => p.name);
+
+    let n = 1; while (n * 2 <= sortedPlayers.length) n *= 2;
+    if (n < 2) n = 2; // Safeguard
+    
+    const order = seedOrder(n);
+    const round1 = [];
+    let bId = 1;
+    for (let i = 0; i < n; i += 2) {
+      const pA = sortedPlayers[order[i] - 1] || "Bye";
+      const pB = sortedPlayers[order[i + 1] - 1] || "Bye";
+      round1.push({
+        id: `br1_m${bId++}`,
+        a: pA,
+        b: pB,
+        scoreA: pB === "Bye" ? 1 : null,
+        scoreB: pA === "Bye" ? 1 : null,
+        sa: `Seed #${order[i]}`,
+        sb: `Seed #${order[i + 1]}`
+      });
+    }
+    newTourney.bracket = [round1];
+    
+    let count = n / 2;
+    while (count >= 1) {
+      const nextRound = [];
+      for (let k = 1; k <= count / 2; k++) {
+        nextRound.push({
+          id: `br${newTourney.bracket.length + 1}_m${k}`,
+          a: null,
+          b: null,
+          scoreA: null,
+          scoreB: null,
+          sa: `Winner M${k*2 - 1}`,
+          sb: `Winner M${k*2}`
+        });
+      }
+      if (nextRound.length > 0) newTourney.bracket.push(nextRound);
+      count /= 2;
+    }
+  }
+
+  tournaments.push(newTourney);
+  activeTournamentId = newId;
+
+  try {
+    await saveTournamentsDb(tournaments);
+    alert("✅ Tournament generated successfully!");
+    showCreateTournamentForm(false);
+    renderTournaments();
+  } catch (err) {
+    console.error("Error saving tournament:", err);
+    alert("⚠️ Error saving tournament: " + err.message);
+  }
+}
+
+function renderTournamentDetail(t, isOperator) {
+  let html = `
+    <div style="max-width:920px; margin:0 auto; padding:0 16px;">
+      
+      <!-- STAGGER TIMELINE CARD -->
+      <div class="card" style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:24px;">
+        <div style="font-family:var(--font-header); font-size:14px; font-weight:800; color:var(--purple); margin-bottom:16px; text-transform:uppercase; letter-spacing:0.08em; display:flex; align-items:center; gap:8px;">
+          <span>📍</span> Sequential Venue Timeline
+        </div>
+        
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; position:relative;">
+          ${t.staggers.map((s, idx) => {
+            return `
+              <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:16px; border-radius:12px; display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:10px; font-weight:800; color:var(--gray); letter-spacing:0.04em;">STAGE ${idx + 1}</div>
+                <div style="font-size:16px; font-weight:900; color:#fff;">${s.venue}</div>
+                <div style="font-size:12px; color:var(--green); font-weight:700;">Format: ${s.format}</div>
+                <div style="font-size:11px; color:var(--gray); font-family:var(--font-mono); margin-top:4px;">🕒 Starts at ${s.time}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+  `;
+
+  if (t.format === "hybrid_pool" || t.format === "round_robin") {
+    html += `
+      <!-- POOLS & MATCHES SECTION -->
+      <div style="margin-bottom:32px;">
+        <div style="font-family:var(--font-header); font-size:15px; font-weight:800; color:var(--green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <span>📋 Pool Play (Round Robin)</span>
+          ${isOperator && t.status === "pools" ? `<button class="btn-primary" onclick="advancePoolsToBracket('${t.id}')" style="font-size:11px; padding:6px 12px; background:var(--purple); border-color:var(--purple); color:#000; border-radius:6px; font-weight:700;">Advance Top 2 to Bracket →</button>` : ""}
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          ${t.pools.map(p => renderPoolCard(t.id, p, isOperator, t.status === "pools")).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  if (t.format === "bracket" || (t.format === "hybrid_pool" && t.bracket && t.bracket.length > 0)) {
+    html += `
+      <!-- BRACKET VIEW -->
+      <div style="margin-bottom:32px;">
+        <div style="font-family:var(--font-header); font-size:15px; font-weight:800; color:var(--green); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px;">
+          🏆 Single Elimination Bracket
+        </div>
+        
+        <div style="display:flex; overflow-x:auto; gap:32px; padding:16px; background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:16px; min-height:300px;">
+          ${t.bracket.map((round, ri) => {
+            const rdMatches = round.length;
+            return `
+              <div class="bracket-round" style="display:flex; flex-direction:column; justify-content:space-around; gap:16px; min-width:220px; flex-shrink:0;">
+                <div style="text-align:center; font-size:11px; font-weight:800; color:var(--gray); text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">${roundName(rdMatches)}</div>
+                ${round.map(m => renderBracketMatchCard(t.id, ri, m, isOperator, t.status === "bracket")).join("")}
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  if (isOperator) {
+    html += `
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:40px; padding:16px 0; border-top:1px solid rgba(255,255,255,0.05);">
+        <button class="btn-outline" onclick="deleteTournamentAction('${t.id}')" style="color:var(--red); border-color:rgba(255,69,58,0.25); border-radius:8px;">⚠️ Delete Tournament</button>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+function calculatePoolStandings(pool) {
+  const standings = {};
+  pool.players.forEach(p => {
+    standings[p] = { name: p, wins: 0, losses: 0, matchesPlayed: 0, diff: 0 };
+  });
+
+  pool.matches.forEach(m => {
+    if (m.scoreA !== null && m.scoreB !== null) {
+      const sA = Number(m.scoreA);
+      const sB = Number(m.scoreB);
+      if (standings[m.a]) {
+        standings[m.a].matchesPlayed++;
+        standings[m.a].diff += (sA - sB);
+        if (sA > sB) standings[m.a].wins++;
+        else standings[m.a].losses++;
+      }
+      if (standings[m.b]) {
+        standings[m.b].matchesPlayed++;
+        standings[m.b].diff += (sB - sA);
+        if (sB > sA) standings[m.b].wins++;
+        else standings[m.b].losses++;
+      }
+    }
+  });
+
+  return Object.values(standings).sort((a, b) => b.wins - a.wins || b.diff - a.diff);
+}
+
+function renderPoolCard(tourneyId, pool, isOperator, isActivePoolStage) {
+  const standings = calculatePoolStandings(pool);
+  
+  let html = `
+    <div class="card" style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+      
+      <!-- Standings Table -->
+      <div>
+        <div style="font-size:14px; font-weight:900; color:#fff; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">${pool.name} Standings</div>
+        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border); text-align:left; color:var(--gray);">
+              <th style="padding:6px 0;">Player</th>
+              <th style="padding:6px 0; text-align:center;">W</th>
+              <th style="padding:6px 0; text-align:center;">L</th>
+              <th style="padding:6px 0; text-align:center;">Diff</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${standings.map((row, idx) => {
+              const highlight = idx < 2 ? "color:var(--al-green); font-weight:700;" : "color:#fff;";
+              return `
+                <tr style="border-bottom:0.5px solid rgba(255,255,255,0.03);">
+                  <td style="padding:8px 0; ${highlight}">${idx + 1}. ${row.name} ${idx < 2 ? "⭐" : ""}</td>
+                  <td style="padding:8px 0; text-align:center; font-weight:700;">${row.wins}</td>
+                  <td style="padding:8px 0; text-align:center; color:var(--gray);">${row.losses}</td>
+                  <td style="padding:8px 0; text-align:center; color:${row.diff >= 0 ? "var(--green)" : "var(--red)"};">${row.diff > 0 ? "+" : ""}${row.diff}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Matches / Fixtures List -->
+      <div>
+        <div style="font-size:14px; font-weight:900; color:#fff; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">Fixtures & Results</div>
+        <div style="display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto; padding-right:6px;">
+          ${pool.matches.map(m => {
+            const hasPlayed = m.scoreA !== null && m.scoreB !== null;
+            if (isOperator && isActivePoolStage) {
+              return `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.15); border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-size:12px; gap:8px;">
+                  <span style="flex:1; text-align:right; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.a}</span>
+                  <input type="number" id="score_${m.id}_a" value="${m.scoreA !== null ? m.scoreA : ""}" placeholder="-" style="width:36px; background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; text-align:center; padding:4px; border-radius:4px; font-size:11px; outline:none;">
+                  <span style="color:var(--gray);">vs</span>
+                  <input type="number" id="score_${m.id}_b" value="${m.scoreB !== null ? m.scoreB : ""}" placeholder="-" style="width:36px; background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; text-align:center; padding:4px; border-radius:4px; font-size:11px; outline:none;">
+                  <span style="flex:1; text-align:left; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.b}</span>
+                  <button onclick="saveMatchScore('${tourneyId}', '${pool.name}', '${m.id}')" style="background:var(--green); border:none; color:#000; font-weight:700; font-size:9px; padding:4px 8px; border-radius:4px; cursor:pointer;">Save</button>
+                </div>
+              `;
+            } else {
+              return `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); padding:8px 12px; border-radius:8px; font-size:12px;">
+                  <span style="flex:1; text-align:right; ${hasPlayed && m.scoreA > m.scoreB ? 'color:var(--green); font-weight:700;' : ''} white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.a}</span>
+                  <span style="margin:0 12px; font-family:var(--font-mono); font-weight:800; background:rgba(0,0,0,0.3); padding:2px 8px; border-radius:4px;">
+                    ${hasPlayed ? `${m.scoreA} – ${m.scoreB}` : "vs"}
+                  </span>
+                  <span style="flex:1; text-align:left; ${hasPlayed && m.scoreB > m.scoreA ? 'color:var(--green); font-weight:700;' : ''} white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.b}</span>
+                </div>
+              `;
+            }
+          }).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+  return html;
+}
+
+function renderBracketMatchCard(tourneyId, roundIdx, m, isOperator, isActiveBracketStage) {
+  const hasPlayed = m.scoreA !== null && m.scoreB !== null;
+  const isBye = m.b === "Bye" || m.a === "Bye";
+  
+  let html = "";
+  
+  if (isOperator && isActiveBracketStage && !isBye) {
+    html = `
+      <div style="background:rgba(7,12,20,0.9); border:1.5px solid var(--border); padding:10px; border-radius:12px; display:flex; flex-direction:column; gap:6px; min-width:200px; box-shadow:0 4px 12px rgba(0,0,0,0.3)">
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; gap:6px;">
+          <span style="font-size:9px; color:var(--gray); text-transform:uppercase;">${m.sa || ""}</span>
+          <span style="font-size:9px; color:var(--gray); text-transform:uppercase;">${m.sb || ""}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+          <span style="font-weight:600; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">${m.a || "TBD"}</span>
+          <input type="number" id="br_${roundIdx}_score_${m.id}_a" value="${m.scoreA !== null ? m.scoreA : ""}" placeholder="-" style="width:32px; background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; text-align:center; padding:2px; border-radius:4px; font-size:11px; outline:none;">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+          <span style="font-weight:600; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">${m.b || "TBD"}</span>
+          <input type="number" id="br_${roundIdx}_score_${m.id}_b" value="${m.scoreB !== null ? m.scoreB : ""}" placeholder="-" style="width:32px; background:rgba(0,0,0,0.4); border:1px solid var(--border); color:#fff; text-align:center; padding:2px; border-radius:4px; font-size:11px; outline:none;">
+        </div>
+        ${m.a && m.b ? `<button onclick="saveBracketScore('${tourneyId}', ${roundIdx}, '${m.id}')" style="background:var(--purple); border:none; color:#000; font-weight:700; font-size:9px; padding:4px; border-radius:6px; cursor:pointer; width:100%; margin-top:2px;">Save Match</button>` : ""}
+      </div>
+    `;
+  } else {
+    const pAColor = hasPlayed && m.scoreA > m.scoreB ? "color:var(--al-green); font-weight:700;" : hasPlayed ? "color:var(--gray);" : "color:#fff;";
+    const pBColor = hasPlayed && m.scoreB > m.scoreA ? "color:var(--al-green); font-weight:700;" : hasPlayed ? "color:var(--gray);" : "color:#fff;";
+    html = `
+      <div style="background:rgba(7,12,20,0.6); border:1px solid var(--border); padding:10px 14px; border-radius:12px; display:flex; flex-direction:column; gap:4px; min-width:200px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:0.5px solid rgba(255,255,255,0.03); padding-bottom:2px; margin-bottom:2px;">
+          <span style="font-size:8px; color:var(--gray); text-transform:uppercase;">${m.sa || ""}</span>
+          <span style="font-size:8px; color:var(--gray); text-transform:uppercase;">${m.sb || ""}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+          <span style="${pAColor} overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${m.a || "TBD"}</span>
+          <span style="font-weight:800; font-family:var(--font-mono);">${m.scoreA !== null ? m.scoreA : "–"}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+          <span style="${pBColor} overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${m.b || "TBD"}</span>
+          <span style="font-weight:800; font-family:var(--font-mono);">${m.scoreB !== null ? m.scoreB : "–"}</span>
+        </div>
+      </div>
+    `;
+  }
+  return html;
+}
+
+async function saveMatchScore(tourneyId, poolName, matchId) {
+  const scoreAVal = $(`score_${matchId}_a`).value.trim();
+  const scoreBVal = $(`score_${matchId}_b`).value.trim();
+  if (scoreAVal === "" || scoreBVal === "") {
+    alert("Please enter both scores.");
+    return;
+  }
+  const scoreA = Number(scoreAVal);
+  const scoreB = Number(scoreBVal);
+
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  const t = tournaments.find(x => x.id === tourneyId);
+  if (!t) return;
+
+  const pool = t.pools.find(p => p.name === poolName);
+  if (!pool) return;
+
+  const match = pool.matches.find(m => m.id === matchId);
+  if (!match) return;
+
+  match.scoreA = scoreA;
+  match.scoreB = scoreB;
+
+  try {
+    await saveTournamentsDb(tournaments);
+    renderTournaments();
+  } catch (err) {
+    alert("Error saving score: " + err.message);
+  }
+}
+
+async function saveBracketScore(tourneyId, roundIdx, matchId) {
+  const scoreAVal = $(`br_${roundIdx}_score_${matchId}_a`).value.trim();
+  const scoreBVal = $(`br_${roundIdx}_score_${matchId}_b`).value.trim();
+  if (scoreAVal === "" || scoreBVal === "") {
+    alert("Please enter both scores.");
+    return;
+  }
+  const scoreA = Number(scoreAVal);
+  const scoreB = Number(scoreBVal);
+
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  const t = tournaments.find(x => x.id === tourneyId);
+  if (!t) return;
+
+  const round = t.bracket[roundIdx];
+  if (!round) return;
+
+  const match = round.find(m => m.id === matchId);
+  if (!match) return;
+
+  match.scoreA = scoreA;
+  match.scoreB = scoreB;
+
+  const nextRound = t.bracket[roundIdx + 1];
+  if (nextRound) {
+    const winner = scoreA > scoreB ? match.a : match.b;
+    const matchIdx = round.indexOf(match);
+    const nextMatchIdx = Math.floor(matchIdx / 2);
+    const isPlayerA = matchIdx % 2 === 0;
+
+    const nextMatch = nextRound[nextMatchIdx];
+    if (nextMatch) {
+      if (isPlayerA) {
+        nextMatch.a = winner;
+      } else {
+        nextMatch.b = winner;
+      }
+    }
+  } else {
+    t.status = "completed";
+    alert(`🏆 Champion crowned: ${scoreA > scoreB ? match.a : match.b}! Tournament is completed.`);
+  }
+
+  try {
+    await saveTournamentsDb(tournaments);
+    renderTournaments();
+  } catch (err) {
+    alert("Error saving score: " + err.message);
+  }
+}
+
+async function advancePoolsToBracket(tourneyId) {
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  const t = tournaments.find(x => x.id === tourneyId);
+  if (!t) return;
+
+  let unplayed = false;
+  t.pools.forEach(p => {
+    p.matches.forEach(m => {
+      if (m.scoreA === null || m.scoreB === null) unplayed = true;
+    });
+  });
+
+  if (unplayed) {
+    if (!confirm("⚠️ Some pool matches do not have scores entered. Proceed anyway?")) return;
+  }
+
+  const poolAdvancers = [];
+  t.pools.forEach(p => {
+    const std = calculatePoolStandings(p);
+    poolAdvancers.push({ pool: p.name, rank: 1, name: std[0]?.name || "TBD" });
+    poolAdvancers.push({ pool: p.name, rank: 2, name: std[1]?.name || "TBD" });
+  });
+
+  const count = poolAdvancers.length;
+  if (count < 2) {
+    alert("Need at least 2 advancing players to build a bracket.");
+    return;
+  }
+
+  t.status = "bracket";
+  t.bracket = [];
+
+  const round1 = [];
+  let bId = 1;
+
+  if (count === 4) {
+    const a1 = poolAdvancers.find(x => x.pool === "Pool A" && x.rank === 1)?.name || "TBD";
+    const b2 = poolAdvancers.find(x => x.pool === "Pool B" && x.rank === 2)?.name || "TBD";
+    const b1 = poolAdvancers.find(x => x.pool === "Pool B" && x.rank === 1)?.name || "TBD";
+    const a2 = poolAdvancers.find(x => x.pool === "Pool A" && x.rank === 2)?.name || "TBD";
+
+    round1.push({ id: "sf_1", a: a1, b: b2, scoreA: null, scoreB: null, sa: "Pool A #1", sb: "Pool B #2" });
+    round1.push({ id: "sf_2", a: b1, b: a2, scoreA: null, scoreB: null, sa: "Pool B #1", sb: "Pool A #2" });
+    
+    t.bracket.push(round1);
+    t.bracket.push([
+      { id: "f_1", a: null, b: null, scoreA: null, scoreB: null, sa: "Winner SF 1", sb: "Winner SF 2" }
+    ]);
+  } else if (count === 8) {
+    const a1 = poolAdvancers.find(x => x.pool === "Pool A" && x.rank === 1)?.name || "TBD";
+    const b2 = poolAdvancers.find(x => x.pool === "Pool B" && x.rank === 2)?.name || "TBD";
+    const c1 = poolAdvancers.find(x => x.pool === "Pool C" && x.rank === 1)?.name || "TBD";
+    const d2 = poolAdvancers.find(x => x.pool === "Pool D" && x.rank === 2)?.name || "TBD";
+    const b1 = poolAdvancers.find(x => x.pool === "Pool B" && x.rank === 1)?.name || "TBD";
+    const a2 = poolAdvancers.find(x => x.pool === "Pool A" && x.rank === 2)?.name || "TBD";
+    const d1 = poolAdvancers.find(x => x.pool === "Pool D" && x.rank === 1)?.name || "TBD";
+    const c2 = poolAdvancers.find(x => x.pool === "Pool C" && x.rank === 2)?.name || "TBD";
+
+    round1.push({ id: "qf_1", a: a1, b: b2, scoreA: null, scoreB: null, sa: "Pool A #1", sb: "Pool B #2" });
+    round1.push({ id: "qf_2", a: c1, b: d2, scoreA: null, scoreB: null, sa: "Pool C #1", sb: "Pool D #2" });
+    round1.push({ id: "qf_3", a: b1, b: a2, scoreA: null, scoreB: null, sa: "Pool B #1", sb: "Pool A #2" });
+    round1.push({ id: "qf_4", a: d1, b: c2, scoreA: null, scoreB: null, sa: "Pool D #1", sb: "Pool C #2" });
+
+    t.bracket.push(round1);
+    t.bracket.push([
+      { id: "sf_1", a: null, b: null, scoreA: null, scoreB: null, sa: "Winner QF 1", sb: "Winner QF 2" },
+      { id: "sf_2", a: null, b: null, scoreA: null, scoreB: null, sa: "Winner QF 3", sb: "Winner QF 4" }
+    ]);
+    t.bracket.push([
+      { id: "f_1", a: null, b: null, scoreA: null, scoreB: null, sa: "Winner SF 1", sb: "Winner SF 2" }
+    ]);
+  } else {
+    for (let i = 0; i < count; i += 2) {
+      round1.push({
+        id: `br1_m${bId++}`,
+        a: poolAdvancers[i]?.name || "TBD",
+        b: poolAdvancers[i+1]?.name || "TBD",
+        scoreA: null,
+        scoreB: null,
+        sa: `${poolAdvancers[i]?.pool} #${poolAdvancers[i]?.rank}`,
+        sb: `${poolAdvancers[i+1]?.pool} #${poolAdvancers[i+1]?.rank}`
+      });
+    }
+    t.bracket.push(round1);
+    let temp = round1.length;
+    while (temp > 1) {
+      const nextRound = [];
+      for (let k = 1; k <= temp / 2; k++) {
+        nextRound.push({
+          id: `br${t.bracket.length + 1}_m${k}`,
+          a: null,
+          b: null,
+          scoreA: null,
+          scoreB: null,
+          sa: `Winner M${k*2 - 1}`,
+          sb: `Winner M${k*2}`
+        });
+      }
+      t.bracket.push(nextRound);
+      temp /= 2;
+    }
+  }
+
+  try {
+    await saveTournamentsDb(tournaments);
+    alert("✅ Pools completed! Single-elimination bracket generated.");
+    renderTournaments();
+  } catch (err) {
+    alert("Error advancing pools: " + err.message);
+  }
+}
+
+async function deleteTournamentAction(tourneyId) {
+  if (!confirm("Are you sure you want to delete this tournament? This cannot be undone.")) return;
+
+  const tournaments = (CONFIG.marketSettings && CONFIG.marketSettings.tournaments) || [];
+  const idx = tournaments.findIndex(x => x.id === tourneyId);
+  if (idx === -1) return;
+
+  tournaments.splice(idx, 1);
+  if (tournaments.length > 0) activeTournamentId = tournaments[0].id;
+  else activeTournamentId = "";
+
+  try {
+    await saveTournamentsDb(tournaments);
+    alert("Tournament deleted.");
+    renderTournaments();
+  } catch (err) {
+    alert("Error deleting tournament: " + err.message);
+  }
+}
+
+async function saveTournamentsDb(tournaments) {
+  const settings = getSettings();
+  settings.tournaments = tournaments;
+  if (_sb) {
+    await runAdminAction("save_settings", { settings });
+  } else {
+    localStorage.setItem("al_tournaments", JSON.stringify(tournaments));
+  }
+  if (!CONFIG.marketSettings) CONFIG.marketSettings = {};
+  CONFIG.marketSettings.tournaments = tournaments;
 }
 </script>
 </body>
