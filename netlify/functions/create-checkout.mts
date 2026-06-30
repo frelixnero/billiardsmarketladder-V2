@@ -57,6 +57,12 @@ export default async (req: Request, context: Context) => {
   }
 
   const settings = stateData?.settings || {};
+
+  // Enforce global market lock for share purchases
+  if (settings.marketLocked && (productKey === "individual-share" || productKey === "teams-share")) {
+    return Response.json({ error: "The stock market is currently locked by the operator." }, { status: 403 });
+  }
+
   let calculatedPrice = 0;
   let stripePriceId = "";
   let secureMetadata = { ...metadata };
@@ -82,19 +88,17 @@ export default async (req: Request, context: Context) => {
     // Fetch player rank and active status from Supabase
     const { data: player, error: playerErr } = await supabase
       .from("players")
-      .select("rank, name, active")
+      .select("rank, name, active, streak")
       .eq("name", playerName)
       .maybeSingle();
 
-    // Allow fallback for demo/local dev: if player not in DB, use metadata rank or default to 16
     const playerRank = metadata?.playerRank ? Number(metadata.playerRank) : (player?.rank || 16);
-    const isActive = player ? player.active : true; // Default to active if not in DB
+    const isActive = player ? player.active : true;
 
     if (!isActive) {
       return Response.json({ error: `Player "${playerName}" is inactive` }, { status: 400 });
     }
 
-    // Check manual lock (only if player exists in DB)
     if (player) {
       const playerMetadata = settings.player_metadata || {};
       const playerMeta = playerMetadata[playerName] || {};
@@ -104,25 +108,42 @@ export default async (req: Request, context: Context) => {
     }
 
     const rank = playerRank;
-    const buyInCap = Number(settings.buyInCap) || 150;
 
-    let tierPrice = 25;
-    if (rank <= 2) tierPrice = 150;
-    else if (rank <= 4) tierPrice = 75;
-    else if (rank <= 8) tierPrice = 35;
+    // Volatile dynamic pricing formula
+    const basePriceFloor = Number(settings.startingPriceFloor) || 25;
+    let basePrice = basePriceFloor;
+    if (rank <= 2) basePrice = 150;
+    else if (rank <= 4) basePrice = 75;
+    else if (rank <= 8) basePrice = 35;
 
-    calculatedPrice = Math.min(tierPrice, buyInCap);
-
-    // Map to price ID
-    if (calculatedPrice === 150) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP2 || "price_1TkOhHAoSKKzN4A3HFKV358Y";
-    } else if (calculatedPrice === 75) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP34 || "price_1TkOfsAoSKKzN4A3E57CdQ9W";
-    } else if (calculatedPrice === 35) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP58 || "price_1TkOfSAoSKKzN4A3jJw6IjHo";
-    } else {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_UNRANKED || "price_1TkOfEAoSKKzN4A3ksE3fpdD";
+    const portfolios = settings.user_portfolios || {};
+    let sharesSold = 0;
+    for (const uId in portfolios) {
+      const port = portfolios[uId] || {};
+      const list = port.individual || [];
+      list.forEach((entry: any) => {
+        if (entry.name === playerName) {
+          sharesSold += Number(entry.shares) || 0;
+        }
+      });
     }
+
+    let streakBonus = 0;
+    if (player && player.streak) {
+      const wins = player.streak.trim().split(/\s+/).filter((x: string) => x === "W").length;
+      streakBonus = wins * 3;
+    } else {
+      const playerMetadata = settings.player_metadata || {};
+      const playerMeta = playerMetadata[playerName] || {};
+      if (playerMeta.streak) {
+        const wins = playerMeta.streak.trim().split(/\s+/).filter((x: string) => x === "W").length;
+        streakBonus = wins * 3;
+      }
+    }
+
+    const factor = settings.volatilityFactor !== undefined ? Number(settings.volatilityFactor) : 1.5;
+    const computedVolatilePrice = basePrice + (sharesSold * factor) + streakBonus;
+    calculatedPrice = Math.min(computedVolatilePrice, Number(settings.buyInCap) || 150);
 
     secureMetadata.type = "share";
     secureMetadata.shareTier = `$${calculatedPrice}`;
@@ -133,7 +154,6 @@ export default async (req: Request, context: Context) => {
       return Response.json({ error: "Missing teamName (playerName) in metadata" }, { status: 400 });
     }
 
-    // Static teams list from index.html (the official team standings/w-l)
     const teams = [
       { name: "Cue Kings",        w: 6, l: 1, t: 0, legs: 14 },
       { name: "Rail Riders",      w: 5, l: 2, t: 0, legs: 12 },
@@ -155,23 +175,35 @@ export default async (req: Request, context: Context) => {
     }
 
     const teamRank = teamIndex + 1;
-    let tierPrice = 25;
-    if (teamRank === 1) tierPrice = 150;
-    else if (teamRank <= 3) tierPrice = 75;
-    else if (teamRank <= 5) tierPrice = 35;
+    
+    // Volatile dynamic pricing formula for teams
+    const basePriceFloor = Number(settings.startingPriceFloor) || 25;
+    let basePrice = basePriceFloor;
+    if (teamRank === 1) basePrice = 150;
+    else if (teamRank <= 3) basePrice = 75;
+    else if (teamRank <= 5) basePrice = 35;
 
-    calculatedPrice = tierPrice;
-
-    // Map to price ID
-    if (calculatedPrice === 150) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP2 || "price_1TkOhHAoSKKzN4A3HFKV358Y";
-    } else if (calculatedPrice === 75) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP34 || "price_1TkOfsAoSKKzN4A3E57CdQ9W";
-    } else if (calculatedPrice === 35) {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_TOP58 || "price_1TkOfSAoSKKzN4A3jJw6IjHo";
-    } else {
-      stripePriceId = process.env.STRIPE_PRICE_SHARE_UNRANKED || "price_1TkOfEAoSKKzN4A3ksE3fpdD";
+    const portfolios = settings.user_portfolios || {};
+    let sharesSold = 0;
+    for (const uId in portfolios) {
+      const port = portfolios[uId] || {};
+      const list = port.teams || [];
+      list.forEach((entry: any) => {
+        if (entry.name === teamName) {
+          sharesSold += Number(entry.shares) || 0;
+        }
+      });
     }
+
+    let streakBonus = 0;
+    const team = sortedTeams[teamIndex];
+    if (team) {
+      streakBonus = (Number(team.w) || 0) * 4;
+    }
+
+    const factor = settings.volatilityFactor !== undefined ? Number(settings.volatilityFactor) : 1.5;
+    const computedVolatilePrice = basePrice + (sharesSold * factor) + streakBonus;
+    calculatedPrice = Math.min(computedVolatilePrice, 150);
 
     secureMetadata.type = "share";
     secureMetadata.shareTier = `$${calculatedPrice}`;
@@ -186,10 +218,21 @@ export default async (req: Request, context: Context) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: [
-        {
-          price: stripePriceId,
-          quantity: qty,
-        },
+        stripePriceId
+          ? {
+              price: stripePriceId,
+              quantity: qty,
+            }
+          : {
+              price_data: {
+                currency: "usd",
+                product_data: {
+                  name: productName || "Share Purchase",
+                },
+                unit_amount: Math.round(calculatedPrice * 100), // in cents
+              },
+              quantity: qty,
+            }
       ],
       metadata: {
         app: "ActionLadder Pool Market Ladder",

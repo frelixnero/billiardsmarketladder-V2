@@ -70,7 +70,8 @@ export default async (req: Request) => {
       } else if (type === "weekly_dues") {
         description = `Weekly Dues — ${playerName}`;
       } else if (type === "teamReg") {
-        description = `Team Entry — ${playerName}`;
+        const pStr = meta.partner1 ? ` (Teammates: ${meta.partner1}` + (meta.partner2 ? `, ${meta.partner2}` : "") + ")" : "";
+        description = `Team Entry — ${playerName}${pStr}`;
       }
 
       // 1. Record payment in the payments table
