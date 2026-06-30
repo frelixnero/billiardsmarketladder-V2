@@ -1090,22 +1090,24 @@ body:not(.role-public) .public-cta-section { display: none !important; }
   .esports-nav {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
+    margin: 0 12px;
   }
   @media (max-width: 992px) {
     .esports-nav { display: none; }
   }
   .esports-nav-link {
     font-family: var(--font-button);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
     color: var(--gray);
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     transition: all 0.2s;
     cursor: pointer;
     position: relative;
+    white-space: nowrap;
   }
   .esports-nav-link:hover, .esports-nav-link.active {
     color: var(--al-green);
@@ -2352,6 +2354,7 @@ body.checkout-loading { overflow: hidden; }
 </div>
 
 </div><!-- /indivMode -->
+</div><!-- /view-market -->
 
 <!-- ════════ TEAMS VIEW ════════ -->
 <div class="view" id="view-teams">
@@ -2493,8 +2496,6 @@ body.checkout-loading { overflow: hidden; }
 
 </div><!-- /teamMode -->
 </div><!-- /view-teams -->
-
-</div><!-- /view-market -->
 
 <!-- ════════ TOURNAMENT VIEW ════════ -->
 <div class="view" id="view-tournament"></div>
