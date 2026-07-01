@@ -1793,7 +1793,209 @@ body.checkout-loading { overflow: hidden; }
   opacity: 0.45;
   user-select: none;
 }
+
+/* ── HOW IT WORKS SECTION ──────────────────────────────── */
+.how-it-works-section {
+  padding: 0 0 40px;
+}
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 700px) {
+  .hiw-steps { grid-template-columns: 1fr; }
+}
+.hiw-step {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.hiw-step::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--step-accent, var(--al-green));
+}
+.hiw-step:hover { transform: translateY(-3px); border-color: var(--al-green); }
+.hiw-step-num {
+  font-family: var(--font-header);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--step-accent, var(--al-green));
+  opacity: 0.25;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.hiw-step-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+}
+.hiw-step-title {
+  font-family: var(--font-header);
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+.hiw-step-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.55;
+}
+.hiw-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+@media (max-width: 580px) {
+  .hiw-examples { grid-template-columns: 1fr; }
+}
+.hiw-example-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hiw-example-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray);
+}
+.hiw-example-title {
+  font-family: var(--font-header);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--white);
+}
+.hiw-example-roi {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--al-green);
+}
+.hiw-example-note {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+.hiw-skill-callout {
+  background: linear-gradient(135deg, rgba(163,230,53,0.06) 0%, rgba(56,189,248,0.04) 100%);
+  border: 1.5px solid rgba(163,230,53,0.2);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.hiw-skill-callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.hiw-skill-callout-text { font-size: 13px; color: var(--gray); line-height: 1.55; }
+.hiw-skill-callout-text strong { color: var(--al-green); }
+
+/* ── LANDING HEATMAP ───────────────────────────────────── */
+.landing-heatmap-section {
+  padding: 0 0 40px;
+}
+.landing-heatmap-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+}
+.landing-heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.landing-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+@media (max-width: 700px) {
+  .landing-heatmap-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.landing-heatmap-legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--gray);
+}
+.landing-heatmap-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── PLAYER CARD ENHANCEMENTS ──────────────────────────── */
+.p-bar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 100px;
+  padding: 2px 8px;
+  letter-spacing: 0.3px;
+}
+.p-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+.p-tier-badge.t1 { background: rgba(251,191,36,0.12); color: var(--gold); border: 1px solid rgba(251,191,36,0.25); }
+.p-tier-badge.t2 { background: rgba(196,112,245,0.12); color: var(--purple); border: 1px solid rgba(196,112,245,0.25); }
+.p-tier-badge.t3 { background: rgba(56,189,248,0.12); color: var(--blue); border: 1px solid rgba(56,189,248,0.25); }
+.p-tier-badge.t4 { background: rgba(255,255,255,0.05); color: var(--gray); border: 1px solid rgba(255,255,255,0.1); }
+.streak-pips {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.streak-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.streak-pip.W { background: var(--al-green); box-shadow: 0 0 5px rgba(163,230,53,0.5); }
+.streak-pip.L { background: var(--red); opacity: 0.65; }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -2493,42 +2695,38 @@ body.checkout-loading { overflow: hidden; }
   </div>
 
   <div class="divider"></div>
-
-  <!-- Team prize board -->
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-title">💰 Team Prize Board</div>
-      <div class="sec-sub">Paid out separately from individual prizes</div>
-    </div>
-    <div class="math-grid" id="teamMath"></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Team portfolio -->
-  <div class="wrap portfolio-section">
-    <div class="sec-head" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-      <div>
-        <div class="sec-title">🎯 My Team Portfolio</div>
-        <div class="sec-sub">Tracked locally on this device · Not a substitute for your Stripe receipt</div>
+        <div class="sec-title">💰 Team Prize Board</div>
+        <div class="sec-sub">Paid out separately from individual prizes</div>
       </div>
-      <button class="clear-btn" onclick="clearPortfolio('teams')">Clear All</button>
+      <div class="math-grid" id="teamMath"></div>
     </div>
-    <div id="teamPortfolio"></div>
-  </div>
 
-  <div class="wrap public-cta-section">
-    <div style="background: rgba(7, 12, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
-      <div style="font-size: 40px; margin-bottom: 16px;">🏆</div>
-      <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Back a Team?</h2>
-      <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
-        Create an account or log in to track your team portfolio, enter a team, or see live team matchups.
-      </p>
-      <button class="btn-buy" style="max-width: 260px; margin: 0 auto; display: block;" onclick="openLogin()">Get Started</button>
+    <div class="divider"></div>
+
+    <!-- Team portfolio -->
+    <div class="wrap portfolio-section">
+      <div class="sec-head" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="sec-title">🎯 My Team Portfolio</div>
+          <div class="sec-sub">Tracked locally on this device · Not a substitute for your Stripe receipt</div>
+        </div>
+        <button class="clear-btn" onclick="clearPortfolio('teams')">Clear All</button>
+      </div>
+      <div id="teamPortfolio"></div>
     </div>
-  </div>
 
-</div><!-- /teamMode -->
+    <div class="wrap public-cta-section">
+      <div style="background: rgba(7, 12, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 20px; padding: 40px 24px; text-align: center; box-shadow: 0 12px 36px rgba(0,0,0,0.5);">
+        <div style="font-size: 40px; margin-bottom: 16px;">🏆</div>
+        <h2 style="font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 10px; color: var(--gold);">Ready to Back a Team?</h2>
+        <p style="font-size: 14px; color: var(--gray); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+          Create an account or log in to track your team portfolio, enter a team, or see live team matchups.
+        </p>
+        <button class="btn-buy" style="max-width: 260px; margin: 0 auto; display: block;" onclick="openLogin()">Get Started</button>
+      </div>
+    </div>
+
+  </div><!-- /teamMode -->
 </div><!-- /view-teams -->
 
 <!-- ════════ TOURNAMENT VIEW ════════ -->
@@ -2561,17 +2759,112 @@ body.checkout-loading { overflow: hidden; }
 <div class="view active" id="view-predict">
   <div class="hero" style="padding:40px 20px 28px">
     <div class="hero-eyebrow"><div class="live-dot"></div>SCOUTING &amp; MARKET</div>
-    <h1 style="font-size:clamp(30px,7vw,56px)">SCOUTING<br><em>CENTER.</em></h1>
-    <p class="hero-sub">Win probability, Fargo rating, recent form, and the story behind every share price — so supporters make skilled analysis before backing players.</p>
+    <h1 style="font-size:clamp(30px,7vw,56px)">PLAYER<br><em>INTELLIGENCE.</em></h1>
+    <p class="hero-sub">Study Fargo ratings, form, and head-to-head records — then back the players you believe are undervalued. Your analysis vs. the market's pricing.</p>
   </div>
   <div class="divider"></div>
   <div class="wrap">
-    <div class="sec-head"><div class="sec-title">📈 Player Outlook &amp; Share Value</div>
-      <div class="sec-sub">Computed from rank, form and streak · Updates with the standings</div></div>
-      
+
+    <!-- ── HOW IT WORKS ───────────────────────────────── -->
+    <div class="how-it-works-section">
+      <div class="sec-head">
+        <div class="sec-title">📋 How It Works</div>
+        <div class="sec-sub">Three steps from scouting to payout</div>
+      </div>
+
+      <div class="hiw-steps" style="margin-top:20px;">
+        <div class="hiw-step" style="--step-accent:#a3e635;">
+          <div class="hiw-step-num">01</div>
+          <span class="hiw-step-icon">🔍</span>
+          <div class="hiw-step-title">Scout the Field</div>
+          <div class="hiw-step-desc">Review each player's Fargo rating, season W/L record, recent 5-match streak, and head-to-head history. The data is right here — use it.</div>
+        </div>
+        <div class="hiw-step" style="--step-accent:#c470f5;">
+          <div class="hiw-step-num">02</div>
+          <span class="hiw-step-icon">📊</span>
+          <div class="hiw-step-title">Analyse the Value</div>
+          <div class="hiw-step-desc">Compare a player's share price against their true form and skill. A $25 dark-horse on a 3-win streak may be the sharpest buy of the week.</div>
+        </div>
+        <div class="hiw-step" style="--step-accent:#4488ff;">
+          <div class="hiw-step-num">03</div>
+          <span class="hiw-step-icon">💰</span>
+          <div class="hiw-step-title">Back &amp; Collect</div>
+          <div class="hiw-step-desc">Buy shares via secure Stripe checkout. If your player finishes Top 2, you collect a payout per share — the sharper your pick, the bigger the upside.</div>
+        </div>
+      </div>
+
+      <!-- Example scenarios -->
+      <div class="sec-head" style="margin-bottom:16px;">
+        <div class="sec-title" style="font-size:13px;">📌 Example Scenarios</div>
+      </div>
+      <div class="hiw-examples">
+        <div class="hiw-example-card">
+          <div class="hiw-example-label">Dark Horse Play</div>
+          <div class="hiw-example-title">Back a $25 player who wins the season</div>
+          <div class="hiw-example-roi">+500% ROI</div>
+          <div class="hiw-example-note">Pay $25 → collect $150 payout per share. Your scouting identified the gap between their Fargo (596) and their $25 market price.</div>
+        </div>
+        <div class="hiw-example-card">
+          <div class="hiw-example-label">Chalk Favourite</div>
+          <div class="hiw-example-title">Back the #1 seed at $150 — they win</div>
+          <div class="hiw-example-roi">Even money</div>
+          <div class="hiw-example-note">Pay $150 → collect $150 payout per share. Safe but low upside. The market already priced in their dominance.</div>
+        </div>
+        <div class="hiw-example-card">
+          <div class="hiw-example-label">Value Mid-Tier</div>
+          <div class="hiw-example-title">Rank #5 on a 4-match win streak at $47</div>
+          <div class="hiw-example-roi">+70% ROI</div>
+          <div class="hiw-example-note">Pay $47 → collect $80 if they reach the final. Streak shows form the price hasn't caught up with — classic undervalue signal.</div>
+        </div>
+        <div class="hiw-example-card">
+          <div class="hiw-example-label">High Fargo, Low Rank</div>
+          <div class="hiw-example-title">Fargo 620, ranked #8 at $41</div>
+          <div class="hiw-example-roi">Skill edge play</div>
+          <div class="hiw-example-note">Skill baseline says they're better than rank #8. Bad early draws skewed the ladder — their Fargo edge signals a bounce-back.</div>
+        </div>
+      </div>
+
+      <!-- Skill shield callout -->
+      <div class="hiw-skill-callout">
+        <span class="hiw-skill-callout-icon">🛡️</span>
+        <div class="hiw-skill-callout-text">
+          <strong>This is skill-based, not gambling.</strong> Supporters engage with real statistical data — Fargo ratings, match records, and form analysis — before backing a player. Your analysis is documented as part of the transaction. <strong>Your read of the market vs. the field's consensus</strong> is what drives returns.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MARKET HEATMAP ─────────────────────────────── -->
+    <div class="landing-heatmap-section">
+      <div class="sec-head">
+        <div class="sec-title">🔥 Market Heatmap</div>
+        <div class="sec-sub">All 16 players · colour = tier · border = form · click to scout</div>
+      </div>
+      <div class="landing-heatmap-card" style="margin-top:20px;">
+        <div class="landing-heatmap-header">
+          <span class="m-head" style="margin:0;">📈 24H PRICE SWINGS BY PLAYER</span>
+          <span style="font-size:11px; color:var(--gray);">Green border = win streak · Red = losing run</span>
+        </div>
+        <div class="landing-heatmap-grid" id="heatmapGridLanding"></div>
+        <div class="landing-heatmap-legend">
+          <span><span class="legend-dot" style="background:rgba(251,191,36,0.4);"></span>Tier 1 · Top 2 ($150)</span>
+          <span><span class="legend-dot" style="background:rgba(196,112,245,0.35);"></span>Tier 2 · Top 3–4 ($75)</span>
+          <span><span class="legend-dot" style="background:rgba(56,189,248,0.3);"></span>Tier 3 · Top 5–8 ($47)</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>Tier 4 · #9–16 ($25–41)</span>
+          <span><span class="legend-dot" style="border:1.5px solid rgba(163,230,53,0.5); background:transparent;"></span>Win streak</span>
+          <span><span class="legend-dot" style="border:1.5px solid rgba(255,69,58,0.4); background:transparent;"></span>Losing run</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PLAYER GRID ─────────────────────────────────── -->
+    <div class="sec-head">
+      <div class="sec-title">📈 Player Outlook &amp; Share Value</div>
+      <div class="sec-sub">Computed from rank, form and streak · Updates with the standings</div>
+    </div>
+
     <!-- Global Market Index & Stats Section -->
     <div id="scoutingMarketStatsContainer" style="margin-top: 16px; margin-bottom: 24px;"></div>
-    
+
     <!-- Scout sorting & filtering controls -->
     <div class="scout-controls" id="scoutControls" style="display:none; margin-bottom:24px;">
       <div class="scout-ctrl-group">
@@ -2612,6 +2905,7 @@ body.checkout-loading { overflow: hidden; }
     <div class="player-grid" id="predGrid"></div>
   </div>
 </div>
+
 
 <!-- ════════ FEEDBACK VIEW ════════ -->
 <div class="view" id="view-feedback">
@@ -5460,35 +5754,40 @@ function buildPredGrid() {
         <circle cx="60" cy="${(22 - ((history[history.length - 1].price - 25) / 125) * 20).toFixed(1)}" r="3" fill="${sparklineColor}" />
       </svg>
     `;
+    const tierBadgeClass = p.rank <= 2 ? 't1' : p.rank <= 4 ? 't2' : p.rank <= 8 ? 't3' : 't4';
+    const tierBadgeLabel = p.rank <= 2 ? 'Tier 1 · Top 2' : p.rank <= 4 ? 'Tier 2 · Top 3–4' : p.rank <= 8 ? 'Tier 3 · Top 5–8' : 'Tier 4';
+    const streakPips = five.map(r => `<span class="streak-pip ${r}"></span>`).join('');
 
     return `
       <div class="${cardClass}" data-player-name="${p.name}" id="scout-card-${p.name.replace(/\s+/g, '-')}" style="--accent:${accentColor(p.rank)}">
         <div class="p-top">
-          <div class="p-rank">${rankLabel(p.rank)}${p.hot ? ' · 🔥' : ''}</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div class="p-rank">${rankLabel(p.rank)}${p.hot ? ' · 🔥' : ''}</div>
+            <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+              <span class="p-tier-badge ${tierBadgeClass}">${tierBadgeLabel}</span>
+              <span class="p-bar-pill">📍 ${p.bar || 'Bar ?'}</span>
+            </div>
+          </div>
           <div style="display:flex; align-items:center; gap:12px;">
             ${sparklineSvg}
             <div class="p-price ${tierClass(p.rank)}" style="font-size:24px; font-weight:900;">
-              ${$$(price)} <span style="font-size:16px; color:${isUp ? 'var(--al-green)' : 'var(--red)'};">${movementArrow}</span>
+              ${$$(price)} <span style="font-size:16px; color:${isUp ? 'var(--al-green)' : 'var(--red)'};">  ${movementArrow}</span>
             </div>
           </div>
         </div>
-        <div class="p-name ${tierClass(p.rank)}" style="font-size:20px; font-weight:800; margin-bottom:8px;">${p.name}</div>
+        <div class="p-name ${tierClass(p.rank)}" style="font-size:20px; font-weight:800; margin-bottom:6px;">${p.name}</div>
         
-        <div style="font-size:13px; color:var(--gray); margin-bottom:12px; display:flex; gap:12px; align-items:center;">
-          <span>Pre-season Fargo: <strong>${preSeasonFargo}</strong></span>
-          <span style="color:var(--border);">|</span>
-          <span>Rank: <strong>#${p.rank}</strong></span>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <div class="streak-pips">${streakPips}</div>
+          <span style="font-size:11px; color:var(--gray);">Last 5 matches</span>
         </div>
 
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:12px; margin-bottom:14px;">
-          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
-            <span style="color:var(--gray);">Season Record:</span>
-            <strong>${recordWins}W &nbsp;${recordLosses}L &nbsp;${recordTies}T &nbsp;—&nbsp; ${recordPoints}pts</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span style="color:var(--gray);">Last 3 Matches:</span>
-            <strong>${last3.length > 0 ? last3.join(" ") : "N/A"} <span style="font-size:10px; font-weight:normal; color:var(--gray);">(recent form)</span></strong>
-          </div>
+        <div style="font-size:13px; color:var(--gray); margin-bottom:12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <span>Fargo: <strong style="color:var(--white);">${preSeasonFargo}</strong></span>
+          <span style="color:var(--border);">|</span>
+          <span>Record: <strong style="color:var(--white);">${recordWins}W ${recordLosses}L</strong></span>
+          <span style="color:var(--border);">|</span>
+          <span>Pts: <strong style="color:var(--white);">${recordPoints}</strong></span>
         </div>
 
         <!-- Accordion Toggle Button -->
