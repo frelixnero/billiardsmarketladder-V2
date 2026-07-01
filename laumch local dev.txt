@@ -1,0 +1,7 @@
+# 1) Kill anything on Netlify ports
+Get-NetTCPConnection -LocalPort 8888,3999 -State Listen -ErrorAction SilentlyContinue |
+  Select-Object -ExpandProperty OwningProcess -Unique |
+  ForEach-Object { Stop-Process -Id $_ -Force }
+
+# 2) Start dev (PowerShell-safe)
+npx.cmd netlify dev --port 8888
