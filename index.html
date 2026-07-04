@@ -1169,6 +1169,17 @@ body:not(.role-public) .public-cta-section { display: none !important; }
 .cert-rows { display:grid; grid-template-columns:1fr 1fr; gap: 10px; margin-bottom: 16px; }
 .cert-row { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:10px 12px; }
 .cert-row-label { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--gray); margin-bottom:4px; font-weight: 700; }
+.cert-qr-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 24px; margin: 12px 0 20px; }
+#certQRBox { background: #ffffff; padding: 12px; border-radius: 14px; border: 3px solid rgba(163, 230, 53, 0.4); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+#certQRBox canvas, #certQRBox img { display: block; }
+.cert-qr-label { font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+.cert-actions { display: flex; gap: 12px; padding: 0 24px; margin-bottom: 24px; }
+.cert-btn { flex: 1; font-family: var(--font-button); font-weight: 800; font-size: 13px; padding: 12px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; }
+.cert-btn.primary { background: var(--al-green); color: #000; border: none; box-shadow: 0 4px 12px rgba(163, 230, 53, 0.2); }
+.cert-btn.primary:hover { background: #bbf846; box-shadow: 0 6px 16px rgba(163, 230, 53, 0.35); }
+.cert-btn.ghost { background: transparent; color: var(--white); border: 1px solid rgba(255, 255, 255, 0.15); }
+.cert-btn.ghost:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--white); }
+.cert-footer { background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05); padding: 16px 24px; text-align: center; font-size: 10px; color: var(--gray); line-height: 1.4; }
 .sk-card {
     background: var(--card);
     border: 1.5px solid var(--border);
@@ -5617,7 +5628,10 @@ function closeCert() {
   $('certOverlay').classList.remove('open');
 }
 
+let activeCertShare = null;
+
 function showCertificate(share) {
+  activeCertShare = share;
   const baseUrl = window.location.origin;
   const tierLabel = share.type === 'share'
     ? (share.rank <= 2 ? '🥇 Top 2 — Gold Tier' : share.rank <= 4 ? '🥈 Top 3–4 — Purple Tier' : share.rank <= 8 ? '🥉 Top 5–8 — Blue Tier' : `#${share.rank} — Standard`)
@@ -5694,16 +5708,206 @@ function showCertificate(share) {
 }
 
 function downloadCert() {
-  // qrcodejs creates a canvas inside #certQRBox
-  const qrCanvas = $('certQRBox').querySelector('canvas');
-  if (qrCanvas) {
-    const a = document.createElement('a');
-    a.download = `BML-QR-${Date.now()}.png`;
-    a.href = qrCanvas.toDataURL('image/png');
-    a.click();
-  } else {
-    alert('QR code not ready yet — please try again.');
+  if (!activeCertShare) {
+    alert("No active certificate found.");
+    return;
   }
+
+  const qrCanvas = $('certQRBox').querySelector('canvas');
+  if (!qrCanvas) {
+    alert('QR code not ready yet — please try again.');
+    return;
+  }
+
+  // Create an offscreen canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = 600;
+  canvas.height = 850;
+  const ctx = canvas.getContext('2d');
+
+  // 1. Draw Background Gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#05080c');
+  grad.addColorStop(0.6, '#0d1527');
+  grad.addColorStop(1, '#061106');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 2. Draw outer border
+  ctx.strokeStyle = '#a3e635';
+  ctx.lineWidth = 10;
+  ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+  // Draw header separator container background
+  ctx.fillStyle = 'rgba(2, 6, 13, 0.9)';
+  ctx.fillRect(10, 10, canvas.width - 20, 160);
+  ctx.strokeStyle = 'rgba(163, 230, 53, 0.3)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(10, 170);
+  ctx.lineTo(canvas.width - 10, 170);
+  ctx.stroke();
+
+  // 3. Draw Header Title
+  ctx.fillStyle = '#a3e635';
+  ctx.textAlign = 'center';
+  ctx.font = '900 36px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText('🎱', canvas.width / 2, 65);
+
+  ctx.fillStyle = 'rgba(163, 230, 53, 0.7)';
+  ctx.font = '800 13px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText('BILLIARDS MARKET LADDER', canvas.width / 2, 105);
+
+  ctx.fillStyle = '#a3e635';
+  ctx.font = '900 24px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText('OFFICIAL SHARE CERTIFICATE', canvas.width / 2, 145);
+
+  // 4. Draw Player / Subject Name
+  const subjectName = (activeCertShare.name || activeCertShare.label || '').toUpperCase();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 34px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText(subjectName, canvas.width / 2, 235);
+
+  // 5. Draw Tier Badge
+  let tierLabel = '';
+  let badgeColor = '#808080';
+  let textColor = '#ffffff';
+  
+  if (activeCertShare.type === 'share') {
+    const r = activeCertShare.rank;
+    if (r <= 2) {
+      tierLabel = '🥇 TOP 2 — GOLD TIER';
+      badgeColor = 'rgba(163,230,53,0.2)';
+      textColor = '#a3e635';
+    } else if (r <= 4) {
+      tierLabel = '🥈 TOP 3–4 — PURPLE TIER';
+      badgeColor = 'rgba(196,112,245,0.2)';
+      textColor = '#c470f5';
+    } else if (r <= 8) {
+      tierLabel = '🥉 TOP 5–8 — BLUE TIER';
+      badgeColor = 'rgba(56,189,248,0.2)';
+      textColor = '#38bdf8';
+    } else {
+      tierLabel = `RANK #${r} — STANDARD`;
+      badgeColor = 'rgba(148,163,184,0.2)';
+      textColor = '#aaaaaa';
+    }
+  } else {
+    tierLabel = 'LEAGUE FEE PAYMENT';
+    badgeColor = 'rgba(163,230,53,0.2)';
+    textColor = '#a3e635';
+  }
+
+  // Draw badge rounded rectangle
+  ctx.fillStyle = badgeColor;
+  const badgeWidth = ctx.measureText(tierLabel).width + 30;
+  const badgeHeight = 32;
+  const bx = (canvas.width - badgeWidth) / 2;
+  const by = 265;
+  
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(bx, by, badgeWidth, badgeHeight, 16);
+  } else {
+    ctx.rect(bx, by, badgeWidth, badgeHeight);
+  }
+  ctx.fill();
+
+  ctx.fillStyle = textColor;
+  ctx.font = '800 13px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText(tierLabel, canvas.width / 2, by + 21);
+
+  // 6. Draw Info Grid Details
+  const dateStr = new Date(activeCertShare.purchasedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  const rows = [];
+  if (activeCertShare.type === 'share') {
+    rows.push({ l: 'SHARES OWNED', v: activeCertShare.qty.toString() });
+    rows.push({ l: 'PRICE / SHARE', v: `$${activeCertShare.price}` });
+    rows.push({ l: 'TOTAL INVESTED', v: `$${activeCertShare.price * activeCertShare.qty}` });
+    rows.push({ l: 'RANK', v: `#${activeCertShare.rank}` });
+    rows.push({ l: 'PURCHASED', v: dateStr });
+    rows.push({ l: 'FORM STREAK', v: activeCertShare.streak || '—' });
+  } else {
+    rows.push({ l: 'AMOUNT PAID', v: `$${activeCertShare.price}` });
+    rows.push({ l: 'DATE', v: dateStr });
+  }
+
+  // Draw 2x3 or 2x1 grid boxes
+  const colWidth = 240;
+  const rowHeight = 65;
+  const startX = 50;
+  const startY = 330;
+  const gap = 20;
+
+  for (let i = 0; i < rows.length; i++) {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const rx = startX + col * (colWidth + gap);
+    const ry = startY + row * (rowHeight + gap);
+
+    // Box background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(rx, ry, colWidth, rowHeight, 10);
+    } else {
+      ctx.rect(rx, ry, colWidth, rowHeight);
+    }
+    ctx.fill();
+
+    // Box border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Box label
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '800 10px "Inter", "Helvetica Neue", sans-serif';
+    ctx.fillText(rows[i].l, rx + 14, ry + 24);
+
+    // Box value
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 18px "Inter", "Helvetica Neue", sans-serif';
+    ctx.fillText(rows[i].v, rx + 14, ry + 48);
+  }
+
+  // 7. Draw QR Code section
+  const qrY = 600;
+  // White background for QR code
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(canvas.width / 2 - 80, qrY, 160, 160, 14);
+  } else {
+    ctx.rect(canvas.width / 2 - 80, qrY, 160, 160);
+  }
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(163, 230, 53, 0.4)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Draw QR canvas image onto our canvas
+  ctx.drawImage(qrCanvas, canvas.width / 2 - 70, qrY + 10, 140, 140);
+
+  // QR label
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '800 11px "Inter", "Helvetica Neue", sans-serif';
+  const qrLabelText = activeCertShare.type === 'share' ? 'SCAN TO VIEW PLAYER PROFILE' : 'SCAN TO VIEW PAYMENT DETAILS';
+  ctx.fillText(qrLabelText, canvas.width / 2, qrY + 185);
+
+  // 8. Footer text
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '600 10px "Inter", "Helvetica Neue", sans-serif';
+  ctx.fillText('This certificate is proof of your share purchase.', canvas.width / 2, canvas.height - 40);
+  ctx.fillText('Keep your Stripe receipt as the official payment record.', canvas.width / 2, canvas.height - 25);
+
+  // Trigger download
+  const a = document.createElement('a');
+  a.download = `BML-Certificate-${subjectName.replace(/\s+/g, '-')}-${Date.now()}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
 }
 
 async function shareCert() {
