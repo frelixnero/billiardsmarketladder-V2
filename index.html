@@ -3877,11 +3877,9 @@ async function doLogin() {
   // Check local fallback credentials first for easy local testing / fallback
   const isLocalElliot = email === "elliot" || (CONFIG.roles.operators && CONFIG.roles.operators.map(x => x.toLowerCase()).includes(email) && password === CONFIG.roles.ownerPassword);
   const isLocalHelper = email === "helper" && password === CONFIG.roles.helperPassword;
-  const isLocalBar = (email.startsWith("bar") || email === "bar") && password === "bar2026";
-  const isGenericOwnerPw = password === CONFIG.roles.ownerPassword;
-  const isGenericHelperPw = password === CONFIG.roles.helperPassword;
+  const isLocalBar = (email === "bar" || (email.startsWith("bar") && !email.includes("@"))) && password === "bar2026";
 
-  if (!_sb || isLocalElliot || isLocalHelper || isLocalBar || isGenericOwnerPw || isGenericHelperPw) {
+  if (!_sb || isLocalElliot || isLocalHelper || isLocalBar) {
     handleLocalAuthFallback(email, password);
     return;
   }
@@ -3988,7 +3986,7 @@ async function doLogin() {
 function handleLocalAuthFallback(email, password) {
   const isElliot = email === "elliot" || CONFIG.roles.operators.includes(email);
   const isHelper = email === "helper";
-  const isBar = email.startsWith("bar") || email === "bar";
+  const isBar = email === "bar" || (email.startsWith("bar") && !email.includes("@"));
   
   let ok = false;
   let role = "public";
@@ -4002,11 +4000,17 @@ function handleLocalAuthFallback(email, password) {
   } else if (isBar && password === "bar2026") {
     ok = true;
     role = "bar";
-    sessionStorage.setItem("al_user_bar", "Bar One");
-  } else if (password === CONFIG.roles.ownerPassword) {
+    
+    // Extrapolate bar name from email (e.g. bar-one -> Bar One, bar -> Bar One)
+    let barName = "Bar One";
+    if (email.includes("-")) {
+      barName = email.split("-").slice(1).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+    }
+    sessionStorage.setItem("al_user_bar", barName);
+  } else if (!_sb && password === CONFIG.roles.ownerPassword) {
     ok = true;
     role = "owner";
-  } else if (password === CONFIG.roles.helperPassword) {
+  } else if (!_sb && password === CONFIG.roles.helperPassword) {
     ok = true;
     role = "helper";
   }
