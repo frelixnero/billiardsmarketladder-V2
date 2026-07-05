@@ -5619,12 +5619,15 @@ renderMatchups();
 loadDbData();
 startScoutingRealtime();
 
-applyRole("public"); // Always start as public — require explicit login each visit
-sessionStorage.removeItem("al_user_id");
-sessionStorage.removeItem("al_user_email");
-sessionStorage.removeItem("al_display_name");
-// Silently clear any stale Supabase session so INITIAL_SESSION never auto-restores login
-if (_sb) { _sb.auth.signOut().catch(() => {}); }
+const hasSessionRole = sessionStorage.getItem("al_role") && sessionStorage.getItem("al_role") !== "public";
+if (!hasSessionRole) {
+  applyRole("public"); // Always start as public — require explicit login each visit
+  sessionStorage.removeItem("al_user_id");
+  sessionStorage.removeItem("al_user_email");
+  sessionStorage.removeItem("al_display_name");
+  // Silently clear any stale Supabase session so INITIAL_SESSION never auto-restores login
+  if (_sb) { _sb.auth.signOut().catch(() => {}); }
+}
 
 
 // ── Share Certificate functions ──────────────────────────────
