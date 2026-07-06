@@ -1725,6 +1725,7 @@ body:not(.role-public) .public-cta-section { display: none !important; }
     <a class="esports-nav-link" data-tab="market" data-mode="individual" onclick="showTab('market'); setMode('individual');">Market</a>
     <a class="esports-nav-link" data-tab="market" data-mode="teams" onclick="showTab('market'); setMode('teams');">Teams</a>
     <a class="esports-nav-link" data-tab="matchups" onclick="showTab('matchups')">Matches</a>
+    <a class="esports-nav-link" data-tab="tournament" onclick="showTab('tournament')">Tournaments</a>
     <a class="esports-nav-link" data-tab="predict" onclick="showTab('predict')">Scouting</a>
     <a class="esports-nav-link" data-tab="feedback" onclick="showTab('feedback')">Feedback</a>
     <a class="esports-nav-link barOnly" data-tab="bar" onclick="showTab('bar')">Bar Profits</a>
@@ -1750,6 +1751,7 @@ body:not(.role-public) .public-cta-section { display: none !important; }
   <button class="tab-btn active" data-tab="home"      onclick="showTab('home')">🏠 Home</button>
   <button class="tab-btn"        data-tab="market"    onclick="showTab('market')">🎱 Market</button>
   <button class="tab-btn"        data-tab="matchups"  onclick="showTab('matchups')">🗓️ Matchups</button>
+  <button class="tab-btn"        data-tab="tournament" onclick="showTab('tournament')">🏆 Tournaments</button>
   <button class="tab-btn"        data-tab="predict"   onclick="showTab('predict')">📈 Scouting</button>
   <button class="tab-btn"        data-tab="feedback"  onclick="showTab('feedback')">💬 Feedback</button>
   <button class="tab-btn barOnly" data-tab="bar" onclick="showTab('bar')">📊 Bar Profits</button>
@@ -2246,6 +2248,7 @@ body:not(.role-public) .public-cta-section { display: none !important; }
   <div class="mode-switch" style="margin:24px auto 12px; max-width:920px;">
     <button class="mode-btn active" id="matchupTabS1" onclick="setMatchupSeason(1)">Season 1 (Round Robin)</button>
     <button class="mode-btn" id="matchupTabS2" onclick="setMatchupSeason(2)">Season 2 (Round Robin)</button>
+    <button class="mode-btn" id="matchupTabRedemption" onclick="setMatchupSeason('redemption')">Week 6 (Redemption)</button>
     <button class="mode-btn" id="matchupTabS3" onclick="setMatchupSeason(3)">Season 3 (Bracket)</button>
     <button class="mode-btn" id="matchupTabTourney" onclick="setMatchupSeason('tourney')">Bar vs Bar</button>
   </div>
@@ -2254,6 +2257,102 @@ body:not(.role-public) .public-cta-section { display: none !important; }
   
   <div class="wrap" id="matchupsContent">
     <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- ════════ TOURNAMENT VIEW ════════ -->
+<div class="view" id="view-tournament">
+  <div class="hero" style="padding:40px 20px 28px">
+    <div class="hero-eyebrow"><div class="live-dot"></div>TOURNAMENT CENTER</div>
+    <h1 style="font-size:clamp(30px,7vw,56px)">THE<br><span class="neon-highlight">TOURNAMENTS.</span></h1>
+    <p class="hero-sub">Dynamic pool play, seeded brackets, staggered bar timelines, and chips format events.</p>
+  </div>
+  
+  <div class="divider"></div>
+
+  <!-- Venue Schedule Timeline -->
+  <div class="wrap" style="margin-top: 30px; margin-bottom: 30px;">
+    <div class="sec-head">
+      <div class="sec-title">📍 Staggered Venue Timeline</div>
+      <div class="sec-sub">Visual schedule of tournament rounds across partner pool halls</div>
+    </div>
+    
+    <div class="dash-grid" style="margin-top:16px;">
+      <div class="dash-card" style="border-left: 4px solid var(--al-green);">
+        <div style="font-size: 11px; font-weight:800; color:var(--al-green); letter-spacing:1px; text-transform:uppercase;">12:00 PM — ROUND 1</div>
+        <div class="dash-val" style="font-size:18px; margin-top:8px; color:var(--white);">Bar One</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">1v1 Individual Pools (Table 1 & 2)</div>
+      </div>
+      <div class="dash-card" style="border-left: 4px solid var(--gold);">
+        <div style="font-size: 11px; font-weight:800; color:var(--gold); letter-spacing:1px; text-transform:uppercase;">02:30 PM — ROUND 2</div>
+        <div class="dash-val" style="font-size:18px; margin-top:8px; color:var(--white);">Bar Two</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">2v2 Doubles Bracket (Table 3)</div>
+      </div>
+      <div class="dash-card" style="border-left: 4px solid #c470f5;">
+        <div style="font-size: 11px; font-weight:800; color:#c470f5; letter-spacing:1px; text-transform:uppercase;">05:00 PM — FINALS</div>
+        <div class="dash-val" style="font-size:18px; margin-top:8px; color:var(--white);">Bar Three</div>
+        <div style="font-size:11px; color:var(--gray); margin-top:4px;">Championship Showdown & Awards</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Format Toggle Switcher -->
+  <div class="mode-switch" style="margin:24px auto 12px; max-width:920px;">
+    <button class="mode-btn active" id="tourneyTabRR" onclick="setTourneyFormat('rr')">Round Robin (Pool Play)</button>
+    <button class="mode-btn" id="tourneyTabBracket" onclick="setTourneyFormat('bracket')">Playoff Bracket</button>
+    <button class="mode-btn" id="tourneyTabChips" onclick="setTourneyFormat('chips')">Chips (Lives System)</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Dynamic Content Area -->
+  <div class="wrap" id="tourneyFormatContent" style="padding-top:16px;">
+    <!-- Populated dynamically by JavaScript -->
+  </div>
+
+  <!-- Admin/Operator Controls (gated to owner/helper) -->
+  <div class="wrap staffOnly" style="margin-top: 40px; margin-bottom: 40px;">
+    <div class="card" style="background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:22px;">
+      <div class="m-head" style="margin-bottom:14px; color:var(--al-green)">🛠️ Tournament Setup Control Panel</div>
+      <p style="font-size:12px; color:var(--gray); margin-bottom:16px;">Reset, configure, and generate a new interactive tournament event.</p>
+      
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px;">
+        <div class="form-field">
+          <label>Tournament Format</label>
+          <select id="tourneySetupFormat" onchange="toggleChipsConfigDisplay()" class="auth-input" style="margin:0;">
+            <option value="rr">Round Robin (Pool Play)</option>
+            <option value="bracket">Single-Elimination Bracket</option>
+            <option value="chips">Chips / Lives Tournament</option>
+          </select>
+        </div>
+        
+        <div class="form-field" id="tourneySetupChipsGroup" style="display:none;">
+          <label>Starting Lives (Chips)</label>
+          <input type="number" id="tourneySetupLives" class="auth-input" style="margin:0;" value="3" min="1" max="5" />
+        </div>
+        
+        <div class="form-field">
+          <label>Quick Load Players</label>
+          <select id="tourneyQuickLoad" class="auth-input" style="margin:0;" onchange="quickSelectTourneyPlayers(this.value)">
+            <option value="all">Select All 16 Players</option>
+            <option value="top8">Select Top 8 Players</option>
+            <option value="top4">Select Top 4 Players</option>
+            <option value="clear">Clear Selection</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px; display: block;">Select Players to Include</label>
+        <div id="tourneyPlayersCheckboxGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:8px; max-height:200px; overflow-y:auto; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; border:1px solid var(--border);">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <button class="al-btn" style="width:auto; padding:12px 24px;" onclick="generateTournamentFromSetup()">Generate Tournament</button>
+    </div>
   </div>
 </div>
 
@@ -2703,25 +2802,60 @@ const CONFIG = {
     teamReg:      "price_1TkOiYAoSKKzN4A34AEcEldN", // $225 Team registration / person
   },
 
+  // ── LEAGUE FORMAT CAPACITIES ──────────────────────────
+  capacities: {
+    indiv1v1: 16,
+    doubles2v2: 16,
+    triples3v3: 16,
+  },
+
+  // ── PACKAGE PRICING ───────────────────────────────────
+  packages: {
+    oneFormat: 125,
+    twoFormats: 200,
+    threeFormats: 250,
+  },
+
+  // ── WEEKLY DUES ───────────────────────────────────────
+  dues: {
+    weeklyAmount: 30,
+    winnerAllocation: 25,
+    prizeAllocation: 5,
+  },
+
+  // ── SEASON CALENDAR ───────────────────────────────────
+  calendar: {
+    totalWeeks: 9,
+    paidWeeks: 8,
+    redemptionWeek: 6,
+  },
+
+  // ── SUPPORTER MODULE FLAG ─────────────────────────────
+  supporterModuleStatus: "disabled", // "disabled" | "demo_only" | "attorney_review" | "live"
+
+  // ── 23% GIVEBACK SUPPORTER MODEL (per $100) ──────────
+  supporterGiveback: {
+    winnerPool: 48.50,
+    playerPrizePool: 36.26,
+    playerDirectBonus: 3.00,
+    barHostShare: 3.00,
+    bmlPlatformShare: 9.24,
+  },
+
   // ── BUY-IN CAP ────────────────────────────────────────
-  // Hard ceiling on a single share's entry price. Raised from $75 → $150 so
-  // the #1 / #2 players buy in at $150. Even the top player never costs more.
   buyInCap: 150,
 
   // LEAGUE FEES — separate from shares, collected from players only
   fees: {
-    registration:  150, // $150 one-time individual season registration
-    weeklyDues:    25,   // $25 per week
-    teamPerPerson: 225,  // $225 per person to enter a team
+    registration:  125, // Fallback base registration
+    weeklyDues:    30,  // Weekly dues per format
+    teamPerPerson: 125, // Fallback team registration per format
     registrationLink: "https://buy.stripe.com/test_bJe9AS4Je3hcehbegZ9ws04",
     weeklyDuesLink:   "https://buy.stripe.com/test_00w8wOgrWbNI3Cxgp79ws05",
     teamRegLink:      "REPLACE_WITH_225_TEAM_REG_LINK",
   },
 
   // ── ACCESS ROLES ──────────────────────────────────────
-  // Client-side gate for the three views: public / helper / owner.
-  // NOTE: this hides UI only — it is not real security. The P&L shown is a
-  // projection model, not live money. For true privacy use Netlify Identity.
   operatorPin: "1234",
   roles: {
     ownerName:      "Elliot",
@@ -2735,14 +2869,6 @@ const CONFIG = {
   brand: {
     name:    "ActionLadder",
     tagline: "Competitive pool ecosystem",
-  },
-
-  // ── SUPPORTER PURCHASE QR LINKS ──────────────────────
-  // Dev scans should always land on localhost. Live scans should use your
-  // deployed production site domain.
-  qrLinks: {
-    devBaseUrl: "http://localhost:8888/",
-    productionBaseUrl: "https://billiardsmarketladder.com/",
   },
 
   // ── PLAYOFF PAYOUTS (per share, regardless of purchase price) ──
@@ -3218,13 +3344,27 @@ function teamStripeUrl(price, qty) {
 }
 
 function openBuy(mode, name, price, rank, sub) {
+  if (CONFIG.supporterModuleStatus === "disabled") {
+    alert("Supporter Backing — Coming Soon!\n\nThis feature is temporarily disabled pending legal clearance.");
+    return;
+  }
+  if (CONFIG.supporterModuleStatus === "attorney_review") {
+    const proceed = confirm("⚠️ LEGAL SHIELD GATING\nYou are accessing this module under Attorney Legal Checklist constraints. Proceed to review?");
+    if (!proceed) return;
+  }
   if (currentRole() === "public") {
     openLogin();
     return;
   }
   buyState = { mode, name, price, qty: 1, rank: rank || 0, sub: sub || "" };
   $("mTitle").textContent = name;
-  $("mSub").textContent   = sub || "";
+  
+  let subText = sub || "";
+  if (CONFIG.supporterModuleStatus === "demo_only") {
+    subText = "⚙️ [DEMO ONLY - NO FINANCIAL LIABILITY] " + subText;
+  }
+  $("mSub").textContent = subText;
+  
   if ($("mLegalAssert")) $("mLegalAssert").checked = false;
   updateBuy();
   $("overlay").classList.add("open");
@@ -3342,6 +3482,28 @@ async function goCheckout() {
     return;
   }
   const { mode, name, price, qty } = buyState;
+  
+  if (CONFIG.supporterModuleStatus === "demo_only") {
+    recordPurchase(mode, name, price, qty);
+    const playerObj = CONFIG.players.find(p => p.name === name) || {};
+    const share = {
+      type: 'share',
+      name: name,
+      rank: playerObj.rank || 0,
+      price: price,
+      qty: qty,
+      mode: mode,
+      streak: playerObj.streak || '',
+      hot: playerObj.hot || false,
+      purchasedAt: new Date().toISOString()
+    };
+    $("overlay").classList.remove("open");
+    renderAllViews();
+    showCertificate(share);
+    alert(`[DEMO MODE] Successfully processed simulated share purchase for ${qty} share(s) in ${name} at $${price} each!`);
+    return;
+  }
+  
   recordPurchase(mode, name, price, qty);
   if (CONFIG.useServerless) {
     try {
@@ -3571,13 +3733,70 @@ async function payFee(kind) {
     openLogin();
     return;
   }
-  const F = CONFIG.fees;
-  const map = {
-    registration: { amount: CONFIG.fees.registration, label: "Season Registration", type: "registration" },
-    weeklyDues:   { amount: CONFIG.fees.weeklyDues,   label: "Weekly Dues",         type: "weekly_dues" },
-    teamReg:      { amount: CONFIG.fees.teamPerPerson, label: "Team Entry",         type: "teamReg" },
-  }[kind];
-  if (!map) return;
+  
+  let amount = 0;
+  let label = "";
+  let metaType = "";
+  let formatsCount = 0;
+  
+  if (kind === 'registration') {
+    const c1 = $("reg1v1")?.checked;
+    const c2 = $("reg2v2")?.checked;
+    const c3 = $("reg3v3")?.checked;
+    if (c1) formatsCount++;
+    if (c2) formatsCount++;
+    if (c3) formatsCount++;
+    
+    if (formatsCount === 0) {
+      alert("Please select at least 1 format to register!");
+      return;
+    }
+    
+    // Gated Waitlist Check: 1v1 format cap of 16
+    if (c1 && is1v1Full()) {
+      const joinWl = confirm("The 1v1 Individual league format is currently FULL (16 player limit). Would you like to join the Waiting List? Joining gives you priority queueing and a $5 waitlist credit.");
+      if (joinWl) {
+        joinWaitingList("1v1 Individual");
+        return;
+      }
+    }
+    
+    if (formatsCount === 1) amount = 125;
+    else if (formatsCount === 2) amount = 200;
+    else if (formatsCount === 3) amount = 250;
+    
+    label = `League Registration (${formatsCount} Format${formatsCount > 1 ? 's' : ''})`;
+    metaType = "registration";
+    
+  } else if (kind === 'weeklyDues') {
+    // Calendar Redemption Week check: Week 6 is free (no weekly dues)
+    if (Number(CONFIG.currentWeek) === 6) {
+      alert("Week 6 is REDEMPTION WEEK! Weekly dues are waived for all formats.");
+      return;
+    }
+    
+    const c1 = $("dues1v1")?.checked;
+    const c2 = $("dues2v2")?.checked;
+    const c3 = $("dues3v3")?.checked;
+    if (c1) formatsCount++;
+    if (c2) formatsCount++;
+    if (c3) formatsCount++;
+    
+    if (formatsCount === 0) {
+      alert("Please select at least 1 format to pay weekly dues!");
+      return;
+    }
+    
+    amount = formatsCount * 30; // $30 per week per format
+    label = `Weekly Match Dues (${formatsCount} Format${formatsCount > 1 ? 's' : ''})`;
+    metaType = "weekly_dues";
+  } else {
+    // teamReg fallback
+    amount = CONFIG.fees.teamPerPerson;
+    label = "Team Entry";
+    metaType = "teamReg";
+  }
+  
   if (CONFIG.useServerless) {
     try {
       const playerId = sessionStorage.getItem("al_user_id") || "";
@@ -3585,15 +3804,16 @@ async function payFee(kind) {
       const r = await fetch("/api/create-checkout", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: map.amount,
-          productName: map.label,
+          amount: amount,
+          productName: label,
           quantity: 1,
           productKey: kind,
           metadata: {
-            type: map.type,
+            type: metaType,
             playerId: playerId,
             playerName: sessionStorage.getItem("al_user_email") || "Player",
             buyerEmail: buyerEmail,
+            formatsCount: formatsCount,
             season: String(CONFIG.currentSeason || 1)
           }
         }),
@@ -3602,8 +3822,8 @@ async function payFee(kind) {
       if (r.ok && data.url) {
         sessionStorage.setItem('pendingShare', JSON.stringify({
           type: 'fee',
-          label: map.label,
-          price: map.amount,
+          label: label,
+          price: amount,
           qty: 1,
           purchasedAt: new Date().toISOString()
         }));
@@ -3640,7 +3860,7 @@ function showTab(t) {
     }
     return;
   }
-  const map = { home:"view-home", rules:"view-rules", market:"view-market", matchups:"view-matchups", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar" };
+  const map = { home:"view-home", rules:"view-rules", market:"view-market", matchups:"view-matchups", tournament:"view-tournament", predict:"view-predict", feedback:"view-feedback", owner:"view-owner", bar:"view-bar" };
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === t));
   syncEsportsNavActive(t);
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -4100,18 +4320,25 @@ function applySettingsToConfig(s) {
     CONFIG.split.prizes = s.splitPrizesPct / 100;
     CONFIG.split.investor = s.splitInvestorPct / 100;
   }
+  if (s.supporterModuleStatus !== undefined) {
+    CONFIG.supporterModuleStatus = s.supporterModuleStatus;
+  }
+  if (s.currentWeek !== undefined) {
+    CONFIG.currentWeek = s.currentWeek;
+  }
 }
 
 const SETTINGS_DEF = [
   { k:"playersCount",       label:"Players",          def:30  },
-  { k:"weeks",              label:"Season weeks",     def:8   },
-  { k:"registrationFee",    label:"Registration $",   def:150 },
-  { k:"weeklyDues",         label:"Weekly dues $",    def:25  },
+  { k:"weeks",              label:"Season weeks",     def:9   },
+  { k:"currentWeek",        label:"Current Week No.", def:1   },
+  { k:"registrationFee",    label:"Registration $",   def:125 },
+  { k:"weeklyDues",         label:"Weekly dues $",    def:30  },
   { k:"sharesPerPlayer",    label:"Shares / player",  def:30  },
   { k:"startingSharePrice", label:"Avg share price $",def:25  },
   { k:"shareSellPct",       label:"Shares sold %",    def:70  },
   { k:"teamCount",          label:"Teams",            def:6   },
-  { k:"teamPerPerson",      label:"Team $/person",    def:225 },
+  { k:"teamPerPerson",      label:"Team $/person",    def:125 },
   { k:"marketing",          label:"Marketing $",      def:1000},
   { k:"stripeFeePct",       label:"Stripe fee %",     def:3   },
   { k:"barCutPct",          label:"Bar cut %",        def:2.5 },
@@ -4127,10 +4354,11 @@ const SETTINGS_DEF = [
   { k:"splitBarPct",        label:"Split Bar %",          def:1.5 },
   { k:"splitPrizesPct",     label:"Split Prizes %",       def:35 },
   { k:"splitInvestorPct",   label:"Split Investor %",     def:46.5 },
+  { k:"supporterModuleStatus", label:"Supporter Flag",    def:"disabled", type:"select", options:["disabled", "demo_only", "attorney_review", "live"] },
 ];
 function getSettings() {
   let saved = {}; try { saved = JSON.parse(localStorage.getItem("al_settings") || "{}"); } catch {}
-  const s = {}; SETTINGS_DEF.forEach(d => s[d.k] = saved[d.k] != null ? saved[d.k] : d.def);
+  const s = {}; SETTINGS_DEF.forEach(d => s[d.k] = saved[d.k] !== undefined ? saved[d.k] : d.def);
   return s;
 }
 function sumPrize(o) { return o.first + o.second + o.third; }
@@ -4161,7 +4389,7 @@ function buildSettings() {
   SETTINGS_DEF.forEach(d => settingsMap[d.k] = d);
 
   const SETTINGS_GROUPS = [
-    { title: "League Config", keys: ["playersCount", "weeks", "teamCount"] },
+    { title: "League Config & Status Flags", keys: ["playersCount", "weeks", "currentWeek", "supporterModuleStatus"] },
     { title: "Pricing & Fees", keys: ["registrationFee", "weeklyDues", "teamPerPerson"] },
     { title: "Share Options", keys: ["sharesPerPlayer", "startingSharePrice", "shareSellPct"] },
     { title: "Playoff Payouts / Share", keys: ["payoutChamp", "payoutFinalist", "payoutSemi", "payoutQf"] },
@@ -4173,8 +4401,13 @@ function buildSettings() {
     const fieldsHtml = g.keys.map(k => {
       const d = settingsMap[k];
       if (!d) return "";
+      if (d.type === "select") {
+        const opts = d.options.map(opt => `<option value="${opt}" ${s[d.k] === opt ? 'selected' : ''}>${opt}</option>`).join("");
+        return `<div class="set-field"><label>${d.label}</label>
+          <select data-k="${d.k}" onchange="onSettingInput()" class="auth-input" style="margin:0; padding:6px; background:rgba(0,0,0,0.5); border:1px solid var(--border); color:var(--white); font-weight:700; border-radius:6px; width:100%;">${opts}</select></div>`;
+      }
       return `<div class="set-field"><label>${d.label}</label>
-        <input type="number" step="any" data-k="${d.k}" value="${s[d.k]}" oninput="onSettingInput()"></div>`;
+        <input type="${typeof d.def === 'number' ? 'number' : 'text'}" step="any" data-k="${d.k}" value="${s[d.k]}" oninput="onSettingInput()"></div>`;
     }).join("");
     return `<div class="set-group-title" style="grid-column: 1 / -1; font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 14px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05);">${g.title}</div>` + fieldsHtml;
   }).join("");
@@ -4183,7 +4416,14 @@ function buildSettings() {
 }
 function readSettingsInputs() {
   const s = getSettings();
-  document.querySelectorAll("#settingsGrid input").forEach(i => { s[i.dataset.k] = Number(i.value) || 0; });
+  document.querySelectorAll("#settingsGrid input, #settingsGrid select").forEach(i => {
+    const key = i.dataset.k;
+    if (i.tagName === "SELECT") {
+      s[key] = i.value;
+    } else {
+      s[key] = i.type === "number" ? (Number(i.value) || 0) : i.value;
+    }
+  });
   return s;
 }
 function onSettingInput() { buildPnl(readSettingsInputs()); }
@@ -4248,6 +4488,51 @@ function buildPnl(s) {
     card("Shares Sold", `${p.sharesSold.toLocaleString()} / ${p.sharesAvail.toLocaleString()}`) +
     card("% Sold", `${p.pctSold}%`, p.bonusUnlocked ? "var(--al-green)" : "var(--white)") +
     card("Bar Bonus Unlocked", p.bonusUnlocked ? "YES" : "NO", p.bonusUnlocked ? "var(--al-green)" : "var(--gray)");
+
+  // Supporter Giveback Model projections (23% Giveback model)
+  const g = CONFIG.supporterGiveback;
+  const winnerPool = p.shareRev * (g.winnerPool / 100);
+  const playerSeasonPot = p.shareRev * (g.playerPrizePool / 100);
+  const playerDirectBonus = p.shareRev * (g.playerDirectBonus / 100);
+  const barHostShare = p.shareRev * (g.barHostShare / 100);
+  const bmlPlatformShare = p.shareRev * (g.bmlPlatformShare / 100);
+  
+  let gbEl = $("supporterGivebackModelWrap");
+  if (!gbEl) {
+    const parent = $("pnlCards").parentNode;
+    gbEl = document.createElement("div");
+    gbEl.id = "supporterGivebackModelWrap";
+    gbEl.style.marginTop = "24px";
+    parent.appendChild(gbEl);
+  }
+  gbEl.innerHTML = `
+    <div class="card" style="background:var(--card); border:1.5px solid var(--border); border-radius:18px; padding:22px; width: 100%; box-sizing: border-box;">
+      <h3 style="color:var(--gold); font-size:18px; font-weight:800; margin-top:0; margin-bottom:12px;">⚖️ 23% Giveback Supporter Allocation Model</h3>
+      <p style="font-size:12px; color:var(--gray); margin-bottom:16px;">Based on current projected share volume revenue of <strong>${$$(p.shareRev)}</strong>, here is the attorney-cleared supporter volume allocation breakdown:</p>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+        <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);">
+          <div style="font-size:10px; color:var(--gray); font-weight:700;">WINNER POOL (48.5%)</div>
+          <div style="font-size:18px; font-weight:900; color:var(--al-green); margin-top:4px;">${$$(winnerPool)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);">
+          <div style="font-size:10px; color:var(--gray); font-weight:700;">PLAYER SEASON POT (36.26%)</div>
+          <div style="font-size:18px; font-weight:900; color:var(--white); margin-top:4px;">${$$(playerSeasonPot)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);">
+          <div style="font-size:10px; color:var(--gray); font-weight:700;">PLAYER DIRECT BONUS (3%)</div>
+          <div style="font-size:18px; font-weight:900; color:var(--white); margin-top:4px;">${$$(playerDirectBonus)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);">
+          <div style="font-size:10px; color:var(--gray); font-weight:700;">BAR HOST SHARE (3%)</div>
+          <div style="font-size:18px; font-weight:900; color:var(--white); margin-top:4px;">${$$(barHostShare)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.03);">
+          <div style="font-size:10px; color:var(--gray); font-weight:700;">BML PLATFORM SHARE (9.24%)</div>
+          <div style="font-size:18px; font-weight:900; color:var(--gold); margin-top:4px;">${$$(bmlPlatformShare)}</div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 function buildOwnerPrizes() {
   const sp = CONFIG.seasonPrizes;
@@ -4296,9 +4581,11 @@ function setMatchupSeason(s) {
   const tabS1 = $("matchupTabS1");
   const tabS2 = $("matchupTabS2");
   const tabS3 = $("matchupTabS3");
+  const tabRedemption = $("matchupTabRedemption");
   const tabTourney = $("matchupTabTourney");
   if (tabS1) tabS1.classList.toggle("active", s === 1);
   if (tabS2) tabS2.classList.toggle("active", s === 2);
+  if (tabRedemption) tabRedemption.classList.toggle("active", s === 'redemption');
   if (tabS3) tabS3.classList.toggle("active", s === 3);
   if (tabTourney) tabTourney.classList.toggle("active", s === 'tourney');
   renderMatchups();
@@ -4353,8 +4640,96 @@ function renderMatchups() {
               Match ${mi + 1}
             </div>
           </div>
-        `).join("")}
       </div>
+    `;
+  } else if (currentMatchupSeason === 'redemption') {
+    let redemptionState = {
+      sf1Winner: null,
+      sf2Winner: null,
+      champWinner: null,
+      notified: false
+    };
+    const saved = localStorage.getItem("al_redemption_state");
+    if (saved) {
+      try { redemptionState = JSON.parse(saved); } catch(e){}
+    }
+    
+    const players = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
+    const p13 = players[12] || { name: "Player 13" };
+    const p14 = players[13] || { name: "Player 14" };
+    const p15 = players[14] || { name: "Player 15" };
+    const p16 = players[15] || { name: "Player 16" };
+    
+    const isStaff = ["owner", "helper"].includes(currentRole());
+    
+    const sf1Winner = redemptionState.sf1Winner;
+    const sf2Winner = redemptionState.sf2Winner;
+    const champWinner = redemptionState.champWinner;
+    
+    const fA = sf1Winner || "Winner Semifinal 1";
+    const fB = sf2Winner || "Winner Semifinal 2";
+    
+    container.innerHTML = `
+      <div class="sec-head">
+        <div class="sec-title">🗓️ Week 6 Redemption Bracket</div>
+        <div class="sec-sub">Standings snapshotted after Week 5. Bottom 4 qualifiers (13th-16th) battle for future credits.</div>
+      </div>
+      
+      <div class="bracket" style="margin-top:20px; display:flex; justify-content:center; gap:40px; overflow-x:auto;">
+        <!-- Semifinals -->
+        <div class="round">
+          <div class="round-title">Semifinals</div>
+          
+          <!-- SF 1 -->
+          <div class="match-card ${sf1Winner ? '' : 'live'}" style="min-width:200px; padding:12px; display:flex; flex-direction:column; gap:6px; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${sf1Winner === p13.name ? 'var(--al-green)' : 'var(--white)'}">#13 ${p13.name}</span>
+              ${isStaff && !sf1Winner ? `<button onclick="setRedemptionWinner('sf1', '${p13.name}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px;">Win</button>` : ''}
+            </div>
+            <div style="font-size:10px; text-align:center; color:var(--gray); font-weight:800; margin:2px 0;">VS</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${sf1Winner === p16.name ? 'var(--al-green)' : 'var(--white)'}">#16 ${p16.name}</span>
+              ${isStaff && !sf1Winner ? `<button onclick="setRedemptionWinner('sf1', '${p16.name}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px;">Win</button>` : ''}
+            </div>
+          </div>
+          
+          <!-- SF 2 -->
+          <div class="match-card ${sf2Winner ? '' : 'live'}" style="min-width:200px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${sf2Winner === p14.name ? 'var(--al-green)' : 'var(--white)'}">#14 ${p14.name}</span>
+              ${isStaff && !sf2Winner ? `<button onclick="setRedemptionWinner('sf2', '${p14.name}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px;">Win</button>` : ''}
+            </div>
+            <div style="font-size:10px; text-align:center; color:var(--gray); font-weight:800; margin:2px 0;">VS</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${sf2Winner === p15.name ? 'var(--al-green)' : 'var(--white)'}">#15 ${p15.name}</span>
+              ${isStaff && !sf2Winner ? `<button onclick="setRedemptionWinner('sf2', '${p15.name}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px;">Win</button>` : ''}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Finals -->
+        <div class="round" style="display:flex; flex-direction:column; justify-content:center;">
+          <div class="round-title">Championship</div>
+          
+          <div class="match-card ${champWinner ? '' : (sf1Winner && sf2Winner ? 'live' : '')}" style="min-width:200px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${champWinner === fA ? 'var(--gold)' : 'var(--white)'}">${fA}</span>
+              ${isStaff && sf1Winner && sf2Winner && !champWinner ? `<button onclick="setRedemptionWinner('champ', '${fA}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px; border-color:var(--gold); color:var(--gold);">Win</button>` : ''}
+            </div>
+            <div style="font-size:10px; text-align:center; color:var(--gray); font-weight:800; margin:2px 0;">VS</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:700; color:${champWinner === fB ? 'var(--gold)' : 'var(--white)'}">${fB}</span>
+              ${isStaff && sf1Winner && sf2Winner && !champWinner ? `<button onclick="setRedemptionWinner('champ', '${fB}')" class="btn-buy" style="padding:2px 6px; font-size:10px; width:auto; border-radius:4px; border-color:var(--gold); color:var(--gold);">Win</button>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      ${isStaff ? `
+        <div style="text-align:center; margin-top:24px;">
+          <button class="al-btn ghost" style="width:auto; padding:8px 16px; font-size:12px;" onclick="resetRedemptionBracket()">Reset Redemption Bracket</button>
+        </div>
+      ` : ''}
     `;
   } else if (currentMatchupSeason === 3) {
     container.innerHTML = `
@@ -4944,19 +5319,53 @@ function buildFeeCards() {
   el.innerHTML = `
     <div class="dash-card">
       <div class="dash-label">SEASON REGISTRATION</div>
-      <div class="dash-val tier-gold">$<span id="feeRegAmt">${F.registration}</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('registration')" id="feeRegBtn">Register · $${F.registration}</button>
+      <div style="margin-top:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px; text-align:left;">
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="reg1v1" checked onchange="updateRegPackagePrice()" /> 1v1 Individual ($125)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="reg2v2" onchange="updateRegPackagePrice()" /> 2v2 Doubles ($125)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="reg3v3" onchange="updateRegPackagePrice()" /> 3v3 Triples ($125)
+        </label>
+      </div>
+      <div class="dash-val tier-gold">$<span id="feeRegAmt">125</span></div>
+      <button class="btn-buy" style="margin-top:12px" onclick="payFee('registration')" id="feeRegBtn">Register · $125</button>
     </div>
+    
     <div class="dash-card">
-      <div class="dash-label">WEEKLY DUES</div>
-      <div class="dash-val">$<span id="feeDuesAmt">${F.weeklyDues}</span><span style="font-size:13px;color:var(--gray)">/wk</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('weeklyDues')" id="feeDuesBtn">Pay Dues · $${F.weeklyDues}</button>
+      <div class="dash-label">WEEKLY MATCH DUES</div>
+      <div style="margin-top:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px; text-align:left;">
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="dues1v1" checked onchange="updateDuesPackagePrice()" /> 1v1 Matches ($30)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="dues2v2" onchange="updateDuesPackagePrice()" /> 2v2 Matches ($30)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--white); cursor:pointer;">
+          <input type="checkbox" id="dues3v3" onchange="updateDuesPackagePrice()" /> 3v3 Matches ($30)
+        </label>
+      </div>
+      <div class="dash-val">$<span id="feeDuesAmt">30</span></div>
+      <button class="btn-buy" style="margin-top:12px" onclick="payFee('weeklyDues')" id="feeDuesBtn">Pay Dues · $30</button>
     </div>
+    
     <div class="dash-card">
-      <div class="dash-label">TEAM ENTRY</div>
-      <div class="dash-val tier-purple">$<span id="feeTeamAmt">${F.teamPerPerson}</span><span style="font-size:13px;color:var(--gray)">/person</span></div>
-      <button class="btn-buy" style="margin-top:12px" onclick="payFee('teamReg')" id="feeTeamBtn">Enter a Team · $${F.teamPerPerson}</button>
+      <div class="dash-label">MY FORMATS & CREDITS</div>
+      <div style="margin-top:12px; margin-bottom:12px; display:flex; flex-direction:column; gap:6px; text-align:left; font-size:12px;">
+        <div>Registered: <span id="myRegisteredFormats" style="color:var(--al-green); font-weight:900;">None</span></div>
+        <div>Waitlists: <span id="myWaitlistFormats" style="color:var(--gold); font-weight:900;">None</span></div>
+        <div style="border-top: 1px solid var(--border); margin-top:6px; padding-top:6px;">Available Credits: <strong id="myLedgerCredits" style="color:var(--gold); font-family:var(--font-mono);">$0.00</strong></div>
+      </div>
+      <button class="btn-buy" style="margin-top:12px" onclick="showCreditLedgerModal()" id="feeTeamBtn">View Credit Ledger</button>
     </div>`;
+  // Trigger initial UI price updates
+  setTimeout(() => {
+    updateRegPackagePrice();
+    updateDuesPackagePrice();
+    updateUserLedgerSummary();
+  }, 100);
 }
 
 function renderAllViews() {
@@ -4983,6 +5392,8 @@ function renderAllViews() {
   buildBarsManagement();
   buildHeatmap();
   buildHomeDetails();
+  initTournamentState();
+  renderTournament();
   if ($("view-bar") && $("view-bar").classList.contains("active")) {
     const userBar = sessionStorage.getItem("al_user_bar") || "Bar One";
     let selected = $("barDashboardSelect") ? $("barDashboardSelect").value : (currentRole() === "bar" ? userBar : "All");
@@ -6132,6 +6543,815 @@ if (_sb) {
     }
   });
 }
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  WEEK 6 REDEMPTION WEEK HELPER FUNCTIONS              ║
+// ╚═══════════════════════════════════════════════════════╝
+function setRedemptionWinner(matchKey, winnerName) {
+  let state = { sf1Winner: null, sf2Winner: null, champWinner: null, notified: false };
+  const saved = localStorage.getItem("al_redemption_state");
+  if (saved) {
+    try { state = JSON.parse(saved); } catch(e){}
+  }
+  
+  if (matchKey === 'sf1') state.sf1Winner = winnerName;
+  if (matchKey === 'sf2') state.sf2Winner = winnerName;
+  if (matchKey === 'champ') {
+    state.champWinner = winnerName;
+    
+    // Award credits to ledger if not already awarded
+    if (!state.notified) {
+      state.notified = true;
+      const runnerUp = winnerName === state.sf1Winner ? state.sf2Winner : state.sf1Winner;
+      
+      loadCreditLedger();
+      // Champion gets $50
+      creditLedger.push({
+        id: Date.now(),
+        source: "redemption",
+        amount: 50.00,
+        status: "available",
+        date: new Date().toISOString().split("T")[0]
+      });
+      // Runner-Up gets $20
+      creditLedger.push({
+        id: Date.now() + 1,
+        source: "redemption",
+        amount: 20.00,
+        status: "available",
+        date: new Date().toISOString().split("T")[0]
+      });
+      saveCreditLedger();
+      updateUserLedgerSummary();
+      
+      alert(`Redemption Tournament Complete!\n\nChampion: ${winnerName} (+$50 Credit)\nRunner-Up: ${runnerUp} (+$20 Credit)\n\nCredits have been added to their Unified Credit Ledgers!`);
+    }
+  }
+  
+  localStorage.setItem("al_redemption_state", JSON.stringify(state));
+  renderMatchups();
+}
+
+function resetRedemptionBracket() {
+  if (confirm("Are you sure you want to reset the Redemption bracket?")) {
+    localStorage.removeItem("al_redemption_state");
+    renderMatchups();
+  }
+}
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  LEAGUE PACKAGES & CREDIT LEDGER STATE                ║
+// ╚═══════════════════════════════════════════════════════╝
+function updateRegPackagePrice() {
+  const c1 = $("reg1v1")?.checked;
+  const c2 = $("reg2v2")?.checked;
+  const c3 = $("reg3v3")?.checked;
+  let count = 0;
+  if (c1) count++;
+  if (c2) count++;
+  if (c3) count++;
+  
+  let price = 0;
+  if (count === 1) price = 125;
+  else if (count === 2) price = 200;
+  else if (count === 3) price = 250;
+  
+  const amtSpan = $("feeRegAmt");
+  const btn = $("feeRegBtn");
+  if (amtSpan) amtSpan.textContent = price;
+  if (btn) {
+    if (price === 0) {
+      btn.textContent = "Select at least 1 format";
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.pointerEvents = "none";
+    } else {
+      btn.textContent = `Register · $${price}`;
+      btn.disabled = false;
+      btn.style.opacity = "";
+      btn.style.pointerEvents = "";
+    }
+  }
+}
+
+function updateDuesPackagePrice() {
+  const c1 = $("dues1v1")?.checked;
+  const c2 = $("dues2v2")?.checked;
+  const c3 = $("dues3v3")?.checked;
+  let count = 0;
+  if (c1) count++;
+  if (c2) count++;
+  if (c3) count++;
+  
+  let price = count * 30;
+  const amtSpan = $("feeDuesAmt");
+  const btn = $("feeDuesBtn");
+  if (amtSpan) amtSpan.textContent = price;
+  if (btn) {
+    if (price === 0) {
+      btn.textContent = "Select at least 1 format";
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.pointerEvents = "none";
+    } else {
+      btn.textContent = `Pay Dues · $${price}`;
+      btn.disabled = false;
+      btn.style.opacity = "";
+      btn.style.pointerEvents = "";
+    }
+  }
+}
+
+// Unified Credit Ledger State (In-memory fallback with localStorage persistence)
+let creditLedger = [
+  { id: 1, source: "placement", amount: 50.00, status: "available", date: "2026-06-01" },
+  { id: 2, source: "referral", amount: 5.00, status: "available", date: "2026-06-15" }
+];
+
+function loadCreditLedger() {
+  const saved = localStorage.getItem("al_credit_ledger");
+  if (saved) {
+    try { creditLedger = JSON.parse(saved); } catch(e) {}
+  } else {
+    localStorage.setItem("al_credit_ledger", JSON.stringify(creditLedger));
+  }
+}
+
+function saveCreditLedger() {
+  localStorage.setItem("al_credit_ledger", JSON.stringify(creditLedger));
+}
+
+function updateUserLedgerSummary() {
+  loadCreditLedger();
+  const regFormats = $("myRegisteredFormats");
+  const wlFormats = $("myWaitlistFormats");
+  const creditsVal = $("myLedgerCredits");
+  
+  if (regFormats) regFormats.textContent = "1v1 Individual";
+  
+  // Format waitlist formats
+  loadWaitingLists();
+  const myEmail = sessionStorage.getItem("al_user_email") || "";
+  const formatsInWl = [];
+  Object.keys(waitingLists).forEach(fmtName => {
+    const found = waitingLists[fmtName].find(w => w.name === myEmail);
+    if (found) {
+      formatsInWl.push(`${fmtName} (T${found.tier})`);
+    }
+  });
+  if (wlFormats) wlFormats.textContent = formatsInWl.length > 0 ? formatsInWl.join(", ") : "None";
+  
+  const totalAvailable = creditLedger
+    .filter(item => item.status === "available")
+    .reduce((sum, item) => sum + item.amount, 0);
+  
+  if (creditsVal) creditsVal.textContent = `$${totalAvailable.toFixed(2)}`;
+}
+
+function showCreditLedgerModal() {
+  loadCreditLedger();
+  let listHtml = creditLedger.map(item => `
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding:8px 0; font-size:13px;">
+      <div>
+        <span style="font-weight:900; text-transform:uppercase; color:var(--gold);">${item.source.replace("_", " ")}</span>
+        <div style="font-size:10px; color:var(--gray);">${item.date}</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-weight:900; font-family:var(--font-mono); color:var(--al-green);">$${item.amount.toFixed(2)}</span>
+        <span style="font-size:10px; padding:2px 6px; border-radius:4px; font-weight:800; text-transform:uppercase; 
+          background:${item.status === 'available' ? 'rgba(57,255,20,0.1)' : 'rgba(255,255,255,0.05)'}; 
+          color:${item.status === 'available' ? 'var(--al-green)' : 'var(--gray)'};">
+          ${item.status}
+        </span>
+      </div>
+    </div>
+  `).join("");
+  
+  const modalHtml = `
+    <div id="ledgerModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:10000; padding:20px;">
+      <div class="card" style="width:100%; max-width:480px; padding:24px; background:var(--bg); border:1.5px solid var(--border); border-radius:18px; position:relative;">
+        <button onclick="document.getElementById('ledgerModal').remove()" style="position:absolute; top:16px; right:16px; background:none; border:none; color:var(--gray); font-size:18px; cursor:pointer;">✕</button>
+        <h3 style="color:var(--white); margin-top:0; font-size:18px; font-weight:900; margin-bottom:16px;">Unified Credit Ledger</h3>
+        <p style="font-size:12px; color:var(--gray); margin-bottom:20px;">Your credits can be automatically applied as discounts during future format registrations or dues payments.</p>
+        
+        <div style="max-height:260px; overflow-y:auto; margin-bottom:20px; padding-right:6px;">
+          ${listHtml}
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:2px solid var(--border); padding-top:16px;">
+          <span style="font-weight:900; color:var(--white); font-size:14px;">Total Balance</span>
+          <span style="font-size:20px; font-weight:900; color:var(--gold); font-family:var(--font-mono);">
+            $${creditLedger.filter(i=>i.status==='available').reduce((s,i)=>s+i.amount, 0).toFixed(2)}
+          </span>
+        </div>
+      </div>
+    </div>
+  `;
+  const div = document.createElement("div");
+  div.innerHTML = modalHtml;
+  document.body.appendChild(div.firstElementChild);
+}
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  WAITING LISTS STATE                                  ║
+// ╚═══════════════════════════════════════════════════════╝
+let waitingLists = {
+  "1v1 Individual": [
+    { name: "charlie@pool.com", tier: 1, date: "2026-06-25" },
+    { name: "david@pool.com", tier: 2, date: "2026-06-28" }
+  ],
+  "2v2 Doubles": [],
+  "3v3 Triples": []
+};
+
+function loadWaitingLists() {
+  const saved = localStorage.getItem("al_waiting_lists");
+  if (saved) {
+    try { waitingLists = JSON.parse(saved); } catch(e) {}
+  } else {
+    localStorage.setItem("al_waiting_lists", JSON.stringify(waitingLists));
+  }
+}
+
+function saveWaitingLists() {
+  localStorage.setItem("al_waiting_lists", JSON.stringify(waitingLists));
+}
+
+function is1v1Full() {
+  return CONFIG.players.filter(p => p.active !== false).length >= 16;
+}
+
+function joinWaitingList(format) {
+  loadWaitingLists();
+  const userName = sessionStorage.getItem("al_user_email") || "player@pool.com";
+  
+  if (waitingLists[format].some(w => w.name === userName)) {
+    alert(`You are already on the ${format} Waiting List!`);
+    return;
+  }
+  
+  // Tier 3: standard join order priority
+  waitingLists[format].push({
+    name: userName,
+    tier: 3,
+    date: new Date().toISOString().split("T")[0]
+  });
+  saveWaitingLists();
+  
+  // $5 Waitlist Credit added
+  loadCreditLedger();
+  creditLedger.push({
+    id: Date.now(),
+    source: "waiting_list",
+    amount: 5.00,
+    status: "available",
+    date: new Date().toISOString().split("T")[0]
+  });
+  saveCreditLedger();
+  updateUserLedgerSummary();
+  
+  alert(`Successfully joined the ${format} Waiting List under Priority Tier 3. A $5 waitlist credit has been added to your ledger!`);
+}
+
+// ╔═══════════════════════════════════════════════════════╗
+// ║  TOURNAMENT ENGINE & STATE                            ║
+// ╚═══════════════════════════════════════════════════════╝
+let currentTourneyFormat = "rr";
+let tournamentState = {
+  format: "rr",
+  players: [],
+  pools: [], // used for rr format
+  bracket: null, // used for bracket format
+  chips: {}, // used for chips/lives format
+};
+
+// Initialize setup panel checklists and loads state from localstorage
+function initTournamentState() {
+  // Populate operator player checkbox list
+  const container = $("tourneyPlayersCheckboxGrid");
+  if (container && container.children.length === 0) {
+    const list = CONFIG.players.slice().sort((a,b) => a.rank - b.rank);
+    container.innerHTML = list.map((p, idx) => `
+      <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--white); font-weight:700; cursor:pointer; padding:4px;">
+        <input type="checkbox" class="tourney-player-check" value="${p.name}" data-rank="${p.rank}" data-bar="${p.bar}" checked />
+        <span class="seed" style="min-width:24px; text-align:center;">#${p.rank}</span> ${p.name}
+      </label>
+    `).join("");
+  }
+  
+  // Load saved state
+  const saved = localStorage.getItem("al_tournament_state");
+  if (saved) {
+    try {
+      tournamentState = JSON.parse(saved);
+      currentTourneyFormat = tournamentState.format;
+      
+      // Update UI tab elements to match loaded format
+      const tabRR = $("tourneyTabRR");
+      const tabBracket = $("tourneyTabBracket");
+      const tabChips = $("tourneyTabChips");
+      if (tabRR) tabRR.classList.toggle("active", currentTourneyFormat === "rr");
+      if (tabBracket) tabBracket.classList.toggle("active", currentTourneyFormat === "bracket");
+      if (tabChips) tabChips.classList.toggle("active", currentTourneyFormat === "chips");
+    } catch(e) {}
+  } else {
+    // Generate default tournament (Round Robin with all 16 players) on first load
+    generateDefaultTournament();
+  }
+}
+
+function generateDefaultTournament() {
+  const list = CONFIG.players.slice(0, 16);
+  setupTournamentRR(list);
+  localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+}
+
+function setTourneyFormat(fmt) {
+  currentTourneyFormat = fmt;
+  const tabRR = $("tourneyTabRR");
+  const tabBracket = $("tourneyTabBracket");
+  const tabChips = $("tourneyTabChips");
+  if (tabRR) tabRR.classList.toggle("active", fmt === "rr");
+  if (tabBracket) tabBracket.classList.toggle("active", fmt === "bracket");
+  if (tabChips) tabChips.classList.toggle("active", fmt === "chips");
+  
+  // Save format choice
+  tournamentState.format = fmt;
+  localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+  renderTournament();
+}
+
+function toggleChipsConfigDisplay() {
+  const fmt = $("tourneySetupFormat").value;
+  const chipGrp = $("tourneySetupChipsGroup");
+  if (chipGrp) chipGrp.style.display = fmt === "chips" ? "block" : "none";
+}
+
+function quickSelectTourneyPlayers(type) {
+  const checks = document.querySelectorAll(".tourney-player-check");
+  checks.forEach((c, idx) => {
+    if (type === "all") c.checked = true;
+    else if (type === "clear") c.checked = false;
+    else if (type === "top8") c.checked = idx < 8;
+    else if (type === "top4") c.checked = idx < 4;
+  });
+}
+
+function generateTournamentFromSetup() {
+  const fmt = $("tourneySetupFormat").value;
+  const checks = document.querySelectorAll(".tourney-player-check:checked");
+  const selectedList = [];
+  checks.forEach(c => {
+    selectedList.push({
+      name: c.value,
+      rank: Number(c.dataset.rank) || 16,
+      bar: c.dataset.bar || "Bar One"
+    });
+  });
+  
+  if (selectedList.length < 2) {
+    alert("Please select at least 2 players to generate a tournament!");
+    return;
+  }
+  
+  // Clear previous settings
+  tournamentState = {
+    format: fmt,
+    players: selectedList,
+    pools: [],
+    bracket: null,
+    chips: {}
+  };
+  
+  if (fmt === "rr") {
+    setupTournamentRR(selectedList);
+  } else if (fmt === "bracket") {
+    setupTournamentBracket(selectedList);
+  } else if (fmt === "chips") {
+    setupTournamentChips(selectedList);
+  }
+  
+  localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+  setTourneyFormat(fmt);
+  alert(`Generated a new ${fmt.toUpperCase()} tournament with ${selectedList.length} players.`);
+}
+
+function setupTournamentRR(list) {
+  // Split players into pools of 4
+  const sorted = [...list].sort((a,b) => a.rank - b.rank);
+  const pools = [];
+  const poolSize = 4;
+  for (let i = 0; i < sorted.length; i += poolSize) {
+    const chunk = sorted.slice(i, i + poolSize);
+    const poolName = String.fromCharCode(65 + pools.length); // Pool A, Pool B...
+    
+    // Standings model inside the pool
+    const standings = chunk.map(p => ({
+      name: p.name,
+      rank: p.rank,
+      bar: p.bar,
+      w: 0,
+      l: 0,
+      diff: 0
+    }));
+    
+    // Generate Round Robin matches for this pool
+    const matches = [];
+    if (chunk.length === 4) {
+      matches.push({ r: 1, a: chunk[0], b: chunk[3], scoreA: null, scoreB: null });
+      matches.push({ r: 1, a: chunk[1], b: chunk[2], scoreA: null, scoreB: null });
+      matches.push({ r: 2, a: chunk[0], b: chunk[2], scoreA: null, scoreB: null });
+      matches.push({ r: 2, a: chunk[3], b: chunk[1], scoreA: null, scoreB: null });
+      matches.push({ r: 3, a: chunk[0], b: chunk[1], scoreA: null, scoreB: null });
+      matches.push({ r: 3, a: chunk[2], b: chunk[3], scoreA: null, scoreB: null });
+    } else {
+      for (let x = 0; x < chunk.length; x++) {
+        for (let y = x + 1; y < chunk.length; y++) {
+          matches.push({ r: 1, a: chunk[x], b: chunk[y], scoreA: null, scoreB: null });
+        }
+      }
+    }
+    
+    pools.push({ name: poolName, standings, matches });
+  }
+  tournamentState.pools = pools;
+}
+
+function setupTournamentBracket(list) {
+  const sorted = [...list].sort((a,b) => a.rank - b.rank);
+  
+  // Find nearest power of 2
+  let n = 2;
+  while (n * 2 <= sorted.length) n *= 2;
+  const order = seedOrder(n);
+  const r1 = [];
+  for (let i = 0; i < n; i += 2) {
+    const idxA = order[i] - 1;
+    const idxB = order[i+1] - 1;
+    r1.push({
+      a: sorted[idxA] || { name: "BYE", rank: 99, bar: "" },
+      b: sorted[idxB] || { name: "BYE", rank: 99, bar: "" },
+      sa: order[i],
+      sb: order[i+1],
+      winner: null
+    });
+  }
+  
+  const rounds = [r1];
+  let count = n / 2;
+  while (count >= 1 && rounds[rounds.length - 1].length > 1) {
+    rounds.push(new Array(count / 2 || 1).fill(null).map(() => ({ a: null, b: null, winner: null })));
+    count /= 2;
+  }
+  
+  tournamentState.bracket = { rounds };
+}
+
+function setupTournamentChips(list) {
+  const startingLives = Number($("tourneySetupLives")?.value) || 3;
+  const chips = {};
+  list.forEach(p => {
+    chips[p.name] = {
+      name: p.name,
+      rank: p.rank,
+      bar: p.bar,
+      lives: startingLives,
+      status: "Active"
+    };
+  });
+  tournamentState.chips = chips;
+}
+
+function renderTournament() {
+  const content = $("tourneyFormatContent");
+  if (!content) return;
+  
+  if (currentTourneyFormat === "rr") {
+    renderRRView(content);
+  } else if (currentTourneyFormat === "bracket") {
+    renderBracketView(content);
+  } else if (currentTourneyFormat === "chips") {
+    renderChipsView(content);
+  }
+}
+
+function renderRRView(container) {
+  if (!tournamentState.pools || tournamentState.pools.length === 0) {
+    container.innerHTML = `<div style="text-align:center;color:var(--gray);padding:24px;">No Round Robin matches setup. Use the Setup Control Panel below to generate one.</div>`;
+    return;
+  }
+  
+  const isStaff = ["owner", "helper"].includes(currentRole());
+  
+  let html = `
+    <div class="sec-head">
+      <div class="sec-title">Pool Play Standings & Matches</div>
+      <div class="sec-sub">Recalculating standings and differentials in real time</div>
+    </div>
+  `;
+  
+  tournamentState.pools.forEach((pool, poolIdx) => {
+    html += `
+      <div class="card" style="background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px; margin-bottom:24px;">
+        <h3 style="color:var(--gold); font-size:18px; font-weight:800; margin-top:0; margin-bottom:16px;">Pool ${pool.name}</h3>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+          <!-- Standings -->
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--gray); margin-bottom:10px; text-transform:uppercase;">STANDINGS</div>
+            <table class="stand-tbl" style="width:100%;">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th class="num">Wins</th>
+                  <th class="num">Losses</th>
+                  <th class="num">Diff</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${pool.standings.map(s => `
+                  <tr>
+                    <td style="font-weight:700; color:var(--white);">${s.name} <span style="font-size:9px;color:var(--gray)">(${s.bar})</span></td>
+                    <td class="num" style="color:var(--al-green)">${s.w}</td>
+                    <td class="num" style="color:var(--red)">${s.l}</td>
+                    <td class="num" style="font-family:var(--font-mono);">${s.diff > 0 ? '+' : ''}${s.diff}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Matches -->
+          <div>
+            <div style="font-size:12px; font-weight:700; color:var(--gray); margin-bottom:10px; text-transform:uppercase;">FIXTURES & SCORES</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${pool.matches.map((m, matchIdx) => {
+                const finished = m.scoreA !== null && m.scoreB !== null;
+                return `
+                  <div style="background:rgba(0,0,0,0.25); border:1px solid var(--border); border-radius:8px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                    <div style="flex:1; text-align:left; font-size:13px; font-weight:700; color:${finished && m.scoreA > m.scoreB ? 'var(--al-green)' : 'var(--white)'}">
+                      ${m.a.name}
+                    </div>
+                    
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      ${isStaff ? `
+                        <input type="number" value="${m.scoreA !== null ? m.scoreA : ''}" placeholder="0" 
+                          oninput="updateTourneyScore(${poolIdx}, ${matchIdx}, 'a', this.value)" 
+                          style="width:44px; text-align:center; background:rgba(0,0,0,0.5); border:1px solid var(--border); color:var(--white); font-weight:900; border-radius:4px; padding:4px;" />
+                        <span style="font-size:11px;color:var(--gray)">:</span>
+                        <input type="number" value="${m.scoreB !== null ? m.scoreB : ''}" placeholder="0" 
+                          oninput="updateTourneyScore(${poolIdx}, ${matchIdx}, 'b', this.value)" 
+                          style="width:44px; text-align:center; background:rgba(0,0,0,0.5); border:1px solid var(--border); color:var(--white); font-weight:900; border-radius:4px; padding:4px;" />
+                      ` : `
+                        <span style="font-family:var(--font-mono); font-weight:900; font-size:14px; color:var(--gold)">
+                          ${finished ? `${m.scoreA} : ${m.scoreB}` : 'vs'}
+                        </span>
+                      `}
+                    </div>
+                    
+                    <div style="flex:1; text-align:right; font-size:13px; font-weight:700; color:${finished && m.scoreB > m.scoreA ? 'var(--al-green)' : 'var(--white)'}">
+                      ${m.b.name}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function updateTourneyScore(poolIdx, matchIdx, playerKey, val) {
+  const pool = tournamentState.pools[poolIdx];
+  const m = pool.matches[matchIdx];
+  const num = val === "" ? null : Number(val);
+  
+  if (playerKey === 'a') m.scoreA = num;
+  if (playerKey === 'b') m.scoreB = num;
+  
+  // Recalculate pool standings
+  recalculatePoolStandings(pool);
+  
+  localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+  renderTournament();
+}
+
+function recalculatePoolStandings(pool) {
+  // Reset standings
+  pool.standings.forEach(s => {
+    s.w = 0;
+    s.l = 0;
+    s.diff = 0;
+  });
+  
+  pool.matches.forEach(m => {
+    if (m.scoreA !== null && m.scoreB !== null) {
+      const sa = m.scoreA;
+      const sb = m.scoreB;
+      const playerA = pool.standings.find(s => s.name === m.a.name);
+      const playerB = pool.standings.find(s => s.name === m.b.name);
+      
+      if (playerA && playerB) {
+        if (sa > sb) {
+          playerA.w++;
+          playerB.l++;
+        } else if (sb > sa) {
+          playerB.w++;
+          playerA.l++;
+        }
+        playerA.diff += (sa - sb);
+        playerB.diff += (sb - sa);
+      }
+    }
+  });
+  
+  // Sort standings: Wins desc, then Point Diff desc
+  pool.standings.sort((a,b) => b.w - a.w || b.diff - a.diff);
+}
+
+function renderBracketView(container) {
+  if (!tournamentState.bracket) {
+    container.innerHTML = `<div style="text-align:center;color:var(--gray);padding:24px;">No Playoff Bracket setup. Use the Setup Control Panel below to generate one.</div>`;
+    return;
+  }
+  
+  const isStaff = ["owner", "helper"].includes(currentRole());
+  const rounds = tournamentState.bracket.rounds;
+  
+  let html = `
+    <div class="sec-head">
+      <div class="sec-title">Playoff Brackets</div>
+      <div class="sec-sub">Advancing match winners triggers the next round bracket nodes</div>
+    </div>
+    
+    <div class="bracket" style="margin-top:20px; display:flex; gap:40px; overflow-x:auto; padding-bottom:16px;">
+  `;
+  
+  rounds.forEach((rd, ri) => {
+    html += `
+      <div class="round">
+        <div class="round-title">${roundName(rd.length)}</div>
+        ${rd.map((m, mi) => {
+          if (!m) return `<div class="match-card" style="min-width:200px;opacity:0.3;">TBD</div>`;
+          const finished = m.winner !== null;
+          const aName = m.a ? m.a.name : "TBD";
+          const bName = m.b ? m.b.name : "TBD";
+          
+          return `
+            <div class="match-card ${finished ? '' : 'live'}" style="min-width:200px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+              <!-- Player A -->
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; font-weight:700; color:${finished && m.winner === aName ? 'var(--al-green)' : 'var(--white)'}">
+                  ${m.a && m.a.rank ? `<span class="seed" style="margin-right:6px;">#${m.a.rank}</span>` : ''}${aName}
+                </span>
+                ${isStaff && !finished && m.a && m.b && m.a.name !== "BYE" && m.b.name !== "BYE" ? `
+                  <button onclick="advanceBracketWinner(${ri}, ${mi}, '${aName}')" 
+                    style="background:rgba(57,255,20,0.15); border:1px solid var(--al-green); color:var(--al-green); font-size:10px; font-weight:900; padding:2px 6px; border-radius:4px; cursor:pointer;">Win</button>
+                ` : ''}
+              </div>
+              
+              <div style="font-size:10px; text-align:center; color:var(--gray); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin:2px 0;">VS</div>
+              
+              <!-- Player B -->
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; font-weight:700; color:${finished && m.winner === bName ? 'var(--al-green)' : 'var(--white)'}">
+                  ${m.b && m.b.rank ? `<span class="seed" style="margin-right:6px;">#${m.b.rank}</span>` : ''}${bName}
+                </span>
+                ${isStaff && !finished && m.a && m.b && m.a.name !== "BYE" && m.b.name !== "BYE" ? `
+                  <button onclick="advanceBracketWinner(${ri}, ${mi}, '${bName}')" 
+                    style="background:rgba(57,255,20,0.15); border:1px solid var(--al-green); color:var(--al-green); font-size:10px; font-weight:900; padding:2px 6px; border-radius:4px; cursor:pointer;">Win</button>
+                ` : ''}
+              </div>
+              
+              <!-- Bye/Finished tags -->
+              ${m.a && m.a.name === "BYE" ? `<div style="font-size:10px;color:var(--gray);text-align:center;margin-top:4px;">BYE ADVANCEMENT</div>` : ''}
+              ${m.b && m.b.name === "BYE" ? `<div style="font-size:10px;color:var(--gray);text-align:center;margin-top:4px;">BYE ADVANCEMENT</div>` : ''}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+  container.innerHTML = html;
+  
+  // Auto-advance BYEs
+  autoAdvanceByes();
+}
+
+function advanceBracketWinner(roundIdx, matchIdx, winnerName) {
+  const rounds = tournamentState.bracket.rounds;
+  const m = rounds[roundIdx][matchIdx];
+  m.winner = winnerName;
+  
+  // Advance to next round
+  const nextRoundIdx = roundIdx + 1;
+  if (nextRoundIdx < rounds.length) {
+    const nextMatchIdx = Math.floor(matchIdx / 2);
+    const isPlayerA = matchIdx % 2 === 0;
+    
+    // Find player object
+    const pObj = (m.a && m.a.name === winnerName) ? m.a : m.b;
+    
+    // Set player in next round match
+    const nextMatch = rounds[nextRoundIdx][nextMatchIdx];
+    if (isPlayerA) {
+      nextMatch.a = pObj;
+    } else {
+      nextMatch.b = pObj;
+    }
+  }
+  
+  localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+  renderTournament();
+}
+
+function autoAdvanceByes() {
+  const rounds = tournamentState.bracket?.rounds;
+  if (!rounds) return;
+  
+  let changed = false;
+  rounds.forEach((rd, ri) => {
+    rd.forEach((m, mi) => {
+      if (m && m.winner === null) {
+        if (m.a && m.a.name === "BYE" && m.b && m.b.name !== "BYE") {
+          m.winner = m.b.name;
+          advanceBracketWinner(ri, mi, m.b.name);
+          changed = true;
+        } else if (m.b && m.b.name === "BYE" && m.a && m.a.name !== "BYE") {
+          m.winner = m.a.name;
+          advanceBracketWinner(ri, mi, m.a.name);
+          changed = true;
+        }
+      }
+    });
+  });
+}
+
+function renderChipsView(container) {
+  if (!tournamentState.chips || Object.keys(tournamentState.chips).length === 0) {
+    container.innerHTML = `<div style="text-align:center;color:var(--gray);padding:24px;">No Chips Tournament setup. Use the Setup Control Panel below to generate one.</div>`;
+    return;
+  }
+  
+  const isStaff = ["owner", "helper"].includes(currentRole());
+  const players = Object.values(tournamentState.chips).sort((a,b) => a.rank - b.rank);
+  
+  container.innerHTML = `
+    <div class="sec-head">
+      <div class="sec-title">Chips / Lives Tournament</div>
+      <div class="sec-sub">Each loss removes a chip. At 0 chips, players are Knocked Out.</div>
+    </div>
+    
+    <div class="player-grid">
+      ${players.map(p => {
+        const knocked = p.lives <= 0;
+        let chipsIcons = "";
+        for (let i = 0; i < p.lives; i++) {
+          chipsIcons += "🪙 ";
+        }
+        
+        return `
+          <div class="p-card" style="padding:16px; border-color:${knocked ? 'rgba(239,68,68,0.2)' : 'var(--border)'}; background:${knocked ? 'linear-gradient(135deg, rgba(239,68,68,0.05), rgba(0,0,0,0.4))' : 'var(--card)'}; text-align:center;">
+            <div style="font-size:16px; font-weight:900; color:${knocked ? 'var(--gray)' : 'var(--white)'}; text-decoration:${knocked ? 'line-through' : 'none'}">
+              <span class="seed">#${p.rank}</span> ${p.name}
+            </div>
+            <div style="font-size:10px; color:var(--gray); margin-top:2px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">${p.bar}</div>
+            
+            <div style="font-size:18px; margin-top:12px; height:24px;">
+              ${knocked ? '<span style="color:var(--red); font-size:12px; font-weight:900; letter-spacing:1px;">❌ KNOCKED OUT</span>' : chipsIcons}
+            </div>
+            
+            ${isStaff && !knocked ? `
+              <button onclick="recordChipsLoss('${p.name}')" 
+                style="margin-top:16px; width:100%; border:1px solid var(--red); background:rgba(239,68,68,0.15); color:var(--red); font-size:11px; font-weight:800; padding:6px; border-radius:6px; cursor:pointer; transition:background .2s;">
+                Record Loss
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function recordChipsLoss(name) {
+  const p = tournamentState.chips[name];
+  if (p && p.lives > 0) {
+    p.lives--;
+    if (p.lives <= 0) {
+      p.status = "Knocked Out";
+    }
+    localStorage.setItem("al_tournament_state", JSON.stringify(tournamentState));
+    renderTournament();
+  }
+}
+
 </script>
 </body>
 </html>

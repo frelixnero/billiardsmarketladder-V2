@@ -72,15 +72,23 @@ export default async (req: Request) => {
   let productName = "";
 
   if (productKey === "registration") {
-    calculatedPrice = Number(settings.registrationFee) || 150;
-    stripePriceId = process.env.STRIPE_PRICE_REGISTRATION || "price_1TkOhoAoSKKzN4A3zdmQlYWE";
+    const formatsCount = Number(metadata?.formatsCount) || 1;
+    if (formatsCount === 2) {
+      calculatedPrice = 200;
+    } else if (formatsCount === 3) {
+      calculatedPrice = 250;
+    } else {
+      calculatedPrice = 125;
+    }
+    stripePriceId = ""; // Use dynamic pricing
     secureMetadata.type = "registration";
-    productName = "League Registration Entry";
+    productName = `League Registration Entry (${formatsCount} Format${formatsCount > 1 ? 's' : ''})`;
   } else if (productKey === "weeklyDues") {
-    calculatedPrice = Number(settings.weeklyDues) || 25;
-    stripePriceId = process.env.STRIPE_PRICE_WEEKLY_DUES || "price_1TkOi7AoSKKzN4A3z8hWbyja";
+    const formatsCount = Number(metadata?.formatsCount) || 1;
+    calculatedPrice = 30 * formatsCount; // $30 per format
+    stripePriceId = ""; // Use dynamic pricing
     secureMetadata.type = "weekly_dues";
-    productName = "Weekly Match Dues";
+    productName = `Weekly Match Dues (${formatsCount} Format${formatsCount > 1 ? 's' : ''})`;
   } else if (productKey === "teamReg") {
     calculatedPrice = Number(settings.teamPerPerson) || 225;
     stripePriceId = process.env.STRIPE_PRICE_TEAM_REGISTRATION || "price_1TkOiYAoSKKzN4A34AEcEldN";
