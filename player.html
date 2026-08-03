@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Player Profile · Billiards Market Ladder</title>
-  <meta name="description" content="View your player's live stats, rank, share price and win record on the Billiards Market Ladder.">
+  <title>Player Profile · Billiards Fight Club</title>
+  <meta name="description" content="View your player's live stats, rank, share price and win record on the Billiards Fight Club.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -325,7 +325,7 @@
   <a href="/" class="topbar-brand">
     <div class="topbar-logo">🎱</div>
     <div>
-      <div class="topbar-name">Billiards Market Ladder</div>
+      <div class="topbar-name">Billiards Fight Club</div>
       <div class="topbar-sub">Player Profile</div>
     </div>
   </a>
@@ -341,7 +341,7 @@
 </div>
 
 <div class="page-footer">
-  Billiards Market Ladder · Secure payments by Stripe<br>
+  Billiards Fight Club · Secure payments by Stripe<br>
   Share prices reflect current standings and are updated each week.
 </div>
 
@@ -358,7 +358,7 @@
     const date = purchasedAt
       ? new Date(purchasedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
       : 'Today';
-    document.title = `${fee} Receipt · Billiards Market Ladder`;
+    document.title = `${fee} Receipt · Billiards Fight Club`;
     app.innerHTML = `
       <div class="fee-card">
         <div class="fee-icon">🧾</div>
@@ -408,7 +408,7 @@
     semi:     rank <= 2 ? 40  : rank <= 4 ? 15 : rank <= 8 ? 5  : 0,
   };
 
-  document.title = `${name} · Billiards Market Ladder`;
+  document.title = `${name} · Billiards Fight Club`;
 
   // Initials avatar
   const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
