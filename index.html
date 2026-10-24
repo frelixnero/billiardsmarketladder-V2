@@ -3172,11 +3172,11 @@ const CONFIG = {
   },
 
   // ── ACCESS ROLES ──────────────────────────────────────
-  operatorPin: "1234",
+  operatorPin: "8426",
   roles: {
     ownerName:      "Elliot",
-    ownerPassword:  "owner2026",   // full control — change before going live
-    helperPassword: "helper2026",  // paid partners, limited control
+    ownerPassword:  "OwnerAccess2026",   // full control — local fallback only (real auth is Supabase)
+    helperPassword: "HelperAccess2026",  // paid partners, limited control
     partners:       4,             // owner + 3 helpers → 4-way profit split
     operators:      ["osiraogene@gmail.com"], // Supabase operator emails
   },
@@ -4482,7 +4482,7 @@ async function doLogin() {
   // Check local fallback credentials first for easy local testing / fallback
   const isLocalElliot = email === "elliot" || (CONFIG.roles.operators && CONFIG.roles.operators.map(x => x.toLowerCase()).includes(email) && password === CONFIG.roles.ownerPassword);
   const isLocalHelper = email === "helper" && password === CONFIG.roles.helperPassword;
-  const isLocalBar = (email === "bar" || (email.startsWith("bar") && !email.includes("@"))) && password === "bar2026";
+  const isLocalBar = (email === "bar" || (email.startsWith("bar") && !email.includes("@"))) && password === "BarAccess2026";
 
   if (!_sb || isLocalElliot || isLocalHelper || isLocalBar) {
     handleLocalAuthFallback(email, password);
@@ -4602,7 +4602,7 @@ function handleLocalAuthFallback(email, password) {
   } else if (isHelper && password === CONFIG.roles.helperPassword) {
     ok = true;
     role = "helper";
-  } else if (isBar && password === "bar2026") {
+  } else if (isBar && password === "BarAccess2026") {
     ok = true;
     role = "bar";
     
@@ -7794,29 +7794,34 @@ function updateBBClock() {
 }
 
 function renderBillboardData() {
+  const sortedPlayers = CONFIG.players.slice().sort((a, b) => a.rank - b.rank);
+  const total = sortedPlayers.length || 16;
+
+  // Fighter rankings & share prices
   const fighterContainer = document.getElementById('bbFighterList');
-  if (fighterContainer && typeof PLAYERS !== 'undefined') {
-    const sorted = [...PLAYERS].sort((a, b) => a.rank - b.rank);
-    fighterContainer.innerHTML = sorted.map((p, idx) => {
-      const priceStr = `$${(p.price || 0).toFixed(2)}`;
-      const changeVal = p.change24h || p.change || 0;
-      const trendClass = changeVal >= 0 ? 'up' : 'down';
-      const trendSign = changeVal >= 0 ? '+' : '';
-      const streakIcons = p.streak || 'W W W';
+  if (fighterContainer) {
+    fighterContainer.innerHTML = sortedPlayers.map((p, idx) => {
+      const price = sharePrice(p.rank);
+      const last5 = (p.streak || '').trim().split(/\s+/).filter(Boolean);
+      const wins = last5.filter(x => x === 'W').length;
+      const isUp = wins >= 3;
+      const isStable = wins === 2;
+      const changeVal = (isStable ? 0 : (isUp ? 1 : -1)) * Number((wins * 2.4).toFixed(1));
+      const fargo = (typeof fargoStyleRating === 'function') ? fargoStyleRating(p) : 650;
 
       return `
         <div class="bb-fighter-card ${idx === bbSpotlightIndex ? 'spotlight' : ''}" id="bbFighterCard_${idx}">
           <div class="bb-fighter-left">
             <div class="bb-fighter-rank">#${p.rank || (idx + 1)}</div>
             <div>
-              <div class="bb-fighter-name">${p.name} <span style="font-size:11px; color:var(--gold); font-weight:800; margin-left:6px;">Fargo ${p.fargo || 650}</span></div>
-              <div class="bb-fighter-sub">Form: ${streakIcons} · Bar: ${p.bar || 'Main Arena'}</div>
+              <div class="bb-fighter-name">${p.name} <span style="font-size:11px; color:var(--gold); font-weight:800; margin-left:6px;">Fargo ${fargo}</span></div>
+              <div class="bb-fighter-sub">Form: ${p.streak || '—'} · Bar: ${p.bar || 'Main Arena'}</div>
             </div>
           </div>
           <div class="bb-fighter-right">
             <div>
-              <div class="bb-fighter-price">${priceStr}</div>
-              <div class="bb-fighter-trend ${trendClass}">${trendSign}${changeVal}% (24h)</div>
+              <div class="bb-fighter-price">${$$(price)}</div>
+              <div class="bb-fighter-trend ${changeVal >= 0 ? 'up' : 'down'}">${changeVal >= 0 ? '+' : ''}${changeVal.toFixed(1)}% (form)</div>
             </div>
           </div>
         </div>
@@ -7824,23 +7829,27 @@ function renderBillboardData() {
     }).join('');
   }
 
+  // Featured matchups (top 4 by rank) with model-derived probabilities
   const matchContainer = document.getElementById('bbMatchupsList');
   if (matchContainer) {
-    const p1Name = typeof PLAYERS !== 'undefined' && PLAYERS[0] ? PLAYERS[0].name : 'Marcus P.';
-    const p2Name = typeof PLAYERS !== 'undefined' && PLAYERS[1] ? PLAYERS[1].name : 'Alex R.';
-    const p3Name = typeof PLAYERS !== 'undefined' && PLAYERS[2] ? PLAYERS[2].name : 'Dave M.';
-    const p4Name = typeof PLAYERS !== 'undefined' && PLAYERS[3] ? PLAYERS[3].name : 'Chris B.';
-
-    const matches = [
-      { p1: p1Name, p2: p2Name, odds1: '1.75x', odds2: '2.15x', prob1: '58%', prob2: '42%' },
-      { p1: p3Name, p2: p4Name, odds1: '1.90x', odds2: '1.90x', prob1: '50%', prob2: '50%' }
-    ];
+    const buildOdds = (a, b) => {
+      const sa = predictStrength(a, total);
+      const sb = predictStrength(b, total);
+      const pa = Math.max(1, Math.min(99, Math.round((sa / (sa + sb)) * 100)));
+      const pb = 100 - pa;
+      const odds = (pct) => `${(100 / pct).toFixed(2)}x`;
+      return { a, b, odds1: odds(pa), odds2: odds(pb), prob1: `${pa}%`, prob2: `${pb}%` };
+    };
+    const top = sortedPlayers.slice(0, 4);
+    const matches = [];
+    if (top[0] && top[1]) matches.push(buildOdds(top[0], top[1]));
+    if (top[2] && top[3]) matches.push(buildOdds(top[2], top[3]));
     matchContainer.innerHTML = matches.map(m => `
       <div class="bb-match-card">
         <div class="bb-match-teams">
-          <span>${m.p1}</span>
+          <span>${m.a.name}</span>
           <span class="bb-match-vs">VS</span>
-          <span>${m.p2}</span>
+          <span>${m.b.name}</span>
         </div>
         <div class="bb-match-odds">
           <span>Win Odds: <strong>${m.odds1}</strong> (${m.prob1})</span>
@@ -7850,32 +7859,37 @@ function renderBillboardData() {
     `).join('');
   }
 
+  // Team standings & payout projections
   const teamsContainer = document.getElementById('bbTeamsGrid');
   if (teamsContainer) {
-    const teams = [
-      { name: 'Rack Attackers', pts: '142 pts', payout: '$150/sh' },
-      { name: 'Cue Breakers', pts: '128 pts', payout: '$80/sh' },
-      { name: 'Bank Shot Bosses', pts: '115 pts', payout: '$40/sh' },
-      { name: 'Side Pocket Kings', pts: '98 pts', payout: '$20/sh' }
-    ];
-    teamsContainer.innerHTML = teams.map(t => `
-      <div class="bb-team-card">
-        <div class="bb-team-title">${t.name}</div>
-        <div class="bb-team-pts">${t.pts}</div>
-        <div style="font-size:11px; color:var(--gray); margin-top:2px;">Proj. Payout: <strong style="color:var(--al-green)">${t.payout}</strong></div>
-      </div>
-    `).join('');
+    const standings = teamStandings();
+    const pay = CONFIG.teamPayouts || { champ: 100, second: 60, third: 30 };
+    const payoutFor = (rank) => rank === 1 ? pay.champ : rank === 2 ? pay.second : rank === 3 ? pay.third : pay.champ;
+    teamsContainer.innerHTML = standings.slice(0, 4).map((t, i) => {
+      const rank = i + 1;
+      return `
+        <div class="bb-team-card">
+          <div class="bb-team-title">${t.name}</div>
+          <div class="bb-team-pts">${t.pts} pts</div>
+          <div style="font-size:11px; color:var(--gray); margin-top:2px;">Proj. Payout: <strong style="color:var(--al-green)">$${payoutFor(rank)}/sh</strong></div>
+        </div>
+      `;
+    }).join('');
   }
 
+  // Ticker
   const tickerContainer = document.getElementById('bbTickerScroll');
   if (tickerContainer) {
+    const p1 = sortedPlayers[0]?.name || 'TBD';
+    const p2 = sortedPlayers[1]?.name || 'TBD';
+    const leader = teamStandings()[0]?.name || 'TBD';
     const tickerItems = [
-      '🔥 FEATURED FIGHT NIGHT: Marcus P. vs Alex R. at 9:00 PM EST',
-      '📈 TOP MOVER: Jordan T. shares up +12.4% after 5-game win streak',
+      `🔥 FEATURED FIGHT NIGHT: ${p1} vs ${p2}`,
+      `📈 TOP RANK: ${p1} leads the ladder at ${sortedPlayers[0] ? sharePrice(sortedPlayers[0].rank) : 0} per share`,
       '🎱 BILLIARDS FIGHT CLUB CHAMPIONSHIP: $1,500 Prize Pool Locked',
-      '⚡ LIVE Fargo Rating updates active for all bar venues',
+      '⚡ Live Fargo ratings active across all bar venues',
       '💰 PLAYOFF SHARE PAYOUTS: Top 2 Gold Tier pays out $150 per share',
-      '🛡️ TEAM MARKET: Rack Attackers lead the Team Leaderboard with 142 pts'
+      `🛡️ TEAM MARKET: ${leader} lead the Team Leaderboard`
     ];
     const tickerText = tickerItems.concat(tickerItems).map(item => `<span>${item}</span>`).join(' &nbsp; &nbsp; • &nbsp; &nbsp; ');
     tickerContainer.innerHTML = tickerText;

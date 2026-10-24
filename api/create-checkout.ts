@@ -91,7 +91,7 @@ export default async (req: Request) => {
     productName = `Weekly Match Dues (${formatsCount} Format${formatsCount > 1 ? 's' : ''})`;
   } else if (productKey === "teamReg") {
     calculatedPrice = Number(settings.teamPerPerson) || 225;
-    stripePriceId = process.env.STRIPE_PRICE_TEAM_REGISTRATION || "price_1TkOiYAoSKKzN4A34AEcEldN";
+    stripePriceId = ""; // Dynamic pricing so team entry respects the operator-configured teamPerPerson
     secureMetadata.type = "teamReg";
     productName = "Team Entry Registration";
   } else if (productKey === "individual-share") {

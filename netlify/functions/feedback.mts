@@ -1,4 +1,4 @@
-import { getDatabase } from "@netlify/database";
+import { createClient } from "@supabase/supabase-js";
 import type { Config } from "@netlify/functions";
 
 // Stores and lists player/supporter feedback: complaints, suggestions, match
@@ -7,15 +7,24 @@ import type { Config } from "@netlify/functions";
 //  POST  /api/feedback                -> anyone can submit
 //  GET   /api/feedback (x-admin-token) -> owner/helper inbox (token-gated)
 //
-// Persistence uses Netlify Database (Postgres). The `feedback` table is
-// created by the migration in netlify/database/migrations/.
+// Persistence uses the Supabase `feedback` table (kept in sync with api/feedback.ts).
 const TYPES = [
   "Complaint", "Suggestion", "Match dispute",
   "Refund request", "Player concern", "Rule question",
 ];
 
 export default async (req: Request) => {
-  const db = getDatabase();
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return Response.json(
+      { error: "Supabase environment variables are missing on the server." },
+      { status: 500 }
+    );
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   if (req.method === "POST") {
     let body: any;
@@ -31,12 +40,19 @@ export default async (req: Request) => {
     if (!message) {
       return Response.json({ error: "Message is required" }, { status: 400 });
     }
-    const [row] = await db.sql`
-      INSERT INTO feedback (type, name, player, message)
-      VALUES (${type}, ${name}, ${player}, ${message})
-      RETURNING id
-    `;
-    return Response.json({ ok: true, id: row.id }, { status: 201 });
+
+    const { data, error } = await supabase
+      .from("feedback")
+      .insert({ type, name, player, message })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("Supabase feedback insert error:", error);
+      return Response.json({ error: "Failed to store feedback in database" }, { status: 500 });
+    }
+
+    return Response.json({ ok: true, id: data.id }, { status: 201 });
   }
 
   if (req.method === "GET") {
@@ -50,14 +66,30 @@ export default async (req: Request) => {
     if (req.headers.get("x-admin-token") !== required) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const rows = await db.sql`
-      SELECT id, type, name, player, message, status,
-             to_char(created_at, 'YYYY-MM-DD HH24:MI') AS created_at
-      FROM feedback
-      ORDER BY created_at DESC
-      LIMIT 500
-    `;
-    return Response.json(rows);
+
+    const { data: rows, error } = await supabase
+      .from("feedback")
+      .select("id, type, name, player, message, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(500);
+
+    if (error) {
+      console.error("Supabase feedback select error:", error);
+      return Response.json({ error: "Failed to load feedback from database" }, { status: 500 });
+    }
+
+    // Format created_at to 'YYYY-MM-DD HH:MM' in UTC for consistency
+    const formattedRows = rows.map((r: any) => {
+      const d = new Date(r.created_at);
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const formattedDate = `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+      return {
+        ...r,
+        created_at: formattedDate
+      };
+    });
+
+    return Response.json(formattedRows);
   }
 
   return Response.json({ error: "Method not allowed" }, { status: 405 });
